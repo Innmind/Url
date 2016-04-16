@@ -10,4 +10,5 @@ interface UrlInterface
     public function path(): PathInterface;
     public function query(): QueryInterface;
     public function fragment(): FragmentInterface;
+    public function __toString(): string;
 }
