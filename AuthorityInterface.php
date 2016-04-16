@@ -14,4 +14,5 @@ interface AuthorityInterface
     public function userInformation(): UserInformationInterface;
     public function host(): HostInterface;
     public function port(): PortInterface;
+    public function __toString(): string;
 }

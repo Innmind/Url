@@ -12,4 +12,5 @@ interface UserInformationInterface
 {
     public function user(): UserInterface;
     public function password(): PasswordInterface;
+    public function __toString(): string;
 }
