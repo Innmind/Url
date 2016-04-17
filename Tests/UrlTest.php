@@ -63,4 +63,27 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testFromString()
+    {
+        $u = Url::fromString('http://foo:bar@localhost:8080/foo?bar=baz#whatever');
+
+        $this->assertInstanceOf(Url::class, $u);
+        $this->assertSame('http', (string) $u->scheme());
+        $this->assertSame('foo', (string) $u->authority()->userInformation()->user());
+        $this->assertSame('bar', (string) $u->authority()->userInformation()->password());
+        $this->assertSame('localhost', (string) $u->authority()->host());
+        $this->assertSame('8080', (string) $u->authority()->port());
+        $this->assertSame('/foo', (string) $u->path());
+        $this->assertSame('bar=baz', (string) $u->query());
+        $this->assertSame('whatever', (string) $u->fragment());
+    }
+
+    /**
+     * @expectedException Innmind\Url\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromInvalidString()
+    {
+        url::fromString('@@@');
+    }
 }
