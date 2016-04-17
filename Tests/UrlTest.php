@@ -77,6 +77,18 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/foo', (string) $u->path());
         $this->assertSame('bar=baz', (string) $u->query());
         $this->assertSame('whatever', (string) $u->fragment());
+
+        $u = Url::fromString('/foo');
+
+        $this->assertInstanceOf(Url::class, $u);
+        $this->assertSame('', (string) $u->scheme());
+        $this->assertSame('', (string) $u->authority()->userInformation()->user());
+        $this->assertSame('', (string) $u->authority()->userInformation()->password());
+        $this->assertSame('', (string) $u->authority()->host());
+        $this->assertSame('', (string) $u->authority()->port());
+        $this->assertSame('/foo', (string) $u->path());
+        $this->assertSame('', (string) $u->query());
+        $this->assertSame('', (string) $u->fragment());
     }
 
     /**
