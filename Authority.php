@@ -44,8 +44,6 @@ final class Authority implements AuthorityInterface
 
     public function __toString(): string
     {
-        $userInformation = (string) $this->userInformation;
-
         return sprintf(
             '%s%s%s',
             $this->userInformation,
