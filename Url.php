@@ -68,10 +68,10 @@ final class Url implements UrlInterface
         return sprintf(
             '%s%s%s%s%s',
             $this->scheme,
-            !$this->scheme instanceof NullScheme ? '://' . $this->authority : '',
+            !$this->scheme instanceof NullScheme ? '://'.$this->authority : '',
             $this->path,
-            !$this->query instanceof NullQuery ? '?' . $this->query : '',
-            !$this->fragment instanceof NullFragment ? '#' . $this->fragment : ''
+            !$this->query instanceof NullQuery ? '?'.$this->query : '',
+            !$this->fragment instanceof NullFragment ? '#'.$this->fragment : ''
         );
     }
 

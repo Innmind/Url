@@ -47,8 +47,8 @@ final class Authority implements AuthorityInterface
         return sprintf(
             '%s%s%s',
             $this->userInformation,
-            !$this->userInformation->user() instanceof NullUser ? '@' . (string) $this->host : '',
-            !$this->port instanceof NullPort ? ':' . (string) $this->port : ''
+            !$this->userInformation->user() instanceof NullUser ? '@'.(string) $this->host : '',
+            !$this->port instanceof NullPort ? ':'.(string) $this->port : ''
         );
     }
 }

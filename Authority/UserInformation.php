@@ -28,7 +28,7 @@ final class UserInformation implements UserInformationInterface
         $this->string = (string) $user;
 
         if (!$password instanceof NullPassword) {
-            $this->string .= ':' . (string) $password;
+            $this->string .= ':'.(string) $password;
         }
     }
 
