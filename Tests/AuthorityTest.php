@@ -46,5 +46,16 @@ class AuthorityTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertSame('foo:bar@localhost:8080', (string) $a);
+
+        $a = new Authority(
+            new UserInformation(
+                new NullUser,
+                new NullPassword
+            ),
+            new Host('localhost'),
+            new NullPort
+        );
+
+        $this->assertSame('localhost', (string) $a);
     }
 }
