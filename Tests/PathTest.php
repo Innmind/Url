@@ -18,6 +18,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/foo/bar/', (string) $p);
 
         new Path('/'); //check it doesn't throw
+        new Path('relative/path');
     }
 
     /**
