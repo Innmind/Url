@@ -8,7 +8,7 @@ use Innmind\Immutable\StringPrimitive as Str;
 
 final class Path implements PathInterface
 {
-    const PATTERN = '~/\S*~';
+    const PATTERN = '~\S+~';
     private $value;
 
     public function __construct(string $value)

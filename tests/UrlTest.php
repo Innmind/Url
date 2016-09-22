@@ -89,6 +89,11 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/foo', (string) $u->path());
         $this->assertSame('', (string) $u->query());
         $this->assertSame('', (string) $u->fragment());
+
+        $this->assertSame(
+            'foo',
+            (string) Url::fromString('foo')->path()
+        );
     }
 
     /**
@@ -96,6 +101,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenBuildingFromInvalidString()
     {
-        url::fromString('@@@');
+        Url::fromString('http://user:password/path');
     }
 }
