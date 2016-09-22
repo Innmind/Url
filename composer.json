@@ -19,9 +19,9 @@
         "innmind/immutable": "^1.5"
     },
     "autoload": {
-        "psr-0": {
-            "Innmind\\Url": ""
+        "psr-4": {
+            "Innmind\\Url\\": "src/",
+            "Tests\\Innmind\\Url\\": "tests/"
         }
-    },
-    "target-dir": "Innmind/Url"
+    }
 }
