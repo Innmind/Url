@@ -23,6 +23,6 @@ class HostTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenInvalidHost()
     {
-        new Host('foo@bar');
+        new Host('foo bar');
     }
 }
