@@ -65,11 +65,23 @@ final class Url implements UrlInterface
 
     public function __toString(): string
     {
+        $path = $path = (string) $this->path;
+
+        if (
+            $this->path instanceof NullPath &&
+            (
+                !$this->query instanceof NullQuery ||
+                !$this->fragment instanceof NullFragment
+            )
+        ) {
+            $path = '';
+        }
+
         return sprintf(
             '%s%s%s%s%s',
             $this->scheme,
             !$this->scheme instanceof NullScheme ? '://'.$this->authority : '',
-            $this->path,
+            $path,
             !$this->query instanceof NullQuery ? '?'.$this->query : '',
             !$this->fragment instanceof NullFragment ? '#'.$this->fragment : ''
         );

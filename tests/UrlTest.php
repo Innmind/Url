@@ -103,4 +103,23 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         Url::fromString('http://user:password/path');
     }
+
+    /**
+     * @dataProvider cases
+     */
+    public function testFormatNotAltered(string $url)
+    {
+        $this->assertSame(
+            $url,
+            (string) Url::fromString($url)
+        );
+    }
+
+    public function cases(): array
+    {
+        return [
+            ['#foobar'],
+            ['?some=query'],
+        ];
+    }
 }
