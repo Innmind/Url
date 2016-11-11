@@ -16,7 +16,8 @@
     },
     "require": {
         "php": "~7.0",
-        "innmind/immutable": "^1.5"
+        "innmind/immutable": "^1.5",
+        "league/uri": "^4.2"
     },
     "autoload": {
         "psr-4": {

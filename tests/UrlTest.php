@@ -64,36 +64,31 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFromString()
-    {
-        $u = Url::fromString('http://foo:bar@localhost:8080/foo?bar=baz#whatever');
+    /**
+     * @dataProvider fromString
+     */
+    public function testFromString(
+        string $url,
+        string $scheme,
+        string $user,
+        string $password,
+        string $host,
+        string $port,
+        string $path,
+        string $query,
+        string $fragment
+    ) {
+        $url = Url::fromString($url);
 
-        $this->assertInstanceOf(Url::class, $u);
-        $this->assertSame('http', (string) $u->scheme());
-        $this->assertSame('foo', (string) $u->authority()->userInformation()->user());
-        $this->assertSame('bar', (string) $u->authority()->userInformation()->password());
-        $this->assertSame('localhost', (string) $u->authority()->host());
-        $this->assertSame('8080', (string) $u->authority()->port());
-        $this->assertSame('/foo', (string) $u->path());
-        $this->assertSame('bar=baz', (string) $u->query());
-        $this->assertSame('whatever', (string) $u->fragment());
-
-        $u = Url::fromString('/foo');
-
-        $this->assertInstanceOf(Url::class, $u);
-        $this->assertSame('', (string) $u->scheme());
-        $this->assertSame('', (string) $u->authority()->userInformation()->user());
-        $this->assertSame('', (string) $u->authority()->userInformation()->password());
-        $this->assertSame('', (string) $u->authority()->host());
-        $this->assertSame('', (string) $u->authority()->port());
-        $this->assertSame('/foo', (string) $u->path());
-        $this->assertSame('', (string) $u->query());
-        $this->assertSame('', (string) $u->fragment());
-
-        $this->assertSame(
-            'foo',
-            (string) Url::fromString('foo')->path()
-        );
+        $this->assertInstanceOf(Url::class, $url);
+        $this->assertSame($scheme, (string) $url->scheme());
+        $this->assertSame($user, (string) $url->authority()->userInformation()->user());
+        $this->assertSame($password, (string) $url->authority()->userInformation()->password());
+        $this->assertSame($host, (string) $url->authority()->host());
+        $this->assertSame($port, (string) $url->authority()->port());
+        $this->assertSame($path, (string) $url->path());
+        $this->assertSame($query, (string) $url->query());
+        $this->assertSame($fragment, (string) $url->fragment());
     }
 
     /**
@@ -194,6 +189,55 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             ['http://symfony.com#'],
             ['http://symfony.com#fragment'],
             ['http://symfony.com/#fragment'],
+        ];
+    }
+
+    public function fromString(): array
+    {
+        return [
+            ['http://foo:bar@localhost:8080/foo?bar=baz#whatever', 'http', 'foo', 'bar', 'localhost', '8080', '/foo', 'bar=baz', 'whatever'],
+            ['//foo:bar@localhost:8080/foo?bar=baz#whatever', '', 'foo', 'bar', 'localhost', '8080', '/foo', 'bar=baz', 'whatever'],
+            ['//localhost:8080/foo?bar=baz#whatever', '', '', '', 'localhost', '8080', '/foo', 'bar=baz', 'whatever'],
+            ['ftp://localhost:8080/foo?bar=baz#whatever', 'ftp', '', '', 'localhost', '8080', '/foo', 'bar=baz', 'whatever'],
+            ['/foo', '', '', '', '', '', '/foo', '', ''],
+            ['/wiki/Category:42', '', '', '', '', '', '/wiki/Category:42', '', ''],
+            ['/wiki/Category:42?some=query', '', '', '', '', '', '/wiki/Category:42', 'some=query', ''],
+            ['http://a.pl', 'http', '', '', 'a.pl', '', '/', '', ''],
+            ['http://www.google.com', 'http', '', '', 'www.google.com', '', '/', '', ''],
+            ['http://www.google.com.', 'http', '', '', 'www.google.com.', '', '/', '', ''],
+            ['http://www.google.museum', 'http', '', '', 'www.google.museum', '', '/', '', ''],
+            ['https://google.com:80/', 'https', '', '', 'google.com', '80', '/', '', ''],
+            ['http://symfony.com/?', 'http', '', '', 'symfony.com', '', '/', '', ''],
+            ['http://symfony.com/search?type=&q=url+validator', 'http', '', '', 'symfony.com', '', '/search', 'type=&q=url+validator', ''],
+            ['http://symfony.com/#', 'http', '', '', 'symfony.com', '', '/', '', ''],
+            ['http://symfony.com/#?', 'http', '', '', 'symfony.com', '', '/', '', '?'],
+            ['http://127.0.0.1:80/', 'http', '', '', '127.0.0.1', '80', '/', '', ''],
+            ['http://[::1]:80/', 'http', '', '', '[::1]', '80', '/', '', ''],
+            ['http://[1:2:3::4:5:6:7]/', 'http', '', '', '[1:2:3::4:5:6:7]', '', '/', '', ''],
+            ['http://sãopaulo.com/', 'http', '', '', 'sãopaulo.com', '', '/', '', ''],
+            ['http://xn--sopaulo-xwa.com/', 'http', '', '', 'xn--sopaulo-xwa.com', '', '/', '', ''],
+            ['http://пример.испытание/', 'http', '', '', 'пример.испытание', '', '/', '', ''],
+            ['http://xn--e1afmkfd.xn--80akhbyknj4f/', 'http', '', '', 'xn--e1afmkfd.xn--80akhbyknj4f', '', '/', '', ''],
+            ['http://مثال.إختبار/', 'http', '', '', 'مثال.إختبار', '', '/', '', ''],
+            ['http://xn--mgbh0fb.xn--kgbechtv/', 'http', '', '', 'xn--mgbh0fb.xn--kgbechtv', '', '/', '', ''],
+            ['http://例子.测试/', 'http', '', '', '例子.测试', '', '/', '', ''],
+            ['http://xn--fsqu00a.xn--0zwm56d/', 'http', '', '', 'xn--fsqu00a.xn--0zwm56d', '', '/', '', ''],
+            ['http://例子.測試/', 'http', '', '', '例子.測試', '', '/', '', ''],
+            ['http://xn--fsqu00a.xn--g6w251d/', 'http', '', '', 'xn--fsqu00a.xn--g6w251d', '', '/', '', ''],
+            ['http://例え.テスト/', 'http', '', '', '例え.テスト', '', '/', '', ''],
+            ['http://xn--r8jz45g.xn--zckzah/', 'http', '', '', 'xn--r8jz45g.xn--zckzah', '', '/', '', ''],
+            ['http://مثال.آزمایشی/', 'http', '', '', 'مثال.آزمایشی', '', '/', '', ''],
+            ['http://xn--mgbh0fb.xn--hgbk6aj7f53bba/', 'http', '', '', 'xn--mgbh0fb.xn--hgbk6aj7f53bba', '', '/', '', ''],
+            ['http://실례.테스트/', 'http', '', '', '실례.테스트', '', '/', '', ''],
+            ['http://xn--9n2bp8q.xn--9t4b11yi5a/', 'http', '', '', 'xn--9n2bp8q.xn--9t4b11yi5a', '', '/', '', ''],
+            ['http://العربية.idn.icann.org/', 'http', '', '', 'العربية.idn.icann.org', '', '/', '', ''],
+            ['http://xn--ogb.idn.icann.org/', 'http', '', '', 'xn--ogb.idn.icann.org', '', '/', '', ''],
+            ['http://xn--e1afmkfd.xn--80akhbyknj4f.xn--e1afmkfd/', 'http', '', '', 'xn--e1afmkfd.xn--80akhbyknj4f.xn--e1afmkfd', '', '/', '', ''],
+            ['http://xn--espaa-rta.xn--ca-ol-fsay5a/', 'http', '', '', 'xn--espaa-rta.xn--ca-ol-fsay5a', '', '/', '', ''],
+            ['http://xn--d1abbgf6aiiy.xn--p1ai/', 'http', '', '', 'xn--d1abbgf6aiiy.xn--p1ai', '', '/', '', ''],
+            ['http://☎.com/', 'http', '', '', '☎.com', '', '/', '', ''],
+            ['http://username:password@symfony.com', 'http', 'username', 'password', 'symfony.com', '', '/', '', ''],
+            ['http://user-name@symfony.com', 'http', 'user-name', '', 'symfony.com', '', '/', '', ''],
         ];
     }
 }
