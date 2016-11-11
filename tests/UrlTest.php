@@ -97,6 +97,14 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Innmind\Url\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromInvalidString()
+    {
+        Url::fromString('http://user:password/path');
+    }
+
+    /**
      * @dataProvider cases
      */
     public function testFormatNotAltered(string $url)

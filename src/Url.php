@@ -99,20 +99,7 @@ final class Url implements UrlInterface
         $data = parse_url($string);
 
         if ($data === false) {
-            return new self(
-                new NullScheme,
-                new Authority(
-                    new UserInformation(
-                        new NullUser,
-                        new NullPassword
-                    ),
-                    new NullHost,
-                    new NullPort
-                ),
-                new Path($string),
-                new NullQuery,
-                new NullFragment
-            );
+            throw new InvalidArgumentException;
         }
 
         return new self(
