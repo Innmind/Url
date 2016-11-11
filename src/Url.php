@@ -15,9 +15,11 @@ use Innmind\Url\{
     Authority\NullPort,
     Exception\InvalidArgumentException
 };
+use League\Uri\UriParser;
 
 final class Url implements UrlInterface
 {
+    private static $parser;
     private $scheme;
     private $authority;
     private $path;
@@ -96,38 +98,34 @@ final class Url implements UrlInterface
      */
     public static function fromString(string $string): self
     {
-        $data = parse_url($string);
-
-        if ($data === false) {
-            return new self(
-                new NullScheme,
-                new Authority(
-                    new UserInformation(
-                        new NullUser,
-                        new NullPassword
-                    ),
-                    new NullHost,
-                    new NullPort
-                ),
-                new Path($string),
-                new NullQuery,
-                new NullFragment
-            );
+        try {
+            $data = self::parser()($string);
+        } catch (\Exception $e) {
+            throw new InvalidArgumentException;
         }
 
         return new self(
-            isset($data['scheme']) ? new Scheme($data['scheme']) : new NullScheme,
+            $data['scheme'] ? new Scheme($data['scheme']) : new NullScheme,
             new Authority(
                 new UserInformation(
-                    isset($data['user']) ? new User($data['user']) : new NullUser,
-                    isset($data['pass']) ? new Password($data['pass']) : new NullPassword
+                    $data['user'] ? new User($data['user']) : new NullUser,
+                    $data['pass'] ? new Password($data['pass']) : new NullPassword
                 ),
-                isset($data['host']) ? new Host($data['host']) : new NullHost,
-                isset($data['port']) ? new Port((int) $data['port']) : new NullPort
+                $data['host'] ? new Host($data['host']) : new NullHost,
+                $data['port'] ? new Port((int) $data['port']) : new NullPort
             ),
-            isset($data['path']) && !empty($data['path']) ? new Path($data['path']) : new NullPath,
-            isset($data['query']) ? new Query($data['query']) : new NullQuery,
-            isset($data['fragment']) ? new Fragment($data['fragment']) : new NullFragment
+            $data['path'] && !empty($data['path']) ? new Path($data['path']) : new NullPath,
+            $data['query'] ? new Query($data['query']) : new NullQuery,
+            $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
         );
+    }
+
+    private static function parser(): UriParser
+    {
+        if (self::$parser === null) {
+            self::$parser = new UriParser;
+        }
+
+        return self::$parser;
     }
 }
