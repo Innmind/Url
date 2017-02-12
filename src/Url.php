@@ -15,7 +15,7 @@ use Innmind\Url\{
     Authority\NullPort,
     Exception\InvalidArgumentException
 };
-use League\Uri\UriParser;
+use League\Uri\Parser;
 
 final class Url implements UrlInterface
 {
@@ -160,10 +160,10 @@ final class Url implements UrlInterface
         );
     }
 
-    private static function parser(): UriParser
+    private static function parser(): Parser
     {
         if (self::$parser === null) {
-            self::$parser = new UriParser;
+            self::$parser = new Parser;
         }
 
         return self::$parser;
