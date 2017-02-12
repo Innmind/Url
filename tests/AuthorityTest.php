@@ -16,8 +16,9 @@ use Innmind\Url\{
     Authority\Host,
     Authority\Port
 };
+use PHPUnit\Framework\TestCase;
 
-class AuthorityTest extends \PHPUnit_Framework_TestCase
+class AuthorityTest extends TestCase
 {
     public function testInterface()
     {

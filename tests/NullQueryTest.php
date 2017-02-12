@@ -7,8 +7,9 @@ use Innmind\Url\{
     NullQuery,
     QueryInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullQueryTest extends \PHPUnit_Framework_TestCase
+class NullQueryTest extends TestCase
 {
     public function testInterface()
     {

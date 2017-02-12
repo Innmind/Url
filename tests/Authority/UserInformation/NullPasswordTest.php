@@ -7,8 +7,9 @@ use Innmind\Url\Authority\UserInformation\{
     NullPassword,
     PasswordInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullPasswordTest extends \PHPUnit_Framework_TestCase
+class NullPasswordTest extends TestCase
 {
     public function testInterface()
     {

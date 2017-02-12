@@ -7,8 +7,9 @@ use Innmind\Url\{
     NullFragment,
     FragmentInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullFragmentTest extends \PHPUnit_Framework_TestCase
+class NullFragmentTest extends TestCase
 {
     public function testInterface()
     {

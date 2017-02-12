@@ -7,8 +7,9 @@ use Innmind\Url\Authority\{
     NullHost,
     HostInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullHostTest extends \PHPUnit_Framework_TestCase
+class NullHostTest extends TestCase
 {
     public function testInterface()
     {

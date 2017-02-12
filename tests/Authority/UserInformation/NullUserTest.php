@@ -7,8 +7,9 @@ use Innmind\Url\Authority\UserInformation\{
     NullUser,
     UserInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullUserTest extends \PHPUnit_Framework_TestCase
+class NullUserTest extends TestCase
 {
     public function testInterface()
     {

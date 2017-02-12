@@ -7,8 +7,9 @@ use Innmind\Url\Authority\{
     Port,
     PortInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class PortTest extends \PHPUnit_Framework_TestCase
+class PortTest extends TestCase
 {
     public function testInterface()
     {

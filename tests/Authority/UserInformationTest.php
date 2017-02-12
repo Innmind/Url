@@ -11,8 +11,9 @@ use Innmind\Url\Authority\{
     UserInformation\Password,
     UserInformation\NullPassword
 };
+use PHPUnit\Framework\TestCase;
 
-class UserInformationTest extends \PHPUnit_Framework_TestCase
+class UserInformationTest extends TestCase
 {
     public function testInterface()
     {

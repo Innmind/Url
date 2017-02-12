@@ -7,8 +7,9 @@ use Innmind\Url\{
     Scheme,
     SchemeInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class SchemeTest extends \PHPUnit_Framework_TestCase
+class SchemeTest extends TestCase
 {
     public function testInterface()
     {
