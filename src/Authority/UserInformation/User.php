@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\Exception\InvalidArgumentException;
-use Innmind\Immutable\StringPrimitive as Str;
+use Innmind\Immutable\Str;
 
 final class User implements UserInterface
 {
@@ -13,7 +13,7 @@ final class User implements UserInterface
 
     public function __construct(string $value)
     {
-        if (!(new Str($value))->match(self::PATTERN)) {
+        if (!(new Str($value))->matches(self::PATTERN)) {
             throw new InvalidArgumentException;
         }
 
