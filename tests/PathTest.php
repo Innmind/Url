@@ -7,8 +7,9 @@ use Innmind\Url\{
     Path,
     PathInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class PathTest extends \PHPUnit_Framework_TestCase
+class PathTest extends TestCase
 {
     public function testInterface()
     {

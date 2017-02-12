@@ -7,8 +7,9 @@ use Innmind\Url\{
     NullPath,
     PathInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullPathInterface extends \PHPUnit_Framework_TestCase
+class NullPathInterface extends TestCase
 {
     public function testInterface()
     {

@@ -11,6 +11,8 @@ use Innmind\Url\Authority\UserInformation\{
 interface UserInformationInterface
 {
     public function user(): UserInterface;
+    public function withUser(UserInterface $user): self;
     public function password(): PasswordInterface;
+    public function withPassword(PasswordInterface $password): self;
     public function __toString(): string;
 }

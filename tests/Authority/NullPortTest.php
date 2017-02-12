@@ -7,8 +7,9 @@ use Innmind\Url\Authority\{
     NullPort,
     PortInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class NullPortTest extends \PHPUnit_Framework_TestCase
+class NullPortTest extends TestCase
 {
     public function testInterface()
     {

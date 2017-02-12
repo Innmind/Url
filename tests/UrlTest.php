@@ -23,10 +23,12 @@ use Innmind\Url\{
     Query,
     NullQuery,
     Fragment,
-    NullFragment
+    NullFragment,
+    NullAuthority
 };
+use PHPUnit\Framework\TestCase;
 
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends TestCase
 {
     public function testInterface()
     {
@@ -119,6 +121,71 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             UrlInterface::class,
             Url::fromString($url)
         );
+    }
+
+    public function testWithScheme()
+    {
+        $url = Url::fromString('http://example.com');
+        $url2 = $url->withScheme($scheme = new Scheme('https'));
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($scheme, $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithAuthority()
+    {
+        $url = Url::fromString('http://example.com');
+        $url2 = $url->withAuthority($authority = new NullAuthority);
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($authority, $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithPath()
+    {
+        $url = Url::fromString('http://example.com');
+        $url2 = $url->withPath($path = new NullPath);
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($path, $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithQuery()
+    {
+        $url = Url::fromString('http://example.com');
+        $url2 = $url->withQuery($query = new NullQuery);
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($query, $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithFragment()
+    {
+        $url = Url::fromString('http://example.com');
+        $url2 = $url->withFragment($fragment = new NullFragment);
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($fragment, $url2->fragment());
     }
 
     public function cases(): array

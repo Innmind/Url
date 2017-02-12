@@ -7,8 +7,9 @@ use Innmind\Url\{
     Query,
     QueryInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class QueryTest extends \PHPUnit_Framework_TestCase
+class QueryTest extends TestCase
 {
     public function testInterface()
     {

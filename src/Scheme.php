@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url;
 
 use Innmind\Url\Exception\InvalidArgumentException;
-use Innmind\Immutable\StringPrimitive as Str;
+use Innmind\Immutable\Str;
 
 final class Scheme implements SchemeInterface
 {
@@ -13,7 +13,7 @@ final class Scheme implements SchemeInterface
 
     public function __construct(string $value)
     {
-        if (!(new Str($value))->match(self::PATTERN)) {
+        if (!(new Str($value))->matches(self::PATTERN)) {
             throw new InvalidArgumentException;
         }
 

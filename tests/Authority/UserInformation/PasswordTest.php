@@ -7,8 +7,9 @@ use Innmind\Url\Authority\UserInformation\{
     Password,
     PasswordInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class PasswordTest extends \PHPUnit_Framework_TestCase
+class PasswordTest extends TestCase
 {
     public function testInterface()
     {
