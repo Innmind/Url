@@ -45,9 +45,25 @@ final class Url implements UrlInterface
         return $this->scheme;
     }
 
+    public function withScheme(SchemeInterface $scheme): UrlInterface
+    {
+        $self = clone $this;
+        $self->scheme = $scheme;
+
+        return $self;
+    }
+
     public function authority(): AuthorityInterface
     {
         return $this->authority;
+    }
+
+    public function withAuthority(AuthorityInterface $authority): UrlInterface
+    {
+        $self = clone $this;
+        $self->authority = $authority;
+
+        return $self;
     }
 
     public function path(): PathInterface
@@ -55,14 +71,38 @@ final class Url implements UrlInterface
         return $this->path;
     }
 
+    public function withPath(PathInterface $path): UrlInterface
+    {
+        $self = clone $this;
+        $self->path = $path;
+
+        return $self;
+    }
+
     public function query(): QueryInterface
     {
         return $this->query;
     }
 
+    public function withQuery(QueryInterface $query): UrlInterface
+    {
+        $self = clone $this;
+        $self->query = $query;
+
+        return $self;
+    }
+
     public function fragment(): FragmentInterface
     {
         return $this->fragment;
+    }
+
+    public function withFragment(FragmentInterface $fragment): UrlInterface
+    {
+        $self = clone $this;
+        $self->fragment = $fragment;
+
+        return $self;
     }
 
     public function __toString(): string

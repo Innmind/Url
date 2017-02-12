@@ -30,14 +30,29 @@ final class NullAuthority implements AuthorityInterface
         return $this->info;
     }
 
+    public function withUserInformation(UserInformationInterface $info): AuthorityInterface
+    {
+        return new Authority($info, $this->host, $this->port);
+    }
+
     public function host(): HostInterface
     {
         return $this->host;
     }
 
+    public function withHost(HostInterface $host): AuthorityInterface
+    {
+        return new Authority($this->info, $host, $this->port);
+    }
+
     public function port(): PortInterface
     {
         return $this->port;
+    }
+
+    public function withPort(PortInterface $port): AuthorityInterface
+    {
+        return new Authority($this->info, $this->host, $port);
     }
 
     public function __toString(): string

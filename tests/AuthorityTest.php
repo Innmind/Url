@@ -14,7 +14,8 @@ use Innmind\Url\{
     Authority\NullHost,
     Authority\NullPort,
     Authority\Host,
-    Authority\Port
+    Authority\Port,
+    Authority\NullUserInformation
 };
 use PHPUnit\Framework\TestCase;
 
@@ -58,5 +59,52 @@ class AuthorityTest extends TestCase
         );
 
         $this->assertSame('localhost', (string) $a);
+    }
+
+    public function testWithUserInformation()
+    {
+        $authority = new Authority(
+            new NullUserInformation,
+            new NullHost,
+            new NullPort
+        );
+        $authority2 = $authority->withUserInformation(
+            $info = new NullUserInformation
+        );
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertSame($info, $authority2->userInformation());
+        $this->assertSame($authority->host(), $authority2->host());
+        $this->assertSame($authority->port(), $authority2->port());
+    }
+
+    public function testWithHost()
+    {
+        $authority = new Authority(
+            new NullUserInformation,
+            new NullHost,
+            new NullPort
+        );
+        $authority2 = $authority->withHost($host = new NullHost);
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertSame($authority->userInformation(), $authority2->userInformation());
+        $this->assertSame($host, $authority2->host());
+        $this->assertSame($authority->port(), $authority2->port());
+    }
+
+    public function testWithPort()
+    {
+        $authority = new Authority(
+            new NullUserInformation,
+            new NullHost,
+            new NullPort
+        );
+        $authority2 = $authority->withPort($port = new NullPort);
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertSame($authority->userInformation(), $authority2->userInformation());
+        $this->assertSame($authority->host(), $authority2->host());
+        $this->assertSame($port, $authority2->port());
     }
 }

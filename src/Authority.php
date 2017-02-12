@@ -32,14 +32,29 @@ final class Authority implements AuthorityInterface
         return $this->userInformation;
     }
 
+    public function withUserInformation(UserInformationInterface $info): AuthorityInterface
+    {
+        return new self($info, $this->host, $this->port);
+    }
+
     public function host(): HostInterface
     {
         return $this->host;
     }
 
+    public function withHost(HostInterface $host): AuthorityInterface
+    {
+        return new self($this->userInformation, $host, $this->port);
+    }
+
     public function port(): PortInterface
     {
         return $this->port;
+    }
+
+    public function withPort(PortInterface $port): AuthorityInterface
+    {
+        return new self($this->userInformation, $this->host, $port);
     }
 
     public function __toString(): string

@@ -37,9 +37,19 @@ final class UserInformation implements UserInformationInterface
         return $this->user;
     }
 
+    public function withUser(UserInterface $user): UserInformationInterface
+    {
+        return new self($user, $this->password);
+    }
+
     public function password(): PasswordInterface
     {
         return $this->password;
+    }
+
+    public function withPassword(PasswordInterface $password): UserInformationInterface
+    {
+        return new self($this->user, $password);
     }
 
     public function __toString(): string

@@ -47,4 +47,24 @@ class UserInformationTest extends TestCase
             (string) new UserInformation(new NullUser, new NullPassword)
         );
     }
+
+    public function testWithUser()
+    {
+        $info = new UserInformation(new User('foo'), new Password('bar'));
+        $info2 = $info->withUser($user = new User('baz'));
+
+        $this->assertNotSame($info, $info2);
+        $this->assertSame($user, $info2->user());
+        $this->assertSame($info->password(), $info2->password());
+    }
+
+    public function testWithPassword()
+    {
+        $info = new UserInformation(new User('foo'), new Password('bar'));
+        $info2 = $info->withPassword($password = new Password('baz'));
+
+        $this->assertNotSame($info, $info2);
+        $this->assertSame($info->user(), $info2->user());
+        $this->assertSame($password, $info2->password());
+    }
 }
