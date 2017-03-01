@@ -188,6 +188,13 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url2->fragment());
     }
 
+    public function testCastWithNullScheme()
+    {
+        $url = Url::fromString('//example.com');
+
+        $this->assertSame('example.com/', (string) $url);
+    }
+
     public function cases(): array
     {
         return [
