@@ -263,6 +263,8 @@ class UrlTest extends TestCase
             ['http://symfony.com#'],
             ['http://symfony.com#fragment'],
             ['http://symfony.com/#fragment'],
+            [' http://www.independent.co.uk/service/privacy-policy-a6184181.html'],
+            ['http://www.independent.co.uk/service/privacy-policy-a6184181.html '],
         ];
     }
 
