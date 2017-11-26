@@ -139,7 +139,7 @@ final class Url implements UrlInterface
     public static function fromString(string $string): self
     {
         try {
-            $data = self::parser()($string);
+            $data = self::parser()(trim($string));
         } catch (\Exception $e) {
             throw new InvalidArgumentException;
         }
