@@ -15,11 +15,10 @@ use Innmind\Url\{
     Authority\NullPort,
     Exception\InvalidArgumentException
 };
-use League\Uri\Parser;
+use League\Uri;
 
 final class Url implements UrlInterface
 {
-    private static $parser;
     private $scheme;
     private $authority;
     private $path;
@@ -139,7 +138,7 @@ final class Url implements UrlInterface
     public static function fromString(string $string): self
     {
         try {
-            $data = self::parser()(trim($string));
+            $data = Uri\parse(trim($string));
         } catch (\Exception $e) {
             throw new InvalidArgumentException;
         }
@@ -155,17 +154,8 @@ final class Url implements UrlInterface
                 $data['port'] ? new Port((int) $data['port']) : new NullPort
             ),
             $data['path'] && !empty($data['path']) ? new Path($data['path']) : new NullPath,
-            $data['query'] ? new Query($data['query']) : new NullQuery,
+            $data['query'] ? Query::fromString($data['query']) : new NullQuery,
             $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
         );
-    }
-
-    private static function parser(): Parser
-    {
-        if (self::$parser === null) {
-            self::$parser = new Parser;
-        }
-
-        return self::$parser;
     }
 }

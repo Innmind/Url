@@ -5,6 +5,7 @@ namespace Innmind\Url;
 
 use Innmind\Url\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
+use League\Uri;
 
 final class Query implements QueryInterface
 {
@@ -18,6 +19,19 @@ final class Query implements QueryInterface
         }
 
         $this->value = $value;
+    }
+
+    public static function fromString(string $value): self
+    {
+        try {
+            return new self($value);
+        } catch (InvalidArgumentException $e) {
+            return new self(
+                Uri\build_query(
+                    Uri\parse_query($value)
+                )
+            );
+        }
     }
 
     public function __toString(): string
