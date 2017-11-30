@@ -265,6 +265,7 @@ class UrlTest extends TestCase
             ['http://symfony.com/#fragment'],
             [' http://www.independent.co.uk/service/privacy-policy-a6184181.html'],
             ['http://www.independent.co.uk/service/privacy-policy-a6184181.html '],
+            ["http://del.icio.us/post?url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New Hitchhiker's author announced"],
         ];
     }
 
@@ -314,6 +315,17 @@ class UrlTest extends TestCase
             ['http://☎.com/', 'http', '', '', '☎.com', '', '/', '', ''],
             ['http://username:password@symfony.com', 'http', 'username', 'password', 'symfony.com', '', '/', '', ''],
             ['http://user-name@symfony.com', 'http', 'user-name', '', 'symfony.com', '', '/', '', ''],
+            [
+                "http://del.icio.us/post?url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New Hitchhiker's author announced",
+                'http',
+                '',
+                '',
+                'del.icio.us',
+                '',
+                '/post',
+                'url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New%20Hitchhiker\'s%20author%20announced',
+                '',
+            ],
         ];
     }
 }
