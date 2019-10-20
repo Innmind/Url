@@ -21,7 +21,7 @@ final class Query implements QueryInterface
         $this->value = $value;
     }
 
-    public static function fromString(string $value): self
+    public static function of(string $value): self
     {
         try {
             return new self($value);
@@ -32,6 +32,15 @@ final class Query implements QueryInterface
                 )
             );
         }
+    }
+
+    /**
+     * @deprecated
+     * @see self::of()
+     */
+    public static function fromString(string $value): self
+    {
+        return self::of($value);
     }
 
     public function __toString(): string
