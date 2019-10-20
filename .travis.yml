@@ -3,12 +3,14 @@ php:
     - 7.0
     - 7.1
     - 7.2
+    - 7.3
+    - '7.4snapshot'
     - nightly
-before_script:
-    - composer install --prefer-source
+matrix:
+    allow_failures:
+        - php: nightly
+before_script: composer install
 script: vendor/bin/phpunit --coverage-clover=coverage.clover
 after_script:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-notifications:
-    slack: innmind:nAiLaAi6RU4wGEAdL6FuKdyF
+    - if [ -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+    - if [ -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

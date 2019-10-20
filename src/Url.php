@@ -106,7 +106,7 @@ final class Url implements UrlInterface
 
     public function __toString(): string
     {
-        $path = $path = (string) $this->path;
+        $path = (string) $this->path;
 
         if (
             $this->path instanceof NullPath &&
@@ -135,7 +135,7 @@ final class Url implements UrlInterface
      *
      * @return self
      */
-    public static function fromString(string $string): self
+    public static function of(string $string): self
     {
         try {
             $data = Uri\parse(trim($string));
@@ -154,8 +154,17 @@ final class Url implements UrlInterface
                 $data['port'] ? new Port((int) $data['port']) : new NullPort
             ),
             $data['path'] && !empty($data['path']) ? new Path($data['path']) : new NullPath,
-            $data['query'] ? Query::fromString($data['query']) : new NullQuery,
+            $data['query'] ? Query::of($data['query']) : new NullQuery,
             $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
         );
+    }
+
+    /**
+     * @deprecated
+     * @see self::of()
+     */
+    public static function fromString(string $string): self
+    {
+        return self::of($string);
     }
 }
