@@ -106,7 +106,7 @@ final class Url implements UrlInterface
 
     public function __toString(): string
     {
-        $path = $path = (string) $this->path;
+        $path = (string) $this->path;
 
         if (
             $this->path instanceof NullPath &&
