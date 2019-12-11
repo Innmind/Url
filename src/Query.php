@@ -34,15 +34,6 @@ final class Query implements QueryInterface
         }
     }
 
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $value): self
-    {
-        return self::of($value);
-    }
-
     public function __toString(): string
     {
         return $this->value;
