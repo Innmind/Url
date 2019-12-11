@@ -3,12 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
+use Innmind\Url\Exception\DomainException;
+
 final class Port
 {
     private $value;
 
     private function __construct(?int $value)
     {
+        if (\is_int($value) && $value < 0) {
+            throw new DomainException((string) $value);
+        }
+
         $this->value = $value;
     }
 
