@@ -5,7 +5,7 @@ namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\Exception\{
     DomainException,
-    InvalidUserInformationException,
+    PasswordCannotBeSpecifiedWithoutAUser,
 };
 use Innmind\Immutable\Str;
 
@@ -40,7 +40,7 @@ final class Password
         }
 
         if ($user->toString() === '') {
-            throw new InvalidUserInformationException;
+            throw new PasswordCannotBeSpecifiedWithoutAUser;
         }
 
         return $user->toString().':'.$this->value;
