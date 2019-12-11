@@ -6,32 +6,36 @@ namespace Innmind\Url;
 use Innmind\Url\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
 
-final class Scheme implements SchemeInterface
+final class Scheme
 {
     private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
     private $value;
 
     private function __construct(string $value)
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
-        }
-
         $this->value = $value;
     }
 
     public static function of(string $value): self
     {
+        if (!Str::of($value)->matches(self::PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
         return new self($value);
     }
 
-    public static function null(): SchemeInterface
+    public static function null(): self
     {
-        return new NullScheme;
+        return new self('');
     }
 
     public function format(AuthorityInterface $authority): string
     {
+        if ($this->value === '') {
+            return (string) $authority;
+        }
+
         return $this->value.'://'.$authority;
     }
 

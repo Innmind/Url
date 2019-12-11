@@ -26,7 +26,7 @@ final class Url implements UrlInterface
     private $fragment;
 
     public function __construct(
-        SchemeInterface $scheme,
+        Scheme $scheme,
         AuthorityInterface $authority,
         PathInterface $path,
         QueryInterface $query,
@@ -39,12 +39,12 @@ final class Url implements UrlInterface
         $this->fragment = $fragment;
     }
 
-    public function scheme(): SchemeInterface
+    public function scheme(): Scheme
     {
         return $this->scheme;
     }
 
-    public function withScheme(SchemeInterface $scheme): UrlInterface
+    public function withScheme(Scheme $scheme): UrlInterface
     {
         $self = clone $this;
         $self->scheme = $scheme;

@@ -5,8 +5,8 @@ namespace Innmind\Url;
 
 interface UrlInterface
 {
-    public function scheme(): SchemeInterface;
-    public function withScheme(SchemeInterface $scheme): self;
+    public function scheme(): Scheme;
+    public function withScheme(Scheme $scheme): self;
     public function authority(): AuthorityInterface;
     public function withAuthority(AuthorityInterface $authority): self;
     public function path(): PathInterface;

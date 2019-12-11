@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Scheme,
-    SchemeInterface
-};
+use Innmind\Url\Scheme;
 use PHPUnit\Framework\TestCase;
 
 class SchemeTest extends TestCase
@@ -15,7 +12,7 @@ class SchemeTest extends TestCase
     {
         $s = Scheme::of('http-2.0');
 
-        $this->assertInstanceOf(SchemeInterface::class, $s);
+        $this->assertInstanceOf(Scheme::class, $s);
         $this->assertSame('http-2.0', (string) $s);
     }
 
@@ -31,7 +28,7 @@ class SchemeTest extends TestCase
     {
         $scheme = Scheme::null();
 
-        $this->assertInstanceOf(SchemeInterface::class, $scheme);
+        $this->assertInstanceOf(Scheme::class, $scheme);
         $this->assertSame('', (string) $scheme);
     }
 }
