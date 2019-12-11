@@ -27,7 +27,7 @@ final class Url implements UrlInterface
 
     public function __construct(
         Scheme $scheme,
-        AuthorityInterface $authority,
+        Authority $authority,
         Path $path,
         Query $query,
         Fragment $fragment
@@ -52,12 +52,12 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function authority(): AuthorityInterface
+    public function authority(): Authority
     {
         return $this->authority;
     }
 
-    public function withAuthority(AuthorityInterface $authority): UrlInterface
+    public function withAuthority(Authority $authority): UrlInterface
     {
         $self = clone $this;
         $self->authority = $authority;

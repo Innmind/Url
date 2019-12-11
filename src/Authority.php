@@ -11,7 +11,7 @@ use Innmind\Url\Authority\{
     UserInformation\NullUser
 };
 
-final class Authority implements AuthorityInterface
+final class Authority
 {
     private $userInformation;
     private $host;
@@ -35,9 +35,13 @@ final class Authority implements AuthorityInterface
         return new self($userInformation, $host, $port);
     }
 
-    public static function null(): AuthorityInterface
+    public static function null(): self
     {
-        return new NullAuthority;
+        return new self(
+            Authority\UserInformation::null(),
+            Authority\Host::null(),
+            Authority\Port::null(),
+        );
     }
 
     public function userInformation(): UserInformationInterface
@@ -45,7 +49,7 @@ final class Authority implements AuthorityInterface
         return $this->userInformation;
     }
 
-    public function withUserInformation(UserInformationInterface $info): AuthorityInterface
+    public function withUserInformation(UserInformationInterface $info): self
     {
         return new self($info, $this->host, $this->port);
     }
@@ -55,7 +59,7 @@ final class Authority implements AuthorityInterface
         return $this->host;
     }
 
-    public function withHost(HostInterface $host): AuthorityInterface
+    public function withHost(HostInterface $host): self
     {
         return new self($this->userInformation, $host, $this->port);
     }
@@ -65,7 +69,7 @@ final class Authority implements AuthorityInterface
         return $this->port;
     }
 
-    public function withPort(PortInterface $port): AuthorityInterface
+    public function withPort(PortInterface $port): self
     {
         return new self($this->userInformation, $this->host, $port);
     }

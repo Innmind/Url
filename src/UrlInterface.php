@@ -7,8 +7,8 @@ interface UrlInterface
 {
     public function scheme(): Scheme;
     public function withScheme(Scheme $scheme): self;
-    public function authority(): AuthorityInterface;
-    public function withAuthority(AuthorityInterface $authority): self;
+    public function authority(): Authority;
+    public function withAuthority(Authority $authority): self;
     public function path(): Path;
     public function withPath(Path $path): self;
     public function query(): Query;

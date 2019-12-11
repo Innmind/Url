@@ -30,7 +30,7 @@ final class Scheme
         return new self('');
     }
 
-    public function format(AuthorityInterface $authority): string
+    public function format(Authority $authority): string
     {
         if ($this->value === '') {
             return (string) $authority;

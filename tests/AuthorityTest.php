@@ -5,7 +5,6 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Authority,
-    AuthorityInterface,
     Authority\UserInformation,
     Authority\UserInformation\User,
     Authority\UserInformation\Password,
@@ -27,7 +26,7 @@ class AuthorityTest extends TestCase
             $p = Port::null()
         );
 
-        $this->assertInstanceOf(AuthorityInterface::class, $a);
+        $this->assertInstanceOf(Authority::class, $a);
         $this->assertSame($u, $a->userInformation());
         $this->assertSame($h, $a->host());
         $this->assertSame($p, $a->port());
@@ -109,7 +108,7 @@ class AuthorityTest extends TestCase
         $authority = Authority::null();
 
         $this->assertInstanceOf(
-            AuthorityInterface::class,
+            Authority::class,
             $authority
         );
         $this->assertEquals(
