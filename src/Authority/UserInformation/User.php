@@ -13,7 +13,7 @@ final class User implements UserInterface
 
     public function __construct(string $value)
     {
-        if (!(new Str($value))->matches(self::PATTERN)) {
+        if (!Str::of($value)->matches(self::PATTERN)) {
             throw new InvalidArgumentException;
         }
 

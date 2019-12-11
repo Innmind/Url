@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "~7.0",
-        "innmind/immutable": "~2.0",
+        "innmind/immutable": "~3.0",
         "league/uri": "~5.0"
     },
     "autoload": {
