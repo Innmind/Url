@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
-final class Port implements PortInterface
+final class Port
 {
     private $value;
 
-    private function __construct(int $value)
+    private function __construct(?int $value)
     {
         $this->value = $value;
     }
@@ -17,23 +17,31 @@ final class Port implements PortInterface
         return new self($value);
     }
 
-    public static function null(): PortInterface
+    public static function null(): self
     {
-        return new NullPort;
+        return new self(null);
     }
 
     public function format(): string
     {
+        if ($this->value === null) {
+            return '';
+        }
+
         return ':'.$this->value;
     }
 
     public function value(): int
     {
-        return $this->value;
+        return $this->value ?: 0;
     }
 
     public function __toString(): string
     {
+        if ($this->value === null) {
+            return '';
+        }
+
         return (string) $this->value;
     }
 }
