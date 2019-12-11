@@ -35,6 +35,30 @@ final class Url
         $this->fragment = $fragment;
     }
 
+    public static function of(string $string): self
+    {
+        try {
+            $data = Uri\parse(trim($string));
+        } catch (\Exception $e) {
+            throw new DomainException($string);
+        }
+
+        return new self(
+            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::none(),
+            Authority::of(
+                UserInformation::of(
+                    $data['user'] ? User::of($data['user']) : User::none(),
+                    $data['pass'] ? Password::of($data['pass']) : Password::none(),
+                ),
+                $data['host'] ? Host::of($data['host']) : Host::none(),
+                $data['port'] ? Port::of((int) $data['port']) : Port::none(),
+            ),
+            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
+            $data['query'] ? Query::of($data['query']) : Query::none(),
+            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
+        );
+    }
+
     public function scheme(): Scheme
     {
         return $this->scheme;
@@ -143,32 +167,5 @@ final class Url
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
-    }
-
-    /**
-     * Build a url out of the given string
-     */
-    public static function of(string $string): self
-    {
-        try {
-            $data = Uri\parse(trim($string));
-        } catch (\Exception $e) {
-            throw new DomainException($string);
-        }
-
-        return new self(
-            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::none(),
-            Authority::of(
-                UserInformation::of(
-                    $data['user'] ? User::of($data['user']) : User::none(),
-                    $data['pass'] ? Password::of($data['pass']) : Password::none(),
-                ),
-                $data['host'] ? Host::of($data['host']) : Host::none(),
-                $data['port'] ? Port::of((int) $data['port']) : Port::none(),
-            ),
-            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
-            $data['query'] ? Query::of($data['query']) : Query::none(),
-            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
-        );
     }
 }
