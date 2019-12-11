@@ -30,6 +30,11 @@ final class Path implements PathInterface
         return new NullPath;
     }
 
+    public function format(Query $query, Fragment $fragment): string
+    {
+        return $this->value.$query->format().$fragment->format();
+    }
+
     public function __toString(): string
     {
         return $this->value;
