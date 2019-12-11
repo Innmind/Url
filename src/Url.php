@@ -28,7 +28,7 @@ final class Url implements UrlInterface
     public function __construct(
         Scheme $scheme,
         AuthorityInterface $authority,
-        PathInterface $path,
+        Path $path,
         Query $query,
         Fragment $fragment
     ) {
@@ -65,12 +65,12 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function path(): PathInterface
+    public function path(): Path
     {
         return $this->path;
     }
 
-    public function withPath(PathInterface $path): UrlInterface
+    public function withPath(Path $path): UrlInterface
     {
         $self = clone $this;
         $self->path = $path;
@@ -106,11 +106,7 @@ final class Url implements UrlInterface
 
     public function __toString(): string
     {
-        return sprintf(
-            '%s%s',
-            $this->scheme->format($this->authority),
-            $this->path->format($this->query, $this->fragment),
-        );
+        return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
     }
 
     /**

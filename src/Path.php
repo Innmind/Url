@@ -6,37 +6,43 @@ namespace Innmind\Url;
 use Innmind\Url\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
 
-final class Path implements PathInterface
+final class Path
 {
     private const PATTERN = '~\S+~';
     private $value;
 
     private function __construct(string $value)
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
-        }
-
         $this->value = $value;
     }
 
     public static function of(string $value): self
     {
+        if (!Str::of($value)->matches(self::PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
         return new self($value);
     }
 
-    public static function null(): PathInterface
+    public static function null(): self
     {
-        return new NullPath;
+        return new self('');
     }
 
     public function format(Query $query, Fragment $fragment): string
     {
-        return $this->value.$query->format().$fragment->format();
+        $end = $query->format().$fragment->format();
+
+        if ($end === '' && $this->value === '') {
+            return '/';
+        }
+
+        return $this->value.$end;
     }
 
     public function __toString(): string
     {
-        return $this->value;
+        return $this->value === '' ? '/' : $this->value;
     }
 }

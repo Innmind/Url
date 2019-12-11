@@ -9,8 +9,8 @@ interface UrlInterface
     public function withScheme(Scheme $scheme): self;
     public function authority(): AuthorityInterface;
     public function withAuthority(AuthorityInterface $authority): self;
-    public function path(): PathInterface;
-    public function withPath(PathInterface $path): self;
+    public function path(): Path;
+    public function withPath(Path $path): self;
     public function query(): Query;
     public function withQuery(Query $query): self;
     public function fragment(): Fragment;

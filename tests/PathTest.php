@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Path,
-    PathInterface
-};
+use Innmind\Url\Path;
 use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
@@ -15,7 +12,7 @@ class PathTest extends TestCase
     {
         $p = Path::of('/foo/bar/');
 
-        $this->assertInstanceOf(PathInterface::class, $p);
+        $this->assertInstanceOf(Path::class, $p);
         $this->assertSame('/foo/bar/', (string) $p);
 
         Path::of('/'); //check it doesn't throw
@@ -34,7 +31,7 @@ class PathTest extends TestCase
     {
         $path = Path::null();
 
-        $this->assertInstanceOf(PathInterface::class, $path);
+        $this->assertInstanceOf(Path::class, $path);
         $this->assertSame('/', (string) $path);
     }
 }
