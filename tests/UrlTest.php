@@ -5,7 +5,6 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Url,
-    UrlInterface,
     Scheme,
     Authority,
     Authority\UserInformation,
@@ -38,7 +37,7 @@ class UrlTest extends TestCase
             Fragment::of('baz')
         );
 
-        $this->assertInstanceOf(UrlInterface::class, $u);
+        $this->assertInstanceOf(Url::class, $u);
         $this->assertSame('http://foo:bar@localhost:8080/foo?foo=bar#baz', (string) $u);
 
         $this->assertSame(
@@ -109,7 +108,7 @@ class UrlTest extends TestCase
     public function testParse(string $url)
     {
         $this->assertInstanceOf(
-            UrlInterface::class,
+            Url::class,
             Url::of($url)
         );
     }

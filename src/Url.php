@@ -13,7 +13,7 @@ use Innmind\Url\{
 };
 use League\Uri;
 
-final class Url implements UrlInterface
+final class Url
 {
     private $scheme;
     private $authority;
@@ -40,7 +40,7 @@ final class Url implements UrlInterface
         return $this->scheme;
     }
 
-    public function withScheme(Scheme $scheme): UrlInterface
+    public function withScheme(Scheme $scheme): self
     {
         $self = clone $this;
         $self->scheme = $scheme;
@@ -53,7 +53,7 @@ final class Url implements UrlInterface
         return $this->authority;
     }
 
-    public function withAuthority(Authority $authority): UrlInterface
+    public function withAuthority(Authority $authority): self
     {
         $self = clone $this;
         $self->authority = $authority;
@@ -66,7 +66,7 @@ final class Url implements UrlInterface
         return $this->path;
     }
 
-    public function withPath(Path $path): UrlInterface
+    public function withPath(Path $path): self
     {
         $self = clone $this;
         $self->path = $path;
@@ -79,7 +79,7 @@ final class Url implements UrlInterface
         return $this->query;
     }
 
-    public function withQuery(Query $query): UrlInterface
+    public function withQuery(Query $query): self
     {
         $self = clone $this;
         $self->query = $query;
@@ -92,7 +92,7 @@ final class Url implements UrlInterface
         return $this->fragment;
     }
 
-    public function withFragment(Fragment $fragment): UrlInterface
+    public function withFragment(Fragment $fragment): self
     {
         $self = clone $this;
         $self->fragment = $fragment;
