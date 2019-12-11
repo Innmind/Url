@@ -30,6 +30,11 @@ final class Scheme implements SchemeInterface
         return new NullScheme;
     }
 
+    public function format(AuthorityInterface $authority): string
+    {
+        return $this->value.'://'.$authority;
+    }
+
     public function __toString(): string
     {
         return $this->value;
