@@ -5,7 +5,7 @@ namespace Innmind\Url;
 
 use Innmind\Url\Authority\{
     UserInformationInterface,
-    HostInterface,
+    Host,
     Port,
     NullPort,
     UserInformation\NullUser
@@ -19,7 +19,7 @@ final class Authority
 
     private function __construct(
         UserInformationInterface $userInformation,
-        HostInterface $host,
+        Host $host,
         Port $port
     ) {
         $this->userInformation = $userInformation;
@@ -29,7 +29,7 @@ final class Authority
 
     public static function of(
         UserInformationInterface $userInformation,
-        HostInterface $host,
+        Host $host,
         Port $port
     ): self {
         return new self($userInformation, $host, $port);
@@ -54,12 +54,12 @@ final class Authority
         return new self($info, $this->host, $this->port);
     }
 
-    public function host(): HostInterface
+    public function host(): Host
     {
         return $this->host;
     }
 
-    public function withHost(HostInterface $host): self
+    public function withHost(Host $host): self
     {
         return new self($this->userInformation, $host, $this->port);
     }

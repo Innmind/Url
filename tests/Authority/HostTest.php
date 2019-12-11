@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\Authority\{
-    Host,
-    HostInterface
-};
+use Innmind\Url\Authority\Host;
 use PHPUnit\Framework\TestCase;
 
 class HostTest extends TestCase
@@ -15,7 +12,7 @@ class HostTest extends TestCase
     {
         $h = Host::of($s = '[1:2:3::4:5:6:7]');
 
-        $this->assertInstanceOf(HostInterface::class, $h);
+        $this->assertInstanceOf(Host::class, $h);
         $this->assertSame($s, (string) $h);
     }
 
@@ -29,7 +26,7 @@ class HostTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(HostInterface::class, Host::null());
+        $this->assertInstanceOf(Host::class, Host::null());
         $this->assertSame('', (string) Host::null());
     }
 }
