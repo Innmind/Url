@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\Exception\{
+    InvalidArgumentException,
+    InvalidUserInformationException,
+};
 use Innmind\Immutable\Str;
 
 final class Password implements PasswordInterface
@@ -28,6 +31,15 @@ final class Password implements PasswordInterface
     public static function null(): PasswordInterface
     {
         return new NullPassword;
+    }
+
+    public function format(UserInterface $user): string
+    {
+        if ((string) $user === '') {
+            throw new InvalidUserInformationException;
+        }
+
+        return "$user:{$this->value}";
     }
 
     public function __toString(): string

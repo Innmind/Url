@@ -10,7 +10,6 @@ use Innmind\Url\{
     Authority\UserInformation\PasswordInterface,
     Authority\UserInformation\Password,
     Authority\UserInformation\NullPassword,
-    Exception\InvalidUserInformationException
 };
 
 final class UserInformation
@@ -21,17 +20,9 @@ final class UserInformation
 
     private function __construct(UserInterface $user, PasswordInterface $password)
     {
-        if ($user instanceof NullUser && !$password instanceof NullPassword) {
-            throw new InvalidUserInformationException;
-        }
-
         $this->user = $user;
         $this->password = $password;
-        $this->string = (string) $user;
-
-        if (!$password instanceof NullPassword) {
-            $this->string .= ':'.(string) $password;
-        }
+        $this->string = $password->format($user);
     }
 
     public static function of(UserInterface $user, PasswordInterface $password): self
@@ -69,7 +60,7 @@ final class UserInformation
 
     public function format(Host $host): string
     {
-        if ($this->user instanceof NullUser) {
+        if ((string) $this->user === '') {
             return (string) $host;
         }
 
