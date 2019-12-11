@@ -161,14 +161,14 @@ final class Url
             Authority::of(
                 UserInformation::of(
                     $data['user'] ? User::of($data['user']) : User::none(),
-                    $data['pass'] ? Password::of($data['pass']) : Password::none()
+                    $data['pass'] ? Password::of($data['pass']) : Password::none(),
                 ),
                 $data['host'] ? Host::of($data['host']) : Host::none(),
-                $data['port'] ? Port::of((int) $data['port']) : Port::none()
+                $data['port'] ? Port::of((int) $data['port']) : Port::none(),
             ),
             $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
             $data['query'] ? Query::of($data['query']) : Query::none(),
-            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none()
+            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
         );
     }
 }

@@ -28,8 +28,8 @@ final class Query
         } catch (DomainException $e) {
             return new self(
                 Uri\build_query(
-                    Uri\parse_query($value)
-                )
+                    Uri\parse_query($value),
+                ),
             );
         }
     }
