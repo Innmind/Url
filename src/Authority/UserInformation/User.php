@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class User implements UserInterface
 {
-    const PATTERN = '/^[\pL\pN-]+$/';
+    private const PATTERN = '/^[\pL\pN-]+$/';
     private $value;
 
     public function __construct(string $value)

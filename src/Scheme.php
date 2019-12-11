@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class Scheme implements SchemeInterface
 {
-    const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
+    private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
     private $value;
 
     public function __construct(string $value)

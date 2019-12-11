@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class Fragment implements FragmentInterface
 {
-    const PATTERN = '/^\S+$/';
+    private const PATTERN = '/^\S+$/';
     private $value;
 
     public function __construct(string $value)

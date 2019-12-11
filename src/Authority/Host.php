@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class Host implements HostInterface
 {
-    const PATTERN = '~^\S+$~ix';
+    private const PATTERN = '~^\S+$~ix';
     private $value;
 
     public function __construct(string $value)
