@@ -9,7 +9,7 @@ use Innmind\Immutable\Str;
 final class Path
 {
     private const PATTERN = '~\S+~';
-    private $value;
+    private string $value;
 
     private function __construct(string $value)
     {

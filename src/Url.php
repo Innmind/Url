@@ -15,11 +15,11 @@ use League\Uri;
 
 final class Url
 {
-    private $scheme;
-    private $authority;
-    private $path;
-    private $query;
-    private $fragment;
+    private Scheme $scheme;
+    private Authority $authority;
+    private Path $path;
+    private Query $query;
+    private Fragment $fragment;
 
     public function __construct(
         Scheme $scheme,

@@ -9,7 +9,7 @@ use Innmind\Immutable\Str;
 final class Host
 {
     private const PATTERN = '~^\S+$~ix';
-    private $value;
+    private string $value;
 
     private function __construct(string $value)
     {

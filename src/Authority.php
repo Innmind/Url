@@ -11,9 +11,9 @@ use Innmind\Url\Authority\{
 
 final class Authority
 {
-    private $userInformation;
-    private $host;
-    private $port;
+    private UserInformation $userInformation;
+    private Host $host;
+    private Port $port;
 
     private function __construct(
         UserInformation $userInformation,

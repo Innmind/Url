@@ -10,7 +10,7 @@ use League\Uri;
 final class Query
 {
     private const PATTERN = '/^\S+$/';
-    private $value;
+    private string $value;
 
     private function __construct(string $value)
     {

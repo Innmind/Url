@@ -10,9 +10,9 @@ use Innmind\Url\{
 
 final class UserInformation
 {
-    private $user;
-    private $password;
-    private $string;
+    private User $user;
+    private Password $password;
+    private string $string;
 
     private function __construct(User $user, Password $password)
     {

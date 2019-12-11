@@ -9,7 +9,7 @@ use Innmind\Immutable\Str;
 final class Scheme
 {
     private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
-    private $value;
+    private string $value;
 
     private function __construct(string $value)
     {

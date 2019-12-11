@@ -7,7 +7,7 @@ use Innmind\Url\Exception\DomainException;
 
 final class Port
 {
-    private $value;
+    private ?int $value;
 
     private function __construct(?int $value)
     {

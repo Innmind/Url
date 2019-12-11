@@ -12,7 +12,7 @@ use Innmind\Immutable\Str;
 final class User
 {
     private const PATTERN = '/^[\pL\pN-]+$/';
-    private $value;
+    private string $value;
 
     private function __construct(string $value)
     {
