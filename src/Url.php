@@ -9,7 +9,7 @@ use Innmind\Url\{
     Authority\UserInformation\Password,
     Authority\Host,
     Authority\Port,
-    Exception\InvalidArgumentException
+    Exception\DomainException,
 };
 use League\Uri;
 
@@ -153,7 +153,7 @@ final class Url
         try {
             $data = Uri\parse(trim($string));
         } catch (\Exception $e) {
-            throw new InvalidArgumentException;
+            throw new DomainException($string);
         }
 
         return new self(

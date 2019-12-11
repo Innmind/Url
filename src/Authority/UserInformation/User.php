@@ -5,7 +5,7 @@ namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\{
     Authority\Host,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
 };
 use Innmind\Immutable\Str;
 
@@ -22,7 +22,7 @@ final class User
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($value);
         }
 
         return new self($value);

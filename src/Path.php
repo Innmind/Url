@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 final class Path
@@ -19,7 +19,7 @@ final class Path
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($value);
         }
 
         return new self($value);

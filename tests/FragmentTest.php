@@ -17,7 +17,7 @@ class FragmentTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
+     * @expectedException Innmind\Url\Exception\DomainException
      */
     public function testThrowWhenInvalidFragment()
     {

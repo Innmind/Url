@@ -17,7 +17,7 @@ class SchemeTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
+     * @expectedException Innmind\Url\Exception\DomainException
      */
     public function testThrowWhenInvalidData()
     {

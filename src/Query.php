@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 use League\Uri;
 
@@ -15,7 +15,7 @@ final class Query
     private function __construct(string $value)
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($value);
         }
 
         $this->value = $value;
@@ -25,7 +25,7 @@ final class Query
     {
         try {
             return new self($value);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return new self(
                 Uri\build_query(
                     Uri\parse_query($value)

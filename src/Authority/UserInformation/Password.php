@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\Exception\{
-    InvalidArgumentException,
+    DomainException,
     InvalidUserInformationException,
 };
 use Innmind\Immutable\Str;
@@ -22,7 +22,7 @@ final class Password
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($value);
         }
 
         return new self($value);

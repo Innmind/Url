@@ -20,7 +20,7 @@ class PathTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
+     * @expectedException Innmind\Url\Exception\DomainException
      */
     public function testThrowWhenInvalidPath()
     {
