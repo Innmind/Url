@@ -62,6 +62,15 @@ final class UserInformation implements UserInformationInterface
         return new self($this->user, $password);
     }
 
+    public function format(Host $host): string
+    {
+        if ($this->user instanceof NullUser) {
+            return (string) $host;
+        }
+
+        return "{$this->string}@$host";
+    }
+
     public function __toString(): string
     {
         return $this->string;

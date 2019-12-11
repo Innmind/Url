@@ -76,11 +76,6 @@ final class Authority
 
     public function __toString(): string
     {
-        return sprintf(
-            '%s%s%s',
-            $this->userInformation,
-            !$this->userInformation->user() instanceof NullUser ? '@'.(string) $this->host : $this->host,
-            $this->port->format(),
-        );
+        return $this->userInformation->format($this->host).$this->port->format();
     }
 }

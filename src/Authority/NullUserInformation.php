@@ -41,6 +41,11 @@ final class NullUserInformation implements UserInformationInterface
         return UserInformation::of($this->user, $password);
     }
 
+    public function format(Host $host): string
+    {
+        return (string) $host;
+    }
+
     public function __toString(): string
     {
         return '';

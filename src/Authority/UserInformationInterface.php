@@ -14,5 +14,6 @@ interface UserInformationInterface
     public function withUser(UserInterface $user): self;
     public function password(): PasswordInterface;
     public function withPassword(PasswordInterface $password): self;
+    public function format(Host $host): string;
     public function __toString(): string;
 }
