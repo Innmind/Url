@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\{
+    Authority\Host,
+    Exception\InvalidArgumentException,
+};
 use Innmind\Immutable\Str;
 
 final class User
@@ -28,6 +31,15 @@ final class User
     public static function none(): self
     {
         return new self('');
+    }
+
+    public function format(Host $host, Password $password): string
+    {
+        if ($this->value === '') {
+            return $host->toString();
+        }
+
+        return $password->format($this).'@'.$host->toString();
     }
 
     public function toString(): string
