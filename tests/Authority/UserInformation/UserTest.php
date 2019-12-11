@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority\UserInformation;
 
-use Innmind\Url\Authority\UserInformation\User;
+use Innmind\Url\{
+    Authority\UserInformation\User,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
@@ -16,11 +19,11 @@ class UserTest extends TestCase
         $this->assertSame('foo', $u->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenInvalidUser()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('user@me');
+
         User::of('user@me');
     }
 

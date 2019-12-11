@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\Authority\{
-    UserInformation,
-    UserInformation\User,
-    UserInformation\Password,
+use Innmind\Url\{
+    Authority\UserInformation,
+    Authority\UserInformation\User,
+    Authority\UserInformation\Password,
+    Exception\InvalidUserInformationException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -25,11 +26,10 @@ class UserInformationTest extends TestCase
         $this->assertSame('foo:bar', $ui->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidUserInformationException
-     */
     public function testThrowWhenNullUserButPasswordPresent()
     {
+        $this->expectException(InvalidUserInformationException::class);
+
         UserInformation::of(User::none(), Password::of('foo'));
     }
 

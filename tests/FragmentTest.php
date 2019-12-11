@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\Fragment;
+use Innmind\Url\{
+    Fragment,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class FragmentTest extends TestCase
@@ -16,11 +19,11 @@ class FragmentTest extends TestCase
         $this->assertSame('foo', $f->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenInvalidFragment()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo bar');
+
         Fragment::of('foo bar');
     }
 

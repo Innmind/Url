@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\Path;
+use Innmind\Url\{
+    Path,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
@@ -19,11 +22,11 @@ class PathTest extends TestCase
         Path::of('relative/path');
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenInvalidPath()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('');
+
         Path::of('');
     }
 

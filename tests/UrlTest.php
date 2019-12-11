@@ -15,6 +15,7 @@ use Innmind\Url\{
     Path,
     Query,
     Fragment,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -83,11 +84,11 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url->fragment()->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenBuildingFromInvalidString()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('http://user:password/path');
+
         Url::of('http://user:password/path');
     }
 

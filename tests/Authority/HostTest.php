@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\Authority\Host;
+use Innmind\Url\{
+    Authority\Host,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class HostTest extends TestCase
@@ -16,11 +19,11 @@ class HostTest extends TestCase
         $this->assertSame($s, $h->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenInvalidHost()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo bar');
+
         Host::of('foo bar');
     }
 

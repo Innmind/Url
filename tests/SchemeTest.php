@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\Scheme;
+use Innmind\Url\{
+    Scheme,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class SchemeTest extends TestCase
@@ -16,11 +19,11 @@ class SchemeTest extends TestCase
         $this->assertSame('http-2.0', $s->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\DomainException
-     */
     public function testThrowWhenInvalidData()
     {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('http://');
+
         Scheme::of('http://');
     }
 
