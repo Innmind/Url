@@ -13,7 +13,7 @@ class FragmentTest extends TestCase
 {
     public function testInterface()
     {
-        $f = new Fragment('foo');
+        $f = Fragment::of('foo');
 
         $this->assertInstanceOf(FragmentInterface::class, $f);
         $this->assertSame('foo', (string) $f);
@@ -24,6 +24,12 @@ class FragmentTest extends TestCase
      */
     public function testThrowWhenInvalidFragment()
     {
-        new Fragment('foo bar');
+        Fragment::of('foo bar');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(FragmentInterface::class, Fragment::null());
+        $this->assertSame('', (string) Fragment::null());
     }
 }

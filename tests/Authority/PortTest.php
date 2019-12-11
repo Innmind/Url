@@ -13,10 +13,17 @@ class PortTest extends TestCase
 {
     public function testInterface()
     {
-        $p = new Port(0);
+        $p = Port::of(0);
 
         $this->assertInstanceOf(PortInterface::class, $p);
         $this->assertSame(0, $p->value());
         $this->assertSame('0', (string) $p);
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(PortInterface::class, Port::null());
+        $this->assertSame(0, Port::null()->value());
+        $this->assertSame('', (string) Port::null());
     }
 }

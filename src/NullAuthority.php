@@ -32,7 +32,7 @@ final class NullAuthority implements AuthorityInterface
 
     public function withUserInformation(UserInformationInterface $info): AuthorityInterface
     {
-        return new Authority($info, $this->host, $this->port);
+        return Authority::of($info, $this->host, $this->port);
     }
 
     public function host(): HostInterface
@@ -42,7 +42,7 @@ final class NullAuthority implements AuthorityInterface
 
     public function withHost(HostInterface $host): AuthorityInterface
     {
-        return new Authority($this->info, $host, $this->port);
+        return Authority::of($this->info, $host, $this->port);
     }
 
     public function port(): PortInterface
@@ -52,7 +52,7 @@ final class NullAuthority implements AuthorityInterface
 
     public function withPort(PortInterface $port): AuthorityInterface
     {
-        return new Authority($this->info, $this->host, $port);
+        return Authority::of($this->info, $this->host, $port);
     }
 
     public function __toString(): string

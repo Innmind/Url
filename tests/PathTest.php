@@ -13,13 +13,13 @@ class PathTest extends TestCase
 {
     public function testInterface()
     {
-        $p = new Path('/foo/bar/');
+        $p = Path::of('/foo/bar/');
 
         $this->assertInstanceOf(PathInterface::class, $p);
         $this->assertSame('/foo/bar/', (string) $p);
 
-        new Path('/'); //check it doesn't throw
-        new Path('relative/path');
+        Path::of('/'); //check it doesn't throw
+        Path::of('relative/path');
     }
 
     /**
@@ -27,6 +27,14 @@ class PathTest extends TestCase
      */
     public function testThrowWhenInvalidPath()
     {
-        new Path('');
+        Path::of('');
+    }
+
+    public function testNull()
+    {
+        $path = Path::null();
+
+        $this->assertInstanceOf(PathInterface::class, $path);
+        $this->assertSame('/', (string) $path);
     }
 }

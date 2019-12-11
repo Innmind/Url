@@ -13,7 +13,7 @@ class SchemeTest extends TestCase
 {
     public function testInterface()
     {
-        $s = new Scheme('http-2.0');
+        $s = Scheme::of('http-2.0');
 
         $this->assertInstanceOf(SchemeInterface::class, $s);
         $this->assertSame('http-2.0', (string) $s);
@@ -24,6 +24,14 @@ class SchemeTest extends TestCase
      */
     public function testThrowWhenInvalidData()
     {
-        new Scheme('http://');
+        Scheme::of('http://');
+    }
+
+    public function testNull()
+    {
+        $scheme = Scheme::null();
+
+        $this->assertInstanceOf(SchemeInterface::class, $scheme);
+        $this->assertSame('', (string) $scheme);
     }
 }

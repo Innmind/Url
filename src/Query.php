@@ -12,7 +12,7 @@ final class Query implements QueryInterface
     private const PATTERN = '/^\S+$/';
     private $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
             throw new InvalidArgumentException;
@@ -32,6 +32,11 @@ final class Query implements QueryInterface
                 )
             );
         }
+    }
+
+    public static function null(): QueryInterface
+    {
+        return new NullQuery;
     }
 
     public function __toString(): string

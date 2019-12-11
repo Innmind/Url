@@ -11,13 +11,23 @@ final class User implements UserInterface
     private const PATTERN = '/^[\pL\pN-]+$/';
     private $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
+    {
+        $this->value = $value;
+    }
+
+    public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
             throw new InvalidArgumentException;
         }
 
-        $this->value = $value;
+        return new self($value);
+    }
+
+    public static function null(): UserInterface
+    {
+        return new NullUser;
     }
 
     public function __toString(): string

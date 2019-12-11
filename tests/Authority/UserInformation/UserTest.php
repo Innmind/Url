@@ -13,7 +13,7 @@ class UserTest extends TestCase
 {
     public function testInterface()
     {
-        $u = new User('foo');
+        $u = User::of('foo');
 
         $this->assertInstanceOf(UserInterface::class, $u);
         $this->assertSame('foo', (string) $u);
@@ -24,6 +24,12 @@ class UserTest extends TestCase
      */
     public function testThrowWhenInvalidUser()
     {
-        new User('user@me');
+        User::of('user@me');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(UserInterface::class, User::null());
+        $this->assertSame('', (string) User::null());
     }
 }

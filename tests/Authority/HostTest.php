@@ -13,7 +13,7 @@ class HostTest extends TestCase
 {
     public function testInterface()
     {
-        $h = new Host($s = '[1:2:3::4:5:6:7]');
+        $h = Host::of($s = '[1:2:3::4:5:6:7]');
 
         $this->assertInstanceOf(HostInterface::class, $h);
         $this->assertSame($s, (string) $h);
@@ -24,6 +24,12 @@ class HostTest extends TestCase
      */
     public function testThrowWhenInvalidHost()
     {
-        new Host('foo bar');
+        Host::of('foo bar');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(HostInterface::class, Host::null());
+        $this->assertSame('', (string) Host::null());
     }
 }

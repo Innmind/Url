@@ -140,18 +140,18 @@ final class Url implements UrlInterface
         }
 
         return new self(
-            $data['scheme'] ? new Scheme($data['scheme']) : new NullScheme,
-            new Authority(
-                new UserInformation(
-                    $data['user'] ? new User($data['user']) : new NullUser,
-                    $data['pass'] ? new Password($data['pass']) : new NullPassword
+            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::null(),
+            Authority::of(
+                UserInformation::of(
+                    $data['user'] ? User::of($data['user']) : User::null(),
+                    $data['pass'] ? Password::of($data['pass']) : Password::null()
                 ),
-                $data['host'] ? new Host($data['host']) : new NullHost,
-                $data['port'] ? new Port((int) $data['port']) : new NullPort
+                $data['host'] ? Host::of($data['host']) : Host::null(),
+                $data['port'] ? Port::of((int) $data['port']) : Port::null()
             ),
-            $data['path'] && !empty($data['path']) ? new Path($data['path']) : new NullPath,
-            $data['query'] ? Query::of($data['query']) : new NullQuery,
-            $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
+            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::null(),
+            $data['query'] ? Query::of($data['query']) : Query::null(),
+            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::null()
         );
     }
 }

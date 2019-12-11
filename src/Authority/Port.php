@@ -7,9 +7,19 @@ final class Port implements PortInterface
 {
     private $value;
 
-    public function __construct(int $value)
+    private function __construct(int $value)
     {
         $this->value = $value;
+    }
+
+    public static function of(int $value): self
+    {
+        return new self($value);
+    }
+
+    public static function null(): PortInterface
+    {
+        return new NullPort;
     }
 
     public function value(): int

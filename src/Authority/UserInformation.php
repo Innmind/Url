@@ -17,7 +17,7 @@ final class UserInformation implements UserInformationInterface
     private $password;
     private $string;
 
-    public function __construct(UserInterface $user, PasswordInterface $password)
+    private function __construct(UserInterface $user, PasswordInterface $password)
     {
         if ($user instanceof NullUser && !$password instanceof NullPassword) {
             throw new InvalidUserInformationException;
@@ -30,6 +30,16 @@ final class UserInformation implements UserInformationInterface
         if (!$password instanceof NullPassword) {
             $this->string .= ':'.(string) $password;
         }
+    }
+
+    public static function of(UserInterface $user, PasswordInterface $password): self
+    {
+        return new self($user, $password);
+    }
+
+    public static function null(): UserInformationInterface
+    {
+        return new NullUserInformation;
     }
 
     public function user(): UserInterface

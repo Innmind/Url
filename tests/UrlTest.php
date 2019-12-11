@@ -7,24 +7,15 @@ use Innmind\Url\{
     Url,
     UrlInterface,
     Scheme,
-    NullScheme,
     Authority,
     Authority\UserInformation,
     Authority\UserInformation\User,
-    Authority\UserInformation\NullUser,
     Authority\UserInformation\Password,
-    Authority\UserInformation\NullPassword,
     Authority\Host,
-    Authority\NullHost,
     Authority\Port,
-    Authority\NullPort,
     Path,
-    NullPath,
     Query,
-    NullQuery,
     Fragment,
-    NullFragment,
-    NullAuthority
 };
 use PHPUnit\Framework\TestCase;
 
@@ -33,18 +24,18 @@ class UrlTest extends TestCase
     public function testInterface()
     {
         $u = new Url(
-            new Scheme('http'),
-            new Authority(
-                new UserInformation(
-                    new User('foo'),
-                    new Password('bar')
+            Scheme::of('http'),
+            Authority::of(
+                UserInformation::of(
+                    User::of('foo'),
+                    Password::of('bar')
                 ),
-                new Host('localhost'),
-                new Port(8080)
+                Host::of('localhost'),
+                Port::of(8080)
             ),
-            new Path('/foo'),
-            new Query('foo=bar'),
-            new Fragment('baz')
+            Path::of('/foo'),
+            Query::of('foo=bar'),
+            Fragment::of('baz')
         );
 
         $this->assertInstanceOf(UrlInterface::class, $u);
@@ -53,15 +44,15 @@ class UrlTest extends TestCase
         $this->assertSame(
             '/',
             (string) new Url(
-                new NullScheme,
-                new Authority(
-                    new UserInformation(new NullUser, new NullPassword),
-                    new NullHost,
-                    new NullPort
+                Scheme::null(),
+                Authority::of(
+                    UserInformation::of(User::null(), Password::null()),
+                    Host::null(),
+                    Port::null()
                 ),
-                new NullPath,
-                new NullQuery,
-                new NullFragment
+                Path::null(),
+                Query::null(),
+                Fragment::null()
             )
         );
     }
@@ -126,7 +117,7 @@ class UrlTest extends TestCase
     public function testWithScheme()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withScheme($scheme = new Scheme('https'));
+        $url2 = $url->withScheme($scheme = Scheme::of('https'));
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($scheme, $url2->scheme());
@@ -139,7 +130,7 @@ class UrlTest extends TestCase
     public function testWithAuthority()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withAuthority($authority = new NullAuthority);
+        $url2 = $url->withAuthority($authority = Authority::null());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -152,7 +143,7 @@ class UrlTest extends TestCase
     public function testWithPath()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withPath($path = new NullPath);
+        $url2 = $url->withPath($path = Path::null());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -165,7 +156,7 @@ class UrlTest extends TestCase
     public function testWithQuery()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withQuery($query = new NullQuery);
+        $url2 = $url->withQuery($query = Query::null());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -178,7 +169,7 @@ class UrlTest extends TestCase
     public function testWithFragment()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withFragment($fragment = new NullFragment);
+        $url2 = $url->withFragment($fragment = Fragment::null());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());

@@ -13,7 +13,7 @@ class PasswordTest extends TestCase
 {
     public function testInterface()
     {
-        $p = new Password('foo');
+        $p = Password::of('foo');
 
         $this->assertInstanceOf(PasswordInterface::class, $p);
         $this->assertSame('foo', (string) $p);
@@ -24,6 +24,12 @@ class PasswordTest extends TestCase
      */
     public function testThrowWhenInvalidPassword()
     {
-        new Password('foo@bar');
+        Password::of('foo@bar');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(PasswordInterface::class, Password::null());
+        $this->assertSame('', (string) Password::null());
     }
 }

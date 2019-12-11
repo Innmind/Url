@@ -13,17 +13,17 @@ class QueryTest extends TestCase
 {
     public function testInterface()
     {
-        $f = new Query('foo');
+        $f = Query::of('foo');
 
         $this->assertInstanceOf(QueryInterface::class, $f);
         $this->assertSame('foo', (string) $f);
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenInvalidQuery()
+    public function testNull()
     {
-        new Query('foo bar');
+        $query = Query::null();
+
+        $this->assertInstanceOf(QueryInterface::class, $query);
+        $this->assertSame('', (string) $query);
     }
 }

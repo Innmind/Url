@@ -28,7 +28,7 @@ final class NullUserInformation implements UserInformationInterface
 
     public function withUser(UserInterface $user): UserInformationInterface
     {
-        return new UserInformation($user, $this->password);
+        return UserInformation::of($user, $this->password);
     }
 
     public function password(): PasswordInterface
@@ -38,7 +38,7 @@ final class NullUserInformation implements UserInformationInterface
 
     public function withPassword(PasswordInterface $password): UserInformationInterface
     {
-        return new UserInformation($this->user, $password);
+        return UserInformation::of($this->user, $password);
     }
 
     public function __toString(): string

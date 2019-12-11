@@ -17,7 +17,7 @@ final class Authority implements AuthorityInterface
     private $host;
     private $port;
 
-    public function __construct(
+    private function __construct(
         UserInformationInterface $userInformation,
         HostInterface $host,
         PortInterface $port
@@ -25,6 +25,19 @@ final class Authority implements AuthorityInterface
         $this->userInformation = $userInformation;
         $this->host = $host;
         $this->port = $port;
+    }
+
+    public static function of(
+        UserInformationInterface $userInformation,
+        HostInterface $host,
+        PortInterface $port
+    ): self {
+        return new self($userInformation, $host, $port);
+    }
+
+    public static function null(): AuthorityInterface
+    {
+        return new NullAuthority;
     }
 
     public function userInformation(): UserInformationInterface
