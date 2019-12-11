@@ -13,7 +13,7 @@ interface UrlInterface
     public function withPath(PathInterface $path): self;
     public function query(): Query;
     public function withQuery(Query $query): self;
-    public function fragment(): FragmentInterface;
-    public function withFragment(FragmentInterface $fragment): self;
+    public function fragment(): Fragment;
+    public function withFragment(Fragment $fragment): self;
     public function __toString(): string;
 }

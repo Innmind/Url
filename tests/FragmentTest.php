@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Fragment,
-    FragmentInterface
-};
+use Innmind\Url\Fragment;
 use PHPUnit\Framework\TestCase;
 
 class FragmentTest extends TestCase
@@ -15,7 +12,7 @@ class FragmentTest extends TestCase
     {
         $f = Fragment::of('foo');
 
-        $this->assertInstanceOf(FragmentInterface::class, $f);
+        $this->assertInstanceOf(Fragment::class, $f);
         $this->assertSame('foo', (string) $f);
     }
 
@@ -29,7 +26,7 @@ class FragmentTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(FragmentInterface::class, Fragment::null());
+        $this->assertInstanceOf(Fragment::class, Fragment::null());
         $this->assertSame('', (string) Fragment::null());
     }
 }

@@ -30,7 +30,7 @@ final class Url implements UrlInterface
         AuthorityInterface $authority,
         PathInterface $path,
         Query $query,
-        FragmentInterface $fragment
+        Fragment $fragment
     ) {
         $this->scheme = $scheme;
         $this->authority = $authority;
@@ -91,12 +91,12 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function fragment(): FragmentInterface
+    public function fragment(): Fragment
     {
         return $this->fragment;
     }
 
-    public function withFragment(FragmentInterface $fragment): UrlInterface
+    public function withFragment(Fragment $fragment): UrlInterface
     {
         $self = clone $this;
         $self->fragment = $fragment;
