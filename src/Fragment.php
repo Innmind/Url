@@ -30,6 +30,11 @@ final class Fragment implements FragmentInterface
         return new NullFragment;
     }
 
+    public function format(): string
+    {
+        return '#'.$this->value;
+    }
+
     public function __toString(): string
     {
         return $this->value;
