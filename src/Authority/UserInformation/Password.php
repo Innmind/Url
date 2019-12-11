@@ -9,32 +9,36 @@ use Innmind\Url\Exception\{
 };
 use Innmind\Immutable\Str;
 
-final class Password implements PasswordInterface
+final class Password
 {
     private const PATTERN = '/^[\pL\pN-]+$/';
     private $value;
 
     private function __construct(string $value)
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
-        }
-
         $this->value = $value;
     }
 
     public static function of(string $value): self
     {
+        if (!Str::of($value)->matches(self::PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
         return new self($value);
     }
 
-    public static function null(): PasswordInterface
+    public static function null(): self
     {
-        return new NullPassword;
+        return new self('');
     }
 
     public function format(UserInterface $user): string
     {
+        if ($this->value === '') {
+            return (string) $user;
+        }
+
         if ((string) $user === '') {
             throw new InvalidUserInformationException;
         }

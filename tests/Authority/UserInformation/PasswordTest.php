@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority\UserInformation;
 
-use Innmind\Url\Authority\UserInformation\{
-    Password,
-    PasswordInterface
-};
+use Innmind\Url\Authority\UserInformation\Password;
 use PHPUnit\Framework\TestCase;
 
 class PasswordTest extends TestCase
@@ -15,7 +12,7 @@ class PasswordTest extends TestCase
     {
         $p = Password::of('foo');
 
-        $this->assertInstanceOf(PasswordInterface::class, $p);
+        $this->assertInstanceOf(Password::class, $p);
         $this->assertSame('foo', (string) $p);
     }
 
@@ -29,7 +26,7 @@ class PasswordTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(PasswordInterface::class, Password::null());
+        $this->assertInstanceOf(Password::class, Password::null());
         $this->assertSame('', (string) Password::null());
     }
 }
