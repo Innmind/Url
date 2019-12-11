@@ -66,14 +66,14 @@ final class UserInformation
 
     public function format(Host $host): string
     {
-        if ((string) $this->user === '') {
-            return (string) $host;
+        if ($this->user->toString() === '') {
+            return $host->toString();
         }
 
-        return "{$this->string}@$host";
+        return $this->string.'@'.$host->toString();
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

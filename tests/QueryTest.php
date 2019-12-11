@@ -13,7 +13,7 @@ class QueryTest extends TestCase
         $f = Query::of('foo');
 
         $this->assertInstanceOf(Query::class, $f);
-        $this->assertSame('foo', (string) $f);
+        $this->assertSame('foo', $f->toString());
     }
 
     public function testNull()
@@ -21,6 +21,6 @@ class QueryTest extends TestCase
         $query = Query::none();
 
         $this->assertInstanceOf(Query::class, $query);
-        $this->assertSame('', (string) $query);
+        $this->assertSame('', $query->toString());
     }
 }

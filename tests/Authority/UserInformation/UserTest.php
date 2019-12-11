@@ -13,7 +13,7 @@ class UserTest extends TestCase
         $u = User::of('foo');
 
         $this->assertInstanceOf(User::class, $u);
-        $this->assertSame('foo', (string) $u);
+        $this->assertSame('foo', $u->toString());
     }
 
     /**
@@ -27,6 +27,6 @@ class UserTest extends TestCase
     public function testNull()
     {
         $this->assertInstanceOf(User::class, User::none());
-        $this->assertSame('', (string) User::none());
+        $this->assertSame('', User::none()->toString());
     }
 }

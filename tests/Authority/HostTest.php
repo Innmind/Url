@@ -13,7 +13,7 @@ class HostTest extends TestCase
         $h = Host::of($s = '[1:2:3::4:5:6:7]');
 
         $this->assertInstanceOf(Host::class, $h);
-        $this->assertSame($s, (string) $h);
+        $this->assertSame($s, $h->toString());
     }
 
     /**
@@ -27,6 +27,6 @@ class HostTest extends TestCase
     public function testNull()
     {
         $this->assertInstanceOf(Host::class, Host::none());
-        $this->assertSame('', (string) Host::none());
+        $this->assertSame('', Host::none()->toString());
     }
 }

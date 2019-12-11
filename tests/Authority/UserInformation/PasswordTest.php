@@ -13,7 +13,7 @@ class PasswordTest extends TestCase
         $p = Password::of('foo');
 
         $this->assertInstanceOf(Password::class, $p);
-        $this->assertSame('foo', (string) $p);
+        $this->assertSame('foo', $p->toString());
     }
 
     /**
@@ -27,6 +27,6 @@ class PasswordTest extends TestCase
     public function testNull()
     {
         $this->assertInstanceOf(Password::class, Password::none());
-        $this->assertSame('', (string) Password::none());
+        $this->assertSame('', Password::none()->toString());
     }
 }

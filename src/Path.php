@@ -41,7 +41,7 @@ final class Path
         return $this->value.$end;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->value === '' ? '/' : $this->value;
     }

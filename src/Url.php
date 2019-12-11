@@ -140,7 +140,7 @@ final class Url
         return $self;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
     }

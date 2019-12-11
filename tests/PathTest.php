@@ -13,7 +13,7 @@ class PathTest extends TestCase
         $p = Path::of('/foo/bar/');
 
         $this->assertInstanceOf(Path::class, $p);
-        $this->assertSame('/foo/bar/', (string) $p);
+        $this->assertSame('/foo/bar/', $p->toString());
 
         Path::of('/'); //check it doesn't throw
         Path::of('relative/path');
@@ -32,6 +32,6 @@ class PathTest extends TestCase
         $path = Path::none();
 
         $this->assertInstanceOf(Path::class, $path);
-        $this->assertSame('/', (string) $path);
+        $this->assertSame('/', $path->toString());
     }
 }

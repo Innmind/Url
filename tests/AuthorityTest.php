@@ -30,7 +30,7 @@ class AuthorityTest extends TestCase
         $this->assertSame($u, $a->userInformation());
         $this->assertSame($h, $a->host());
         $this->assertSame($p, $a->port());
-        $this->assertSame('', (string) $a);
+        $this->assertSame('', $a->toString());
 
         $a = Authority::of(
             UserInformation::of(
@@ -41,7 +41,7 @@ class AuthorityTest extends TestCase
             Port::of(8080)
         );
 
-        $this->assertSame('foo:bar@localhost:8080', (string) $a);
+        $this->assertSame('foo:bar@localhost:8080', $a->toString());
 
         $a = Authority::of(
             UserInformation::of(
@@ -52,7 +52,7 @@ class AuthorityTest extends TestCase
             Port::none()
         );
 
-        $this->assertSame('localhost', (string) $a);
+        $this->assertSame('localhost', $a->toString());
     }
 
     public function testWithUserInformation()
@@ -171,7 +171,7 @@ class AuthorityTest extends TestCase
             Port::none(),
             $authority->port()
         );
-        $this->assertSame('', (string) $authority);
+        $this->assertSame('', $authority->toString());
     }
 
     public function testNullWithUserInformation()

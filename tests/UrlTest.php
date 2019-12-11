@@ -38,11 +38,11 @@ class UrlTest extends TestCase
         );
 
         $this->assertInstanceOf(Url::class, $u);
-        $this->assertSame('http://foo:bar@localhost:8080/foo?foo=bar#baz', (string) $u);
+        $this->assertSame('http://foo:bar@localhost:8080/foo?foo=bar#baz', $u->toString());
 
         $this->assertSame(
             '/',
-            (string) new Url(
+            (new Url(
                 Scheme::none(),
                 Authority::of(
                     UserInformation::of(User::none(), Password::none()),
@@ -52,7 +52,7 @@ class UrlTest extends TestCase
                 Path::none(),
                 Query::none(),
                 Fragment::none()
-            )
+            ))->toString()
         );
     }
 
@@ -73,14 +73,14 @@ class UrlTest extends TestCase
         $url = Url::of($url);
 
         $this->assertInstanceOf(Url::class, $url);
-        $this->assertSame($scheme, (string) $url->scheme());
-        $this->assertSame($user, (string) $url->authority()->userInformation()->user());
-        $this->assertSame($password, (string) $url->authority()->userInformation()->password());
-        $this->assertSame($host, (string) $url->authority()->host());
-        $this->assertSame($port, (string) $url->authority()->port());
-        $this->assertSame($path, (string) $url->path());
-        $this->assertSame($query, (string) $url->query());
-        $this->assertSame($fragment, (string) $url->fragment());
+        $this->assertSame($scheme, $url->scheme()->toString());
+        $this->assertSame($user, $url->authority()->userInformation()->user()->toString());
+        $this->assertSame($password, $url->authority()->userInformation()->password()->toString());
+        $this->assertSame($host, $url->authority()->host()->toString());
+        $this->assertSame($port, $url->authority()->port()->toString());
+        $this->assertSame($path, $url->path()->toString());
+        $this->assertSame($query, $url->query()->toString());
+        $this->assertSame($fragment, $url->fragment()->toString());
     }
 
     /**
@@ -98,7 +98,7 @@ class UrlTest extends TestCase
     {
         $this->assertSame(
             $url,
-            (string) Url::of($url)
+            Url::of($url)->toString()
         );
     }
 
@@ -247,7 +247,7 @@ class UrlTest extends TestCase
     {
         $url = Url::of('//example.com');
 
-        $this->assertSame('example.com/', (string) $url);
+        $this->assertSame('example.com/', $url->toString());
     }
 
     public function cases(): array

@@ -13,7 +13,7 @@ class SchemeTest extends TestCase
         $s = Scheme::of('http-2.0');
 
         $this->assertInstanceOf(Scheme::class, $s);
-        $this->assertSame('http-2.0', (string) $s);
+        $this->assertSame('http-2.0', $s->toString());
     }
 
     /**
@@ -29,6 +29,6 @@ class SchemeTest extends TestCase
         $scheme = Scheme::none();
 
         $this->assertInstanceOf(Scheme::class, $scheme);
-        $this->assertSame('', (string) $scheme);
+        $this->assertSame('', $scheme->toString());
     }
 }

@@ -36,7 +36,7 @@ final class Port
         return $this->value ?: 0;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         if ($this->value === null) {
             return '';

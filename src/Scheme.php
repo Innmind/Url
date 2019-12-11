@@ -33,13 +33,13 @@ final class Scheme
     public function format(Authority $authority): string
     {
         if ($this->value === '') {
-            return (string) $authority;
+            return $authority->toString();
         }
 
-        return $this->value.'://'.$authority;
+        return $this->value.'://'.$authority->toString();
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->value;
     }

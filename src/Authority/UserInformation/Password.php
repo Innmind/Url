@@ -36,17 +36,17 @@ final class Password
     public function format(User $user): string
     {
         if ($this->value === '') {
-            return (string) $user;
+            return $user->toString();
         }
 
-        if ((string) $user === '') {
+        if ($user->toString() === '') {
             throw new InvalidUserInformationException;
         }
 
-        return "$user:{$this->value}";
+        return $user->toString().':'.$this->value;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->value;
     }

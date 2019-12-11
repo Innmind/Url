@@ -87,7 +87,7 @@ final class Authority
         return new self($this->userInformation, $this->host, Port::none());
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->userInformation->format($this->host).$this->port->format();
     }
