@@ -52,6 +52,11 @@ final class Authority
         return new self($info, $this->host, $this->port);
     }
 
+    public function withoutUserInformation(): self
+    {
+        return new self(UserInformation::none(), $this->host, $this->port);
+    }
+
     public function host(): Host
     {
         return $this->host;
@@ -62,6 +67,11 @@ final class Authority
         return new self($this->userInformation, $host, $this->port);
     }
 
+    public function withoutHost(): self
+    {
+        return new self($this->userInformation, Host::none(), $this->port);
+    }
+
     public function port(): Port
     {
         return $this->port;
@@ -70,6 +80,11 @@ final class Authority
     public function withPort(Port $port): self
     {
         return new self($this->userInformation, $this->host, $port);
+    }
+
+    public function withoutPort(): self
+    {
+        return new self($this->userInformation, $this->host, Port::none());
     }
 
     public function __toString(): string

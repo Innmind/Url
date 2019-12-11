@@ -126,6 +126,19 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutScheme()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutScheme();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertEquals(Scheme::none(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithAuthority()
     {
         $url = Url::of('http://example.com');
@@ -134,6 +147,19 @@ class UrlTest extends TestCase
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
         $this->assertSame($authority, $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithoutAuthority()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutAuthority();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertEquals(Authority::none(), $url2->authority());
         $this->assertSame($url->path(), $url2->path());
         $this->assertSame($url->query(), $url2->query());
         $this->assertSame($url->fragment(), $url2->fragment());
@@ -152,6 +178,19 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutPath()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutPath();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertEquals(Path::none(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithQuery()
     {
         $url = Url::of('http://example.com');
@@ -162,6 +201,19 @@ class UrlTest extends TestCase
         $this->assertSame($url->authority(), $url2->authority());
         $this->assertSame($url->path(), $url2->path());
         $this->assertSame($query, $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
+    public function testWithoutQuery()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutQuery();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertEquals(Query::none(), $url2->query());
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
@@ -176,6 +228,19 @@ class UrlTest extends TestCase
         $this->assertSame($url->path(), $url2->path());
         $this->assertSame($url->query(), $url2->query());
         $this->assertSame($fragment, $url2->fragment());
+    }
+
+    public function testWithoutFragment()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutFragment();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertEquals(Fragment::none(), $url2->fragment());
     }
 
     public function testCastWithNullScheme()

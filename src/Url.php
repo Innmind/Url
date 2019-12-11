@@ -48,6 +48,14 @@ final class Url
         return $self;
     }
 
+    public function withoutScheme(): self
+    {
+        $self = clone $this;
+        $self->scheme = Scheme::none();
+
+        return $self;
+    }
+
     public function authority(): Authority
     {
         return $this->authority;
@@ -57,6 +65,14 @@ final class Url
     {
         $self = clone $this;
         $self->authority = $authority;
+
+        return $self;
+    }
+
+    public function withoutAuthority(): self
+    {
+        $self = clone $this;
+        $self->authority = Authority::none();
 
         return $self;
     }
@@ -74,6 +90,14 @@ final class Url
         return $self;
     }
 
+    public function withoutPath(): self
+    {
+        $self = clone $this;
+        $self->path = Path::none();
+
+        return $self;
+    }
+
     public function query(): Query
     {
         return $this->query;
@@ -87,6 +111,14 @@ final class Url
         return $self;
     }
 
+    public function withoutQuery(): self
+    {
+        $self = clone $this;
+        $self->query = Query::none();
+
+        return $self;
+    }
+
     public function fragment(): Fragment
     {
         return $this->fragment;
@@ -96,6 +128,14 @@ final class Url
     {
         $self = clone $this;
         $self->fragment = $fragment;
+
+        return $self;
+    }
+
+    public function withoutFragment(): self
+    {
+        $self = clone $this;
+        $self->fragment = Fragment::none();
 
         return $self;
     }

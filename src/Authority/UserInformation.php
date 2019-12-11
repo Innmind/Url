@@ -44,6 +44,11 @@ final class UserInformation
         return new self($user, $this->password);
     }
 
+    public function withoutUser(): self
+    {
+        return new self(User::none(), $this->password);
+    }
+
     public function password(): Password
     {
         return $this->password;
@@ -52,6 +57,11 @@ final class UserInformation
     public function withPassword(Password $password): self
     {
         return new self($this->user, $password);
+    }
+
+    public function withoutPassword(): self
+    {
+        return new self($this->user, Password::none());
     }
 
     public function format(Host $host): string

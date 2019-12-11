@@ -72,6 +72,24 @@ class AuthorityTest extends TestCase
         $this->assertSame($authority->port(), $authority2->port());
     }
 
+    public function testWithoutUserInformation()
+    {
+        $authority = Authority::of(
+            UserInformation::of(
+                User::of('foo'),
+                Password::of('bar'),
+            ),
+            Host::none(),
+            Port::none()
+        );
+        $authority2 = $authority->withoutUserInformation();
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertEquals(UserInformation::none(), $authority2->userInformation());
+        $this->assertSame($authority->host(), $authority2->host());
+        $this->assertSame($authority->port(), $authority2->port());
+    }
+
     public function testWithHost()
     {
         $authority = Authority::of(
@@ -84,6 +102,21 @@ class AuthorityTest extends TestCase
         $this->assertNotSame($authority, $authority2);
         $this->assertSame($authority->userInformation(), $authority2->userInformation());
         $this->assertSame($host, $authority2->host());
+        $this->assertSame($authority->port(), $authority2->port());
+    }
+
+    public function testWithoutHost()
+    {
+        $authority = Authority::of(
+            UserInformation::none(),
+            Host::of('example.com'),
+            Port::none()
+        );
+        $authority2 = $authority->withoutHost();
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertSame($authority->userInformation(), $authority2->userInformation());
+        $this->assertEquals(Host::none(), $authority2->host());
         $this->assertSame($authority->port(), $authority2->port());
     }
 
@@ -100,6 +133,21 @@ class AuthorityTest extends TestCase
         $this->assertSame($authority->userInformation(), $authority2->userInformation());
         $this->assertSame($authority->host(), $authority2->host());
         $this->assertSame($port, $authority2->port());
+    }
+
+    public function testWithoutPort()
+    {
+        $authority = Authority::of(
+            UserInformation::none(),
+            Host::none(),
+            Port::of(8080)
+        );
+        $authority2 = $authority->withoutPort();
+
+        $this->assertNotSame($authority, $authority2);
+        $this->assertSame($authority->userInformation(), $authority2->userInformation());
+        $this->assertSame($authority->host(), $authority2->host());
+        $this->assertEquals(Port::none(), $authority2->port());
     }
 
 

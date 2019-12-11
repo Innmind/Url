@@ -55,6 +55,16 @@ class UserInformationTest extends TestCase
         $this->assertSame($info->password(), $info2->password());
     }
 
+    public function testWithoutUser()
+    {
+        $info = UserInformation::of(User::of('foo'), Password::none());
+        $info2 = $info->withoutUser();
+
+        $this->assertNotSame($info, $info2);
+        $this->assertEquals(User::none(), $info2->user());
+        $this->assertSame($info->password(), $info2->password());
+    }
+
     public function testWithPassword()
     {
         $info = UserInformation::of(User::of('foo'), Password::of('bar'));
@@ -63,6 +73,16 @@ class UserInformationTest extends TestCase
         $this->assertNotSame($info, $info2);
         $this->assertSame($info->user(), $info2->user());
         $this->assertSame($password, $info2->password());
+    }
+
+    public function testWithoutPassword()
+    {
+        $info = UserInformation::of(User::of('foo'), Password::of('bar'));
+        $info2 = $info->withoutPassword();
+
+        $this->assertNotSame($info, $info2);
+        $this->assertSame($info->user(), $info2->user());
+        $this->assertEquals(Password::none(), $info2->password());
     }
 
     public function testNullWithUser()
