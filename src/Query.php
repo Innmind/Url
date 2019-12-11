@@ -34,7 +34,7 @@ final class Query
         }
     }
 
-    public static function null(): self
+    public static function none(): self
     {
         $self = new self('void');
         $self->value = '';

@@ -30,18 +30,18 @@ class UserInformationTest extends TestCase
      */
     public function testThrowWhenNullUserButPasswordPresent()
     {
-        UserInformation::of(User::null(), Password::of('foo'));
+        UserInformation::of(User::none(), Password::of('foo'));
     }
 
     public function testString()
     {
         $this->assertSame(
             'foo',
-            (string )UserInformation::of(User::of('foo'), Password::null())
+            (string )UserInformation::of(User::of('foo'), Password::none())
         );
         $this->assertSame(
             '',
-            (string) UserInformation::of(User::null(), Password::null())
+            (string) UserInformation::of(User::none(), Password::none())
         );
     }
 
@@ -67,8 +67,8 @@ class UserInformationTest extends TestCase
 
     public function testNullWithUser()
     {
-        $info = UserInformation::null();
-        $info2 = $info->withUser($user = User::null());
+        $info = UserInformation::none();
+        $info2 = $info->withUser($user = User::none());
 
         $this->assertNotSame($info, $info2);
         $this->assertInstanceOf(UserInformation::class, $info2);
@@ -78,8 +78,8 @@ class UserInformationTest extends TestCase
 
     public function testNullWithPassword()
     {
-        $info = UserInformation::null();
-        $info2 = $info->withPassword($password = Password::null());
+        $info = UserInformation::none();
+        $info2 = $info->withPassword($password = Password::none());
 
         $this->assertNotSame($info, $info2);
         $this->assertInstanceOf(UserInformation::class, $info2);

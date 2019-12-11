@@ -25,7 +25,7 @@ final class Fragment
         return new self($value);
     }
 
-    public static function null(): self
+    public static function none(): self
     {
         return new self('');
     }

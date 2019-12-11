@@ -26,7 +26,7 @@ class HostTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(Host::class, Host::null());
-        $this->assertSame('', (string) Host::null());
+        $this->assertInstanceOf(Host::class, Host::none());
+        $this->assertSame('', (string) Host::none());
     }
 }

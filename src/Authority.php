@@ -33,12 +33,12 @@ final class Authority
         return new self($userInformation, $host, $port);
     }
 
-    public static function null(): self
+    public static function none(): self
     {
         return new self(
-            Authority\UserInformation::null(),
-            Authority\Host::null(),
-            Authority\Port::null(),
+            Authority\UserInformation::none(),
+            Authority\Host::none(),
+            Authority\Port::none(),
         );
     }
 

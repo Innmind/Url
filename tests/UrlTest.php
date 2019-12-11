@@ -43,15 +43,15 @@ class UrlTest extends TestCase
         $this->assertSame(
             '/',
             (string) new Url(
-                Scheme::null(),
+                Scheme::none(),
                 Authority::of(
-                    UserInformation::of(User::null(), Password::null()),
-                    Host::null(),
-                    Port::null()
+                    UserInformation::of(User::none(), Password::none()),
+                    Host::none(),
+                    Port::none()
                 ),
-                Path::null(),
-                Query::null(),
-                Fragment::null()
+                Path::none(),
+                Query::none(),
+                Fragment::none()
             )
         );
     }
@@ -129,7 +129,7 @@ class UrlTest extends TestCase
     public function testWithAuthority()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withAuthority($authority = Authority::null());
+        $url2 = $url->withAuthority($authority = Authority::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -142,7 +142,7 @@ class UrlTest extends TestCase
     public function testWithPath()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withPath($path = Path::null());
+        $url2 = $url->withPath($path = Path::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -155,7 +155,7 @@ class UrlTest extends TestCase
     public function testWithQuery()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withQuery($query = Query::null());
+        $url2 = $url->withQuery($query = Query::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -168,7 +168,7 @@ class UrlTest extends TestCase
     public function testWithFragment()
     {
         $url = Url::of('http://example.com');
-        $url2 = $url->withFragment($fragment = Fragment::null());
+        $url2 = $url->withFragment($fragment = Fragment::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());

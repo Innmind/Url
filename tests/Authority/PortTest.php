@@ -19,8 +19,8 @@ class PortTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(Port::class, Port::null());
-        $this->assertSame(0, Port::null()->value());
-        $this->assertSame('', (string) Port::null());
+        $this->assertInstanceOf(Port::class, Port::none());
+        $this->assertSame(0, Port::none()->value());
+        $this->assertSame('', (string) Port::none());
     }
 }

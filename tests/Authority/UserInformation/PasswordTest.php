@@ -26,7 +26,7 @@ class PasswordTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(Password::class, Password::null());
-        $this->assertSame('', (string) Password::null());
+        $this->assertInstanceOf(Password::class, Password::none());
+        $this->assertSame('', (string) Password::none());
     }
 }

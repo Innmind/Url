@@ -29,7 +29,7 @@ class PathTest extends TestCase
 
     public function testNull()
     {
-        $path = Path::null();
+        $path = Path::none();
 
         $this->assertInstanceOf(Path::class, $path);
         $this->assertSame('/', (string) $path);

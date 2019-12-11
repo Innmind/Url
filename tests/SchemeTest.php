@@ -26,7 +26,7 @@ class SchemeTest extends TestCase
 
     public function testNull()
     {
-        $scheme = Scheme::null();
+        $scheme = Scheme::none();
 
         $this->assertInstanceOf(Scheme::class, $scheme);
         $this->assertSame('', (string) $scheme);

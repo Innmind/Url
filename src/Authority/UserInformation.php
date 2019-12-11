@@ -26,11 +26,11 @@ final class UserInformation
         return new self($user, $password);
     }
 
-    public static function null(): self
+    public static function none(): self
     {
         return new self(
-            User::null(),
-            Password::null(),
+            User::none(),
+            Password::none(),
         );
     }
 

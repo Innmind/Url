@@ -18,7 +18,7 @@ class QueryTest extends TestCase
 
     public function testNull()
     {
-        $query = Query::null();
+        $query = Query::none();
 
         $this->assertInstanceOf(Query::class, $query);
         $this->assertSame('', (string) $query);

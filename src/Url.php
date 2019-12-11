@@ -117,18 +117,18 @@ final class Url
         }
 
         return new self(
-            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::null(),
+            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::none(),
             Authority::of(
                 UserInformation::of(
-                    $data['user'] ? User::of($data['user']) : User::null(),
-                    $data['pass'] ? Password::of($data['pass']) : Password::null()
+                    $data['user'] ? User::of($data['user']) : User::none(),
+                    $data['pass'] ? Password::of($data['pass']) : Password::none()
                 ),
-                $data['host'] ? Host::of($data['host']) : Host::null(),
-                $data['port'] ? Port::of((int) $data['port']) : Port::null()
+                $data['host'] ? Host::of($data['host']) : Host::none(),
+                $data['port'] ? Port::of((int) $data['port']) : Port::none()
             ),
-            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::null(),
-            $data['query'] ? Query::of($data['query']) : Query::null(),
-            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::null()
+            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
+            $data['query'] ? Query::of($data['query']) : Query::none(),
+            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none()
         );
     }
 }

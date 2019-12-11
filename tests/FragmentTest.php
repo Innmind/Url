@@ -26,7 +26,7 @@ class FragmentTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(Fragment::class, Fragment::null());
-        $this->assertSame('', (string) Fragment::null());
+        $this->assertInstanceOf(Fragment::class, Fragment::none());
+        $this->assertSame('', (string) Fragment::none());
     }
 }

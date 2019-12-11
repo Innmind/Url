@@ -26,7 +26,7 @@ class UserTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(User::class, User::null());
-        $this->assertSame('', (string) User::null());
+        $this->assertInstanceOf(User::class, User::none());
+        $this->assertSame('', (string) User::none());
     }
 }
