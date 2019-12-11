@@ -5,6 +5,11 @@ namespace Innmind\Url;
 
 final class NullQuery implements QueryInterface
 {
+    public function format(): string
+    {
+        return '';
+    }
+
     public function __toString(): string
     {
         return '';

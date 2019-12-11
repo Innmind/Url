@@ -39,6 +39,11 @@ final class Query implements QueryInterface
         return new NullQuery;
     }
 
+    public function format(): string
+    {
+        return '?'.$this->value;
+    }
+
     public function __toString(): string
     {
         return $this->value;

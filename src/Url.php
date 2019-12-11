@@ -111,7 +111,7 @@ final class Url implements UrlInterface
         if (
             $this->path instanceof NullPath &&
             (
-                !$this->query instanceof NullQuery ||
+                $this->query->format() !== '' ||
                 !$this->fragment instanceof NullFragment
             )
         ) {
@@ -122,7 +122,7 @@ final class Url implements UrlInterface
             '%s%s%s%s',
             $this->scheme->format($this->authority),
             $path,
-            !$this->query instanceof NullQuery ? '?'.$this->query : '',
+            $this->query->format(),
             !$this->fragment instanceof NullFragment ? '#'.$this->fragment : ''
         );
     }
