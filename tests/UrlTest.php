@@ -69,7 +69,7 @@ class UrlTest extends TestCase
     /**
      * @dataProvider fromString
      */
-    public function testFromString(
+    public function testOf(
         string $url,
         string $scheme,
         string $user,
@@ -80,7 +80,7 @@ class UrlTest extends TestCase
         string $query,
         string $fragment
     ) {
-        $url = Url::fromString($url);
+        $url = Url::of($url);
 
         $this->assertInstanceOf(Url::class, $url);
         $this->assertSame($scheme, (string) $url->scheme());
@@ -98,7 +98,7 @@ class UrlTest extends TestCase
      */
     public function testThrowWhenBuildingFromInvalidString()
     {
-        Url::fromString('http://user:password/path');
+        Url::of('http://user:password/path');
     }
 
     /**
@@ -108,7 +108,7 @@ class UrlTest extends TestCase
     {
         $this->assertSame(
             $url,
-            (string) Url::fromString($url)
+            (string) Url::of($url)
         );
     }
 
@@ -119,13 +119,13 @@ class UrlTest extends TestCase
     {
         $this->assertInstanceOf(
             UrlInterface::class,
-            Url::fromString($url)
+            Url::of($url)
         );
     }
 
     public function testWithScheme()
     {
-        $url = Url::fromString('http://example.com');
+        $url = Url::of('http://example.com');
         $url2 = $url->withScheme($scheme = new Scheme('https'));
 
         $this->assertNotSame($url, $url2);
@@ -138,7 +138,7 @@ class UrlTest extends TestCase
 
     public function testWithAuthority()
     {
-        $url = Url::fromString('http://example.com');
+        $url = Url::of('http://example.com');
         $url2 = $url->withAuthority($authority = new NullAuthority);
 
         $this->assertNotSame($url, $url2);
@@ -151,7 +151,7 @@ class UrlTest extends TestCase
 
     public function testWithPath()
     {
-        $url = Url::fromString('http://example.com');
+        $url = Url::of('http://example.com');
         $url2 = $url->withPath($path = new NullPath);
 
         $this->assertNotSame($url, $url2);
@@ -164,7 +164,7 @@ class UrlTest extends TestCase
 
     public function testWithQuery()
     {
-        $url = Url::fromString('http://example.com');
+        $url = Url::of('http://example.com');
         $url2 = $url->withQuery($query = new NullQuery);
 
         $this->assertNotSame($url, $url2);
@@ -177,7 +177,7 @@ class UrlTest extends TestCase
 
     public function testWithFragment()
     {
-        $url = Url::fromString('http://example.com');
+        $url = Url::of('http://example.com');
         $url2 = $url->withFragment($fragment = new NullFragment);
 
         $this->assertNotSame($url, $url2);
@@ -190,7 +190,7 @@ class UrlTest extends TestCase
 
     public function testCastWithNullScheme()
     {
-        $url = Url::fromString('//example.com');
+        $url = Url::of('//example.com');
 
         $this->assertSame('example.com/', (string) $url);
     }

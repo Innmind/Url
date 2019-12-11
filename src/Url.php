@@ -158,13 +158,4 @@ final class Url implements UrlInterface
             $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
         );
     }
-
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $string): self
-    {
-        return self::of($string);
-    }
 }
