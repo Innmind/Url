@@ -7,7 +7,7 @@ use Innmind\Url\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
 use League\Uri;
 
-final class Query implements QueryInterface
+final class Query
 {
     private const PATTERN = '/^\S+$/';
     private $value;
@@ -34,13 +34,20 @@ final class Query implements QueryInterface
         }
     }
 
-    public static function null(): QueryInterface
+    public static function null(): self
     {
-        return new NullQuery;
+        $self = new self('void');
+        $self->value = '';
+
+        return $self;
     }
 
     public function format(): string
     {
+        if ($this->value === '') {
+            return '';
+        }
+
         return '?'.$this->value;
     }
 

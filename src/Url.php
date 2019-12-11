@@ -29,7 +29,7 @@ final class Url implements UrlInterface
         Scheme $scheme,
         AuthorityInterface $authority,
         PathInterface $path,
-        QueryInterface $query,
+        Query $query,
         FragmentInterface $fragment
     ) {
         $this->scheme = $scheme;
@@ -78,12 +78,12 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function query(): QueryInterface
+    public function query(): Query
     {
         return $this->query;
     }
 
-    public function withQuery(QueryInterface $query): UrlInterface
+    public function withQuery(Query $query): UrlInterface
     {
         $self = clone $this;
         $self->query = $query;

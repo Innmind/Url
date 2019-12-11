@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Query,
-    QueryInterface
-};
+use Innmind\Url\Query;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase
@@ -15,7 +12,7 @@ class QueryTest extends TestCase
     {
         $f = Query::of('foo');
 
-        $this->assertInstanceOf(QueryInterface::class, $f);
+        $this->assertInstanceOf(Query::class, $f);
         $this->assertSame('foo', (string) $f);
     }
 
@@ -23,7 +20,7 @@ class QueryTest extends TestCase
     {
         $query = Query::null();
 
-        $this->assertInstanceOf(QueryInterface::class, $query);
+        $this->assertInstanceOf(Query::class, $query);
         $this->assertSame('', (string) $query);
     }
 }

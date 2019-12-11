@@ -11,8 +11,8 @@ interface UrlInterface
     public function withAuthority(AuthorityInterface $authority): self;
     public function path(): PathInterface;
     public function withPath(PathInterface $path): self;
-    public function query(): QueryInterface;
-    public function withQuery(QueryInterface $query): self;
+    public function query(): Query;
+    public function withQuery(Query $query): self;
     public function fragment(): FragmentInterface;
     public function withFragment(FragmentInterface $fragment): self;
     public function __toString(): string;
