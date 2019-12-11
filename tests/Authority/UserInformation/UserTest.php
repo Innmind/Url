@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority\UserInformation;
 
-use Innmind\Url\Authority\UserInformation\{
-    User,
-    UserInterface
-};
+use Innmind\Url\Authority\UserInformation\User;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
@@ -15,7 +12,7 @@ class UserTest extends TestCase
     {
         $u = User::of('foo');
 
-        $this->assertInstanceOf(UserInterface::class, $u);
+        $this->assertInstanceOf(User::class, $u);
         $this->assertSame('foo', (string) $u);
     }
 
@@ -29,7 +26,7 @@ class UserTest extends TestCase
 
     public function testNull()
     {
-        $this->assertInstanceOf(UserInterface::class, User::null());
+        $this->assertInstanceOf(User::class, User::null());
         $this->assertSame('', (string) User::null());
     }
 }

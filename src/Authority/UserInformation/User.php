@@ -6,7 +6,7 @@ namespace Innmind\Url\Authority\UserInformation;
 use Innmind\Url\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
 
-final class User implements UserInterface
+final class User
 {
     private const PATTERN = '/^[\pL\pN-]+$/';
     private $value;
@@ -25,9 +25,9 @@ final class User implements UserInterface
         return new self($value);
     }
 
-    public static function null(): UserInterface
+    public static function null(): self
     {
-        return new NullUser;
+        return new self('');
     }
 
     public function __toString(): string

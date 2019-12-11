@@ -6,13 +6,9 @@ namespace Innmind\Url;
 use Innmind\Url\{
     Authority\UserInformation,
     Authority\UserInformation\User,
-    Authority\UserInformation\NullUser,
     Authority\UserInformation\Password,
-    Authority\UserInformation\NullPassword,
     Authority\Host,
-    Authority\NullHost,
     Authority\Port,
-    Authority\NullPort,
     Exception\InvalidArgumentException
 };
 use League\Uri;

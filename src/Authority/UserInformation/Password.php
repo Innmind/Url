@@ -33,7 +33,7 @@ final class Password
         return new self('');
     }
 
-    public function format(UserInterface $user): string
+    public function format(User $user): string
     {
         if ($this->value === '') {
             return (string) $user;

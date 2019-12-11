@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority;
 
 use Innmind\Url\{
-    Authority\UserInformation\UserInterface,
-    Authority\UserInformation\NullUser,
     Authority\UserInformation\User,
     Authority\UserInformation\Password,
 };
@@ -16,14 +14,14 @@ final class UserInformation
     private $password;
     private $string;
 
-    private function __construct(UserInterface $user, Password $password)
+    private function __construct(User $user, Password $password)
     {
         $this->user = $user;
         $this->password = $password;
         $this->string = $password->format($user);
     }
 
-    public static function of(UserInterface $user, Password $password): self
+    public static function of(User $user, Password $password): self
     {
         return new self($user, $password);
     }
@@ -36,12 +34,12 @@ final class UserInformation
         );
     }
 
-    public function user(): UserInterface
+    public function user(): User
     {
         return $this->user;
     }
 
-    public function withUser(UserInterface $user): self
+    public function withUser(User $user): self
     {
         return new self($user, $this->password);
     }

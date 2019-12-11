@@ -7,8 +7,6 @@ use Innmind\Url\Authority\{
     UserInformation,
     Host,
     Port,
-    NullPort,
-    UserInformation\NullUser
 };
 
 final class Authority
