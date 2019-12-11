@@ -5,6 +5,7 @@ namespace Innmind\Url\Authority;
 
 interface PortInterface
 {
+    public function format(): string;
     public function value(): int;
     public function __toString(): string;
 }

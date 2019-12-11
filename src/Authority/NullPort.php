@@ -5,6 +5,11 @@ namespace Innmind\Url\Authority;
 
 final class NullPort implements PortInterface
 {
+    public function format(): string
+    {
+        return '';
+    }
+
     public function value(): int
     {
         return 0;

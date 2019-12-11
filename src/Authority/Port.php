@@ -22,6 +22,11 @@ final class Port implements PortInterface
         return new NullPort;
     }
 
+    public function format(): string
+    {
+        return ':'.$this->value;
+    }
+
     public function value(): int
     {
         return $this->value;

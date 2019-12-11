@@ -80,7 +80,7 @@ final class Authority
             '%s%s%s',
             $this->userInformation,
             !$this->userInformation->user() instanceof NullUser ? '@'.(string) $this->host : $this->host,
-            !$this->port instanceof NullPort ? ':'.(string) $this->port : ''
+            $this->port->format(),
         );
     }
 }
