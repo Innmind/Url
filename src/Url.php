@@ -130,10 +130,6 @@ final class Url implements UrlInterface
 
     /**
      * Build a url out of the given string
-     *
-     * @param string $string
-     *
-     * @return self
      */
     public static function of(string $string): self
     {
