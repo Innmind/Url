@@ -6,12 +6,14 @@ namespace Innmind\Url\Authority;
 use Innmind\Url\{
     Authority\UserInformation\UserInterface,
     Authority\UserInformation\NullUser,
+    Authority\UserInformation\User,
     Authority\UserInformation\PasswordInterface,
+    Authority\UserInformation\Password,
     Authority\UserInformation\NullPassword,
     Exception\InvalidUserInformationException
 };
 
-final class UserInformation implements UserInformationInterface
+final class UserInformation
 {
     private $user;
     private $password;
@@ -37,9 +39,12 @@ final class UserInformation implements UserInformationInterface
         return new self($user, $password);
     }
 
-    public static function null(): UserInformationInterface
+    public static function null(): self
     {
-        return new NullUserInformation;
+        return new self(
+            User::null(),
+            Password::null(),
+        );
     }
 
     public function user(): UserInterface
@@ -47,7 +52,7 @@ final class UserInformation implements UserInformationInterface
         return $this->user;
     }
 
-    public function withUser(UserInterface $user): UserInformationInterface
+    public function withUser(UserInterface $user): self
     {
         return new self($user, $this->password);
     }
@@ -57,7 +62,7 @@ final class UserInformation implements UserInformationInterface
         return $this->password;
     }
 
-    public function withPassword(PasswordInterface $password): UserInformationInterface
+    public function withPassword(PasswordInterface $password): self
     {
         return new self($this->user, $password);
     }

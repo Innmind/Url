@@ -5,7 +5,6 @@ namespace Innmind\Url\Tests\Authority;
 
 use Innmind\Url\Authority\{
     UserInformation,
-    UserInformationInterface,
     UserInformation\User,
     UserInformation\Password,
 };
@@ -20,7 +19,7 @@ class UserInformationTest extends TestCase
             $p = Password::of('bar')
         );
 
-        $this->assertInstanceOf(UserInformationInterface::class, $ui);
+        $this->assertInstanceOf(UserInformation::class, $ui);
         $this->assertSame($u, $ui->user());
         $this->assertSame($p, $ui->password());
         $this->assertSame('foo:bar', (string) $ui);
