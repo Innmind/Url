@@ -5,7 +5,7 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Scheme,
-    SchemeInterface
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,17 +13,25 @@ class SchemeTest extends TestCase
 {
     public function testInterface()
     {
-        $s = new Scheme('http-2.0');
+        $s = Scheme::of('http-2.0');
 
-        $this->assertInstanceOf(SchemeInterface::class, $s);
-        $this->assertSame('http-2.0', (string) $s);
+        $this->assertInstanceOf(Scheme::class, $s);
+        $this->assertSame('http-2.0', $s->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidData()
     {
-        new Scheme('http://');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('http://');
+
+        Scheme::of('http://');
+    }
+
+    public function testNull()
+    {
+        $scheme = Scheme::none();
+
+        $this->assertInstanceOf(Scheme::class, $scheme);
+        $this->assertSame('', $scheme->toString());
     }
 }

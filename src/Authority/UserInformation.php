@@ -4,55 +4,72 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority;
 
 use Innmind\Url\{
-    Authority\UserInformation\UserInterface,
-    Authority\UserInformation\NullUser,
-    Authority\UserInformation\PasswordInterface,
-    Authority\UserInformation\NullPassword,
-    Exception\InvalidUserInformationException
+    Authority\UserInformation\User,
+    Authority\UserInformation\Password,
 };
 
-final class UserInformation implements UserInformationInterface
+final class UserInformation
 {
-    private $user;
-    private $password;
-    private $string;
+    private User $user;
+    private Password $password;
+    private string $string;
 
-    public function __construct(UserInterface $user, PasswordInterface $password)
+    private function __construct(User $user, Password $password)
     {
-        if ($user instanceof NullUser && !$password instanceof NullPassword) {
-            throw new InvalidUserInformationException;
-        }
-
         $this->user = $user;
         $this->password = $password;
-        $this->string = (string) $user;
-
-        if (!$password instanceof NullPassword) {
-            $this->string .= ':'.(string) $password;
-        }
+        $this->string = $password->format($user);
     }
 
-    public function user(): UserInterface
+    public static function of(User $user, Password $password): self
+    {
+        return new self($user, $password);
+    }
+
+    public static function none(): self
+    {
+        return new self(
+            User::none(),
+            Password::none(),
+        );
+    }
+
+    public function user(): User
     {
         return $this->user;
     }
 
-    public function withUser(UserInterface $user): UserInformationInterface
+    public function withUser(User $user): self
     {
         return new self($user, $this->password);
     }
 
-    public function password(): PasswordInterface
+    public function withoutUser(): self
+    {
+        return new self(User::none(), $this->password);
+    }
+
+    public function password(): Password
     {
         return $this->password;
     }
 
-    public function withPassword(PasswordInterface $password): UserInformationInterface
+    public function withPassword(Password $password): self
     {
         return new self($this->user, $password);
     }
 
-    public function __toString(): string
+    public function withoutPassword(): self
+    {
+        return new self($this->user, Password::none());
+    }
+
+    public function format(Host $host): string
+    {
+        return $this->user->format($host, $this->password);
+    }
+
+    public function toString(): string
     {
         return $this->string;
     }

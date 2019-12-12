@@ -5,26 +5,17 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Url,
-    UrlInterface,
     Scheme,
-    NullScheme,
     Authority,
     Authority\UserInformation,
     Authority\UserInformation\User,
-    Authority\UserInformation\NullUser,
     Authority\UserInformation\Password,
-    Authority\UserInformation\NullPassword,
     Authority\Host,
-    Authority\NullHost,
     Authority\Port,
-    Authority\NullPort,
     Path,
-    NullPath,
     Query,
-    NullQuery,
     Fragment,
-    NullFragment,
-    NullAuthority
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -33,43 +24,43 @@ class UrlTest extends TestCase
     public function testInterface()
     {
         $u = new Url(
-            new Scheme('http'),
-            new Authority(
-                new UserInformation(
-                    new User('foo'),
-                    new Password('bar')
+            Scheme::of('http'),
+            Authority::of(
+                UserInformation::of(
+                    User::of('foo'),
+                    Password::of('bar')
                 ),
-                new Host('localhost'),
-                new Port(8080)
+                Host::of('localhost'),
+                Port::of(8080)
             ),
-            new Path('/foo'),
-            new Query('foo=bar'),
-            new Fragment('baz')
+            Path::of('/foo'),
+            Query::of('foo=bar'),
+            Fragment::of('baz')
         );
 
-        $this->assertInstanceOf(UrlInterface::class, $u);
-        $this->assertSame('http://foo:bar@localhost:8080/foo?foo=bar#baz', (string) $u);
+        $this->assertInstanceOf(Url::class, $u);
+        $this->assertSame('http://foo:bar@localhost:8080/foo?foo=bar#baz', $u->toString());
 
         $this->assertSame(
             '/',
-            (string) new Url(
-                new NullScheme,
-                new Authority(
-                    new UserInformation(new NullUser, new NullPassword),
-                    new NullHost,
-                    new NullPort
+            (new Url(
+                Scheme::none(),
+                Authority::of(
+                    UserInformation::of(User::none(), Password::none()),
+                    Host::none(),
+                    Port::none()
                 ),
-                new NullPath,
-                new NullQuery,
-                new NullFragment
-            )
+                Path::none(),
+                Query::none(),
+                Fragment::none()
+            ))->toString()
         );
     }
 
     /**
      * @dataProvider fromString
      */
-    public function testFromString(
+    public function testOf(
         string $url,
         string $scheme,
         string $user,
@@ -80,25 +71,25 @@ class UrlTest extends TestCase
         string $query,
         string $fragment
     ) {
-        $url = Url::fromString($url);
+        $url = Url::of($url);
 
         $this->assertInstanceOf(Url::class, $url);
-        $this->assertSame($scheme, (string) $url->scheme());
-        $this->assertSame($user, (string) $url->authority()->userInformation()->user());
-        $this->assertSame($password, (string) $url->authority()->userInformation()->password());
-        $this->assertSame($host, (string) $url->authority()->host());
-        $this->assertSame($port, (string) $url->authority()->port());
-        $this->assertSame($path, (string) $url->path());
-        $this->assertSame($query, (string) $url->query());
-        $this->assertSame($fragment, (string) $url->fragment());
+        $this->assertSame($scheme, $url->scheme()->toString());
+        $this->assertSame($user, $url->authority()->userInformation()->user()->toString());
+        $this->assertSame($password, $url->authority()->userInformation()->password()->toString());
+        $this->assertSame($host, $url->authority()->host()->toString());
+        $this->assertSame($port, $url->authority()->port()->toString());
+        $this->assertSame($path, $url->path()->toString());
+        $this->assertSame($query, $url->query()->toString());
+        $this->assertSame($fragment, $url->fragment()->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromInvalidString()
     {
-        Url::fromString('http://user:password/path');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('http://user:password/path');
+
+        Url::of('http://user:password/path');
     }
 
     /**
@@ -108,7 +99,7 @@ class UrlTest extends TestCase
     {
         $this->assertSame(
             $url,
-            (string) Url::fromString($url)
+            Url::of($url)->toString()
         );
     }
 
@@ -118,15 +109,15 @@ class UrlTest extends TestCase
     public function testParse(string $url)
     {
         $this->assertInstanceOf(
-            UrlInterface::class,
-            Url::fromString($url)
+            Url::class,
+            Url::of($url)
         );
     }
 
     public function testWithScheme()
     {
-        $url = Url::fromString('http://example.com');
-        $url2 = $url->withScheme($scheme = new Scheme('https'));
+        $url = Url::of('http://example.com');
+        $url2 = $url->withScheme($scheme = Scheme::of('https'));
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($scheme, $url2->scheme());
@@ -136,10 +127,23 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutScheme()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutScheme();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertEquals(Scheme::none(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithAuthority()
     {
-        $url = Url::fromString('http://example.com');
-        $url2 = $url->withAuthority($authority = new NullAuthority);
+        $url = Url::of('http://example.com');
+        $url2 = $url->withAuthority($authority = Authority::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -149,10 +153,23 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutAuthority()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutAuthority();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertEquals(Authority::none(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithPath()
     {
-        $url = Url::fromString('http://example.com');
-        $url2 = $url->withPath($path = new NullPath);
+        $url = Url::of('http://example.com');
+        $url2 = $url->withPath($path = Path::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -162,10 +179,23 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutPath()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutPath();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertEquals(Path::none(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithQuery()
     {
-        $url = Url::fromString('http://example.com');
-        $url2 = $url->withQuery($query = new NullQuery);
+        $url = Url::of('http://example.com');
+        $url2 = $url->withQuery($query = Query::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -175,10 +205,23 @@ class UrlTest extends TestCase
         $this->assertSame($url->fragment(), $url2->fragment());
     }
 
+    public function testWithoutQuery()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutQuery();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertEquals(Query::none(), $url2->query());
+        $this->assertSame($url->fragment(), $url2->fragment());
+    }
+
     public function testWithFragment()
     {
-        $url = Url::fromString('http://example.com');
-        $url2 = $url->withFragment($fragment = new NullFragment);
+        $url = Url::of('http://example.com');
+        $url2 = $url->withFragment($fragment = Fragment::none());
 
         $this->assertNotSame($url, $url2);
         $this->assertSame($url->scheme(), $url2->scheme());
@@ -188,11 +231,24 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url2->fragment());
     }
 
+    public function testWithoutFragment()
+    {
+        $url = Url::of('http://example.com');
+        $url2 = $url->withoutFragment();
+
+        $this->assertNotSame($url, $url2);
+        $this->assertSame($url->scheme(), $url2->scheme());
+        $this->assertSame($url->authority(), $url2->authority());
+        $this->assertSame($url->path(), $url2->path());
+        $this->assertSame($url->query(), $url2->query());
+        $this->assertEquals(Fragment::none(), $url2->fragment());
+    }
+
     public function testCastWithNullScheme()
     {
-        $url = Url::fromString('//example.com');
+        $url = Url::of('//example.com');
 
-        $this->assertSame('example.com/', (string) $url);
+        $this->assertSame('example.com/', $url->toString());
     }
 
     public function cases(): array

@@ -3,24 +3,46 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\{
+    Authority\Host,
+    Exception\DomainException,
+};
 use Innmind\Immutable\Str;
 
-final class User implements UserInterface
+final class User
 {
-    const PATTERN = '/^[\pL\pN-]+$/';
-    private $value;
+    private const PATTERN = '/^[\pL\pN-]+$/';
+    private string $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
-        if (!(new Str($value))->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
-        }
-
         $this->value = $value;
     }
 
-    public function __toString(): string
+    public static function of(string $value): self
+    {
+        if (!Str::of($value)->matches(self::PATTERN)) {
+            throw new DomainException($value);
+        }
+
+        return new self($value);
+    }
+
+    public static function none(): self
+    {
+        return new self('');
+    }
+
+    public function format(Host $host, Password $password): string
+    {
+        if ($this->value === '') {
+            return $host->toString();
+        }
+
+        return $password->format($this).'@'.$host->toString();
+    }
+
+    public function toString(): string
     {
         return $this->value;
     }

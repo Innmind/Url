@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\Authority\{
-    Host,
-    HostInterface
+use Innmind\Url\{
+    Authority\Host,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,17 +13,23 @@ class HostTest extends TestCase
 {
     public function testInterface()
     {
-        $h = new Host($s = '[1:2:3::4:5:6:7]');
+        $h = Host::of($s = '[1:2:3::4:5:6:7]');
 
-        $this->assertInstanceOf(HostInterface::class, $h);
-        $this->assertSame($s, (string) $h);
+        $this->assertInstanceOf(Host::class, $h);
+        $this->assertSame($s, $h->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidHost()
     {
-        new Host('foo bar');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo bar');
+
+        Host::of('foo bar');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(Host::class, Host::none());
+        $this->assertSame('', Host::none()->toString());
     }
 }

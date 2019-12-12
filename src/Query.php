@@ -3,19 +3,19 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\InvalidArgumentException;
+use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 use League\Uri;
 
-final class Query implements QueryInterface
+final class Query
 {
-    const PATTERN = '/^\S+$/';
-    private $value;
+    private const PATTERN = '/^\S+$/';
+    private string $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
-        if (!(new Str($value))->matches(self::PATTERN)) {
-            throw new InvalidArgumentException;
+        if (!Str::of($value)->matches(self::PATTERN)) {
+            throw new DomainException($value);
         }
 
         $this->value = $value;
@@ -25,25 +25,33 @@ final class Query implements QueryInterface
     {
         try {
             return new self($value);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return new self(
                 Uri\build_query(
-                    Uri\parse_query($value)
-                )
+                    Uri\parse_query($value),
+                ),
             );
         }
     }
 
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $value): self
+    public static function none(): self
     {
-        return self::of($value);
+        $self = new self('void');
+        $self->value = '';
+
+        return $self;
     }
 
-    public function __toString(): string
+    public function format(): string
+    {
+        if ($this->value === '') {
+            return '';
+        }
+
+        return '?'.$this->value;
+    }
+
+    public function toString(): string
     {
         return $this->value;
     }

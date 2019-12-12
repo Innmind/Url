@@ -5,7 +5,7 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Fragment,
-    FragmentInterface
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,17 +13,23 @@ class FragmentTest extends TestCase
 {
     public function testInterface()
     {
-        $f = new Fragment('foo');
+        $f = Fragment::of('foo');
 
-        $this->assertInstanceOf(FragmentInterface::class, $f);
-        $this->assertSame('foo', (string) $f);
+        $this->assertInstanceOf(Fragment::class, $f);
+        $this->assertSame('foo', $f->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidFragment()
     {
-        new Fragment('foo bar');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo bar');
+
+        Fragment::of('foo bar');
+    }
+
+    public function testNull()
+    {
+        $this->assertInstanceOf(Fragment::class, Fragment::none());
+        $this->assertSame('', Fragment::none()->toString());
     }
 }

@@ -6,31 +6,27 @@ namespace Innmind\Url;
 use Innmind\Url\{
     Authority\UserInformation,
     Authority\UserInformation\User,
-    Authority\UserInformation\NullUser,
     Authority\UserInformation\Password,
-    Authority\UserInformation\NullPassword,
     Authority\Host,
-    Authority\NullHost,
     Authority\Port,
-    Authority\NullPort,
-    Exception\InvalidArgumentException
+    Exception\DomainException,
 };
 use League\Uri;
 
-final class Url implements UrlInterface
+final class Url
 {
-    private $scheme;
-    private $authority;
-    private $path;
-    private $query;
-    private $fragment;
+    private Scheme $scheme;
+    private Authority $authority;
+    private Path $path;
+    private Query $query;
+    private Fragment $fragment;
 
     public function __construct(
-        SchemeInterface $scheme,
-        AuthorityInterface $authority,
-        PathInterface $path,
-        QueryInterface $query,
-        FragmentInterface $fragment
+        Scheme $scheme,
+        Authority $authority,
+        Path $path,
+        Query $query,
+        Fragment $fragment
     ) {
         $this->scheme = $scheme;
         $this->authority = $authority;
@@ -39,12 +35,36 @@ final class Url implements UrlInterface
         $this->fragment = $fragment;
     }
 
-    public function scheme(): SchemeInterface
+    public static function of(string $string): self
+    {
+        try {
+            $data = Uri\parse(trim($string));
+        } catch (\Exception $e) {
+            throw new DomainException($string);
+        }
+
+        return new self(
+            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::none(),
+            Authority::of(
+                UserInformation::of(
+                    $data['user'] ? User::of($data['user']) : User::none(),
+                    $data['pass'] ? Password::of($data['pass']) : Password::none(),
+                ),
+                $data['host'] ? Host::of($data['host']) : Host::none(),
+                $data['port'] ? Port::of((int) $data['port']) : Port::none(),
+            ),
+            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
+            $data['query'] ? Query::of($data['query']) : Query::none(),
+            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
+        );
+    }
+
+    public function scheme(): Scheme
     {
         return $this->scheme;
     }
 
-    public function withScheme(SchemeInterface $scheme): UrlInterface
+    public function withScheme(Scheme $scheme): self
     {
         $self = clone $this;
         $self->scheme = $scheme;
@@ -52,12 +72,20 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function authority(): AuthorityInterface
+    public function withoutScheme(): self
+    {
+        $self = clone $this;
+        $self->scheme = Scheme::none();
+
+        return $self;
+    }
+
+    public function authority(): Authority
     {
         return $this->authority;
     }
 
-    public function withAuthority(AuthorityInterface $authority): UrlInterface
+    public function withAuthority(Authority $authority): self
     {
         $self = clone $this;
         $self->authority = $authority;
@@ -65,12 +93,20 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function path(): PathInterface
+    public function withoutAuthority(): self
+    {
+        $self = clone $this;
+        $self->authority = Authority::none();
+
+        return $self;
+    }
+
+    public function path(): Path
     {
         return $this->path;
     }
 
-    public function withPath(PathInterface $path): UrlInterface
+    public function withPath(Path $path): self
     {
         $self = clone $this;
         $self->path = $path;
@@ -78,12 +114,20 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function query(): QueryInterface
+    public function withoutPath(): self
+    {
+        $self = clone $this;
+        $self->path = Path::none();
+
+        return $self;
+    }
+
+    public function query(): Query
     {
         return $this->query;
     }
 
-    public function withQuery(QueryInterface $query): UrlInterface
+    public function withQuery(Query $query): self
     {
         $self = clone $this;
         $self->query = $query;
@@ -91,12 +135,20 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function fragment(): FragmentInterface
+    public function withoutQuery(): self
+    {
+        $self = clone $this;
+        $self->query = Query::none();
+
+        return $self;
+    }
+
+    public function fragment(): Fragment
     {
         return $this->fragment;
     }
 
-    public function withFragment(FragmentInterface $fragment): UrlInterface
+    public function withFragment(Fragment $fragment): self
     {
         $self = clone $this;
         $self->fragment = $fragment;
@@ -104,67 +156,16 @@ final class Url implements UrlInterface
         return $self;
     }
 
-    public function __toString(): string
+    public function withoutFragment(): self
     {
-        $path = (string) $this->path;
+        $self = clone $this;
+        $self->fragment = Fragment::none();
 
-        if (
-            $this->path instanceof NullPath &&
-            (
-                !$this->query instanceof NullQuery ||
-                !$this->fragment instanceof NullFragment
-            )
-        ) {
-            $path = '';
-        }
-
-        return sprintf(
-            '%s%s%s%s%s',
-            $this->scheme,
-            !$this->scheme instanceof NullScheme ? '://'.$this->authority : $this->authority,
-            $path,
-            !$this->query instanceof NullQuery ? '?'.$this->query : '',
-            !$this->fragment instanceof NullFragment ? '#'.$this->fragment : ''
-        );
+        return $self;
     }
 
-    /**
-     * Build a url out of the given string
-     *
-     * @param string $string
-     *
-     * @return self
-     */
-    public static function of(string $string): self
+    public function toString(): string
     {
-        try {
-            $data = Uri\parse(trim($string));
-        } catch (\Exception $e) {
-            throw new InvalidArgumentException;
-        }
-
-        return new self(
-            $data['scheme'] ? new Scheme($data['scheme']) : new NullScheme,
-            new Authority(
-                new UserInformation(
-                    $data['user'] ? new User($data['user']) : new NullUser,
-                    $data['pass'] ? new Password($data['pass']) : new NullPassword
-                ),
-                $data['host'] ? new Host($data['host']) : new NullHost,
-                $data['port'] ? new Port((int) $data['port']) : new NullPort
-            ),
-            $data['path'] && !empty($data['path']) ? new Path($data['path']) : new NullPath,
-            $data['query'] ? Query::of($data['query']) : new NullQuery,
-            $data['fragment'] ? new Fragment($data['fragment']) : new NullFragment
-        );
-    }
-
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $string): self
-    {
-        return self::of($string);
+        return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
     }
 }

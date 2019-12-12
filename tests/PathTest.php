@@ -5,7 +5,7 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Path,
-    PathInterface
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,20 +13,28 @@ class PathTest extends TestCase
 {
     public function testInterface()
     {
-        $p = new Path('/foo/bar/');
+        $p = Path::of('/foo/bar/');
 
-        $this->assertInstanceOf(PathInterface::class, $p);
-        $this->assertSame('/foo/bar/', (string) $p);
+        $this->assertInstanceOf(Path::class, $p);
+        $this->assertSame('/foo/bar/', $p->toString());
 
-        new Path('/'); //check it doesn't throw
-        new Path('relative/path');
+        Path::of('/'); //check it doesn't throw
+        Path::of('relative/path');
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidPath()
     {
-        new Path('');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('');
+
+        Path::of('');
+    }
+
+    public function testNull()
+    {
+        $path = Path::none();
+
+        $this->assertInstanceOf(Path::class, $path);
+        $this->assertSame('/', $path->toString());
     }
 }

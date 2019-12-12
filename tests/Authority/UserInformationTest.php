@@ -3,13 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\Authority\{
-    UserInformation,
-    UserInformationInterface,
-    UserInformation\User,
-    UserInformation\NullUser,
-    UserInformation\Password,
-    UserInformation\NullPassword
+use Innmind\Url\{
+    Authority\UserInformation,
+    Authority\UserInformation\User,
+    Authority\UserInformation\Password,
+    Exception\PasswordCannotBeSpecifiedWithoutAUser,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -17,53 +15,94 @@ class UserInformationTest extends TestCase
 {
     public function testInterface()
     {
-        $ui = new UserInformation(
-            $u = new User('foo'),
-            $p = new Password('bar')
+        $ui = UserInformation::of(
+            $u = User::of('foo'),
+            $p = Password::of('bar')
         );
 
-        $this->assertInstanceOf(UserInformationInterface::class, $ui);
+        $this->assertInstanceOf(UserInformation::class, $ui);
         $this->assertSame($u, $ui->user());
         $this->assertSame($p, $ui->password());
-        $this->assertSame('foo:bar', (string) $ui);
+        $this->assertSame('foo:bar', $ui->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidUserInformationException
-     */
     public function testThrowWhenNullUserButPasswordPresent()
     {
-        new UserInformation(new NullUser, new Password('foo'));
+        $this->expectException(PasswordCannotBeSpecifiedWithoutAUser::class);
+
+        UserInformation::of(User::none(), Password::of('foo'));
     }
 
     public function testString()
     {
         $this->assertSame(
             'foo',
-            (string )new UserInformation(new User('foo'), new NullPassword)
+            UserInformation::of(User::of('foo'), Password::none())->toString()
         );
         $this->assertSame(
             '',
-            (string) new UserInformation(new NullUser, new NullPassword)
+            UserInformation::of(User::none(), Password::none())->toString()
         );
     }
 
     public function testWithUser()
     {
-        $info = new UserInformation(new User('foo'), new Password('bar'));
-        $info2 = $info->withUser($user = new User('baz'));
+        $info = UserInformation::of(User::of('foo'), Password::of('bar'));
+        $info2 = $info->withUser($user = User::of('baz'));
 
         $this->assertNotSame($info, $info2);
         $this->assertSame($user, $info2->user());
         $this->assertSame($info->password(), $info2->password());
     }
 
-    public function testWithPassword()
+    public function testWithoutUser()
     {
-        $info = new UserInformation(new User('foo'), new Password('bar'));
-        $info2 = $info->withPassword($password = new Password('baz'));
+        $info = UserInformation::of(User::of('foo'), Password::none());
+        $info2 = $info->withoutUser();
 
         $this->assertNotSame($info, $info2);
+        $this->assertEquals(User::none(), $info2->user());
+        $this->assertSame($info->password(), $info2->password());
+    }
+
+    public function testWithPassword()
+    {
+        $info = UserInformation::of(User::of('foo'), Password::of('bar'));
+        $info2 = $info->withPassword($password = Password::of('baz'));
+
+        $this->assertNotSame($info, $info2);
+        $this->assertSame($info->user(), $info2->user());
+        $this->assertSame($password, $info2->password());
+    }
+
+    public function testWithoutPassword()
+    {
+        $info = UserInformation::of(User::of('foo'), Password::of('bar'));
+        $info2 = $info->withoutPassword();
+
+        $this->assertNotSame($info, $info2);
+        $this->assertSame($info->user(), $info2->user());
+        $this->assertEquals(Password::none(), $info2->password());
+    }
+
+    public function testNullWithUser()
+    {
+        $info = UserInformation::none();
+        $info2 = $info->withUser($user = User::none());
+
+        $this->assertNotSame($info, $info2);
+        $this->assertInstanceOf(UserInformation::class, $info2);
+        $this->assertSame($user, $info2->user());
+        $this->assertSame($info->password(), $info2->password());
+    }
+
+    public function testNullWithPassword()
+    {
+        $info = UserInformation::none();
+        $info2 = $info->withPassword($password = Password::none());
+
+        $this->assertNotSame($info, $info2);
+        $this->assertInstanceOf(UserInformation::class, $info2);
         $this->assertSame($info->user(), $info2->user());
         $this->assertSame($password, $info2->password());
     }

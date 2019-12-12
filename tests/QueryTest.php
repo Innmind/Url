@@ -3,27 +3,24 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Query,
-    QueryInterface
-};
+use Innmind\Url\Query;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase
 {
     public function testInterface()
     {
-        $f = new Query('foo');
+        $f = Query::of('foo');
 
-        $this->assertInstanceOf(QueryInterface::class, $f);
-        $this->assertSame('foo', (string) $f);
+        $this->assertInstanceOf(Query::class, $f);
+        $this->assertSame('foo', $f->toString());
     }
 
-    /**
-     * @expectedException Innmind\Url\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenInvalidQuery()
+    public function testNull()
     {
-        new Query('foo bar');
+        $query = Query::none();
+
+        $this->assertInstanceOf(Query::class, $query);
+        $this->assertSame('', $query->toString());
     }
 }
