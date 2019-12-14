@@ -37,4 +37,58 @@ class PathTest extends TestCase
         $this->assertInstanceOf(Path::class, $path);
         $this->assertSame('/', $path->toString());
     }
+
+    public function testAbsolute()
+    {
+        $this->assertTrue(Path::of('/some/path')->absolute());
+        $this->assertTrue(Path::none()->absolute());
+        $this->assertFalse(Path::of('some/path')->absolute());
+    }
+
+    public function testDirectory()
+    {
+        $this->assertTrue(Path::of('/some/path/')->directory());
+        $this->assertTrue(Path::none()->directory());
+        $this->assertFalse(Path::of('/some/path')->directory());
+    }
+
+    /**
+     * @dataProvider resolutions
+     */
+    public function testResolve($expected, $source, $target)
+    {
+        $this->assertInstanceOf(Path::class, Path::of($source)->resolve(Path::of($target)));
+        $this->assertSame($expected, Path::of($source)->resolve(Path::of($target))->toString());
+    }
+
+    public function resolutions(): array
+    {
+        return [
+            'target is absolute' => [
+                '/some/target',
+                '/some/source',
+                '/some/target',
+            ],
+            'absolute source is a directory' => [
+                '/some/source/some/target',
+                '/some/source/',
+                'some/target',
+            ],
+            'relative source is a directory' => [
+                'some/source/some/target',
+                'some/source/',
+                'some/target',
+            ],
+            'absolute source is a file' => [
+                '/some/some/target',
+                '/some/source',
+                'some/target',
+            ],
+            'relative source is a file' => [
+                'some/some/target',
+                'some/source',
+                'some/target',
+            ],
+        ];
+    }
 }
