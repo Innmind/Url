@@ -35,6 +35,11 @@ final class Path
         return $this->value[0] === '/';
     }
 
+    public function directory(): bool
+    {
+        return $this->value[-1] === '/';
+    }
+
     public function format(Query $query, Fragment $fragment): string
     {
         $end = $query->format().$fragment->format();

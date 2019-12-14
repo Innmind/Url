@@ -43,4 +43,10 @@ class PathTest extends TestCase
         $this->assertTrue(Path::of('/some/path')->absolute());
         $this->assertFalse(Path::of('some/path')->absolute());
     }
+
+    public function testDirectory()
+    {
+        $this->assertTrue(Path::of('/some/path/')->directory());
+        $this->assertFalse(Path::of('/some/path')->directory());
+    }
 }
