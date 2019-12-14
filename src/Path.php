@@ -30,6 +30,11 @@ final class Path
         return new self('');
     }
 
+    public function absolute(): bool
+    {
+        return $this->value[0] === '/';
+    }
+
     public function format(Query $query, Fragment $fragment): string
     {
         $end = $query->format().$fragment->format();

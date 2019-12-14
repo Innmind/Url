@@ -37,4 +37,10 @@ class PathTest extends TestCase
         $this->assertInstanceOf(Path::class, $path);
         $this->assertSame('/', $path->toString());
     }
+
+    public function testAbsolute()
+    {
+        $this->assertTrue(Path::of('/some/path')->absolute());
+        $this->assertFalse(Path::of('some/path')->absolute());
+    }
 }

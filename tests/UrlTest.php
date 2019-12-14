@@ -251,6 +251,12 @@ class UrlTest extends TestCase
         $this->assertSame('example.com/', $url->toString());
     }
 
+    public function testPathIsAbsolute()
+    {
+        $this->assertTrue(Url::of('/some/path')->path()->absolute());
+        $this->assertFalse(Url::of('some/path')->path()->absolute());
+    }
+
     public function cases(): array
     {
         return [
