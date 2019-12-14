@@ -40,6 +40,21 @@ final class Path
         return $this->toString()[-1] === '/';
     }
 
+    public function resolve(self $path): self
+    {
+        if ($path->absolute()) {
+            return $path;
+        }
+
+        if ($this->directory()) {
+            return self::of($this->toString().$path->toString());
+        }
+
+        $parent = \dirname($this->toString());
+
+        return self::of($parent.'/'.$path->toString());
+    }
+
     public function format(Query $query, Fragment $fragment): string
     {
         $end = $query->format().$fragment->format();
