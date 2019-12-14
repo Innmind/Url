@@ -32,12 +32,12 @@ final class Path
 
     public function absolute(): bool
     {
-        return $this->value[0] === '/';
+        return $this->toString()[0] === '/';
     }
 
     public function directory(): bool
     {
-        return $this->value[-1] === '/';
+        return $this->toString()[-1] === '/';
     }
 
     public function format(Query $query, Fragment $fragment): string

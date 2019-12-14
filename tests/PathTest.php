@@ -41,12 +41,14 @@ class PathTest extends TestCase
     public function testAbsolute()
     {
         $this->assertTrue(Path::of('/some/path')->absolute());
+        $this->assertTrue(Path::none()->absolute());
         $this->assertFalse(Path::of('some/path')->absolute());
     }
 
     public function testDirectory()
     {
         $this->assertTrue(Path::of('/some/path/')->directory());
+        $this->assertTrue(Path::none()->directory());
         $this->assertFalse(Path::of('/some/path')->directory());
     }
 }
