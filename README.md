@@ -3,7 +3,7 @@
 | `develop` |
 |-----------|
 | [![codecov](https://codecov.io/gh/Innmind/Url/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Url) |
-| [![Build Status](https://travis-ci.org/Innmind/Url.svg?branch=develop)](https://travis-ci.org/Innmind/Url) |
+| [![Build Status](https://github.com/Innmind/Url/workflows/CI/badge.svg)](https://github.com/Innmind/Url/actions?query=workflow%3ACI) |
 
 Url abstraction library
 

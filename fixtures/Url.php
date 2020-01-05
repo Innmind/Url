@@ -19,7 +19,7 @@ final class Url
      */
     public static function any(): Set
     {
-        return Set\Composite::of(
+        return Set\Composite::immutable(
             static function($scheme, $authority, $path, $query, $fragment): Model {
                 return new Model($scheme, $authority, $path, $query, $fragment);
             },

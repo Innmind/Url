@@ -13,7 +13,7 @@ final class Authority
      */
     public static function any(): Set
     {
-        return Set\Composite::of(
+        return Set\Composite::immutable(
             static function($userInfo, $host, $port): Model {
                 return Model::of($userInfo, $host, $port);
             },
