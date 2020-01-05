@@ -13,7 +13,7 @@ final class Query
      */
     public static function any(): Set
     {
-        return Set\Decorate::of(
+        return Set\Decorate::immutable(
             static function(string $value): Model {
                 return Model::of($value);
             },
