@@ -30,6 +30,11 @@ final class Path
         return new self('');
     }
 
+    public function equals(self $path): bool
+    {
+        return $this->value === $path->value;
+    }
+
     public function absolute(): bool
     {
         return $this->toString()[0] === '/';

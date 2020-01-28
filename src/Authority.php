@@ -42,6 +42,13 @@ final class Authority
         );
     }
 
+    public function equals(self $authority): bool
+    {
+        return $this->userInformation->equals($authority->userInformation()) &&
+            $this->host->equals($authority->host()) &&
+            $this->port->equals($authority->port());
+    }
+
     public function userInformation(): UserInformation
     {
         return $this->userInformation;

@@ -34,4 +34,11 @@ class SchemeTest extends TestCase
         $this->assertInstanceOf(Scheme::class, $scheme);
         $this->assertSame('', $scheme->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Scheme::none()->equals(Scheme::none()));
+        $this->assertTrue(Scheme::of('http')->equals(Scheme::of('http')));
+        $this->assertFalse(Scheme::of('https')->equals(Scheme::of('http')));
+    }
 }

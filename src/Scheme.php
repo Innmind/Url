@@ -30,6 +30,11 @@ final class Scheme
         return new self('');
     }
 
+    public function equals(self $scheme): bool
+    {
+        return $this->value === $scheme->value;
+    }
+
     public function format(Authority $authority): string
     {
         if ($this->value === '') {

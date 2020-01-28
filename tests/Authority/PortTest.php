@@ -34,4 +34,11 @@ class PortTest extends TestCase
         $this->assertSame(0, Port::none()->value());
         $this->assertSame('', Port::none()->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Port::none()->equals(Port::none()));
+        $this->assertTrue(Port::of(80)->equals(Port::of(80)));
+        $this->assertFalse(Port::of(8080)->equals(Port::of(80)));
+    }
 }

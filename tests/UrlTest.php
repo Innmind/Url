@@ -17,10 +17,14 @@ use Innmind\Url\{
     Fragment,
     Exception\DomainException,
 };
+use Fixtures\Innmind\Url\Url as Fixture;
 use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\BlackBox;
 
 class UrlTest extends TestCase
 {
+    use BlackBox;
+
     public function testInterface()
     {
         $u = new Url(
@@ -255,6 +259,24 @@ class UrlTest extends TestCase
     {
         $this->assertTrue(Url::of('/some/path')->path()->absolute());
         $this->assertFalse(Url::of('some/path')->path()->absolute());
+    }
+
+    public function testEquals()
+    {
+        $this
+            ->forAll(Fixture::any(), Fixture::any())
+            ->then(function($a, $b) {
+                $this->assertTrue($a->equals($a));
+                $this->assertTrue($a->equals(new Url(
+                    $a->scheme(),
+                    $a->authority(),
+                    $a->path(),
+                    $a->query(),
+                    $a->fragment(),
+                )));
+                $this->assertFalse($a->equals($b));
+                $this->assertFalse($b->equals($a));
+            });
     }
 
     public function cases(): array

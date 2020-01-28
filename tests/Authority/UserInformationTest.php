@@ -106,4 +106,36 @@ class UserInformationTest extends TestCase
         $this->assertSame($info->user(), $info2->user());
         $this->assertSame($password, $info2->password());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(UserInformation::none()->equals(UserInformation::none()));
+        $this->assertTrue(
+            UserInformation::of(
+                User::of('foo'),
+                Password::none(),
+            )->equals(UserInformation::of(
+                User::of('foo'),
+                Password::none(),
+            )),
+        );
+        $this->assertTrue(
+            UserInformation::of(
+                User::of('bar'),
+                Password::of('foo'),
+            )->equals(UserInformation::of(
+                User::of('bar'),
+                Password::of('foo'),
+            )),
+        );
+        $this->assertFalse(
+            UserInformation::of(
+                User::of('bar'),
+                Password::none(),
+            )->equals(UserInformation::of(
+                User::of('foo'),
+                Password::of('bar'),
+            )),
+        );
+    }
 }

@@ -32,4 +32,11 @@ class PasswordTest extends TestCase
         $this->assertInstanceOf(Password::class, Password::none());
         $this->assertSame('', Password::none()->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Password::none()->equals(Password::none()));
+        $this->assertTrue(Password::of('foo')->equals(Password::of('foo')));
+        $this->assertFalse(Password::of('bar')->equals(Password::of('foo')));
+    }
 }

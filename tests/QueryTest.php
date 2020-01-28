@@ -23,4 +23,11 @@ class QueryTest extends TestCase
         $this->assertInstanceOf(Query::class, $query);
         $this->assertSame('', $query->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Query::none()->equals(Query::none()));
+        $this->assertTrue(Query::of('foo')->equals(Query::of('foo')));
+        $this->assertFalse(Query::of('bar')->equals(Query::of('foo')));
+    }
 }

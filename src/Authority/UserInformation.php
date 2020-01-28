@@ -34,6 +34,12 @@ final class UserInformation
         );
     }
 
+    public function equals(self $userInformation): bool
+    {
+        return $this->user->equals($userInformation->user()) &&
+            $this->password->equals($userInformation->password());
+    }
+
     public function user(): User
     {
         return $this->user;

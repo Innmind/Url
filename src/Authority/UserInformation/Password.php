@@ -33,6 +33,11 @@ final class Password
         return new self('');
     }
 
+    public function equals(self $password): bool
+    {
+        return $this->value === $password->value;
+    }
+
     public function format(User $user): string
     {
         if ($this->value === '') {

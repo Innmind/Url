@@ -52,6 +52,13 @@ class PathTest extends TestCase
         $this->assertFalse(Path::of('/some/path')->directory());
     }
 
+    public function testEquals()
+    {
+        $this->assertTrue(Path::none()->equals(Path::none()));
+        $this->assertTrue(Path::of('/')->equals(Path::of('/')));
+        $this->assertFalse(Path::of('/somewhere')->equals(Path::of('/')));
+    }
+
     /**
      * @dataProvider resolutions
      */

@@ -30,6 +30,11 @@ final class Host
         return new self('');
     }
 
+    public function equals(self $host): bool
+    {
+        return $this->value === $host->value;
+    }
+
     public function toString(): string
     {
         return $this->value;

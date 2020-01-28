@@ -59,6 +59,15 @@ final class Url
         );
     }
 
+    public function equals(self $url): bool
+    {
+        return $this->scheme->equals($url->scheme()) &&
+            $this->authority->equals($url->authority()) &&
+            $this->path->equals($url->path()) &&
+            $this->query->equals($url->query()) &&
+            $this->fragment->equals($url->fragment());
+    }
+
     public function scheme(): Scheme
     {
         return $this->scheme;

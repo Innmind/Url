@@ -11,10 +11,14 @@ use Innmind\Url\{
     Authority\Host,
     Authority\Port,
 };
+use Fixtures\Innmind\Url\Authority as Fixture;
 use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\BlackBox;
 
 class AuthorityTest extends TestCase
 {
+    use BlackBox;
+
     public function testInterface()
     {
         $a = Authority::of(
@@ -210,5 +214,23 @@ class AuthorityTest extends TestCase
         $this->assertSame($authority->userInformation(), $authority2->userInformation());
         $this->assertSame($authority->host(), $authority2->host());
         $this->assertSame($port, $authority2->port());
+    }
+
+    public function testEquals()
+    {
+        $this
+            ->forAll(Fixture::any(), Fixture::any())
+            ->then(function($a, $b) {
+                $this->assertTrue($a->equals($a));
+                $this->assertTrue(
+                    $a->equals(Authority::of(
+                        $a->userInformation(),
+                        $a->host(),
+                        $a->port(),
+                    )),
+                );
+                $this->assertFalse($a->equals($b));
+                $this->assertFalse($b->equals($a));
+            });
     }
 }
