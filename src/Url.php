@@ -38,7 +38,7 @@ final class Url
     public static function of(string $string): self
     {
         try {
-            $data = Uri\parse(trim($string));
+            $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
             throw new DomainException($string);
         }
@@ -57,6 +57,15 @@ final class Url
             $data['query'] ? Query::of($data['query']) : Query::none(),
             $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
         );
+    }
+
+    public function equals(self $url): bool
+    {
+        return $this->scheme->equals($url->scheme()) &&
+            $this->authority->equals($url->authority()) &&
+            $this->path->equals($url->path()) &&
+            $this->query->equals($url->query()) &&
+            $this->fragment->equals($url->fragment());
     }
 
     public function scheme(): Scheme

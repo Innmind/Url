@@ -42,6 +42,11 @@ final class Query
         return $self;
     }
 
+    public function equals(self $query): bool
+    {
+        return $this->value === $query->value;
+    }
+
     public function format(): string
     {
         if ($this->value === '') {

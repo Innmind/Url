@@ -32,4 +32,11 @@ class FragmentTest extends TestCase
         $this->assertInstanceOf(Fragment::class, Fragment::none());
         $this->assertSame('', Fragment::none()->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Fragment::none()->equals(Fragment::none()));
+        $this->assertTrue(Fragment::of('foo')->equals(Fragment::of('foo')));
+        $this->assertFalse(Fragment::of('bar')->equals(Fragment::of('foo')));
+    }
 }

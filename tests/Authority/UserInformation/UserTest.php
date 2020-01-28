@@ -32,4 +32,11 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, User::none());
         $this->assertSame('', User::none()->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(User::none()->equals(User::none()));
+        $this->assertTrue(User::of('foo')->equals(User::of('foo')));
+        $this->assertFalse(User::of('bar')->equals(User::of('foo')));
+    }
 }

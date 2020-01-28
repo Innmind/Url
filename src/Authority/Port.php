@@ -28,6 +28,11 @@ final class Port
         return new self(null);
     }
 
+    public function equals(self $port): bool
+    {
+        return $this->value === $port->value;
+    }
+
     public function format(): string
     {
         if ($this->value === null) {

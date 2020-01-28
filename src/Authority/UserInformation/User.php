@@ -33,6 +33,11 @@ final class User
         return new self('');
     }
 
+    public function equals(self $user): bool
+    {
+        return $this->value === $user->value;
+    }
+
     public function format(Host $host, Password $password): string
     {
         if ($this->value === '') {

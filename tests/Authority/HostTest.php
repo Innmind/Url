@@ -32,4 +32,11 @@ class HostTest extends TestCase
         $this->assertInstanceOf(Host::class, Host::none());
         $this->assertSame('', Host::none()->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(Host::none()->equals(Host::none()));
+        $this->assertTrue(Host::of('example.com')->equals(Host::of('example.com')));
+        $this->assertFalse(Host::of('example.net')->equals(Host::of('example.com')));
+    }
 }

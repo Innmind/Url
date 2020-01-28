@@ -30,6 +30,11 @@ final class Fragment
         return new self('');
     }
 
+    public function equals(self $fragment): bool
+    {
+        return $this->value === $fragment->value;
+    }
+
     public function format(): string
     {
         if ($this->value === '') {
