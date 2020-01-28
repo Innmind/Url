@@ -38,7 +38,7 @@ final class Url
     public static function of(string $string): self
     {
         try {
-            $data = Uri\parse(trim($string));
+            $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
             throw new DomainException($string);
         }
