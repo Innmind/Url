@@ -6,7 +6,10 @@ namespace Tests\Innmind\Url\Fixtures;
 use Fixtures\Innmind\Url\Query;
 use Innmind\Url\Query as Model;
 use PHPUnit\Framework\TestCase;
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random\RandomInt,
+};
 
 class QueryTest extends TestCase
 {
@@ -16,7 +19,7 @@ class QueryTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set);
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new RandomInt) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
             $this->assertTrue($value->isImmutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
