@@ -5,6 +5,8 @@ namespace Innmind\Url\Tests;
 
 use Innmind\Url\{
     Path,
+    AbsolutePath,
+    RelativePath,
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
@@ -66,6 +68,17 @@ class PathTest extends TestCase
     {
         $this->assertInstanceOf(Path::class, Path::of($source)->resolve(Path::of($target)));
         $this->assertSame($expected, Path::of($source)->resolve(Path::of($target))->toString());
+    }
+
+    public function testNamedConstructorsReturnsAppropriateSubType()
+    {
+        $this->assertInstanceOf(AbsolutePath::class, Path::none());
+        $this->assertInstanceOf(AbsolutePath::class, Path::of('/'));
+        $this->assertInstanceOf(AbsolutePath::class, Path::of('/somewhere'));
+        $this->assertInstanceOf(RelativePath::class, Path::of('somewhere'));
+        $this->assertInstanceOf(RelativePath::class, Path::of('somewhere/'));
+        $this->assertInstanceOf(RelativePath::class, Path::of('./somewhere'));
+        $this->assertInstanceOf(RelativePath::class, Path::of('../somewhere'));
     }
 
     public function resolutions(): array

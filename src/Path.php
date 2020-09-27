@@ -6,12 +6,12 @@ namespace Innmind\Url;
 use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
-final class Path
+abstract class Path
 {
     private const PATTERN = '~\S+~';
     private string $value;
 
-    private function __construct(string $value)
+    final private function __construct(string $value)
     {
         $this->value = $value;
     }
@@ -22,12 +22,12 @@ final class Path
             throw new DomainException($value);
         }
 
-        return new self($value);
+        return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
     }
 
     public static function none(): self
     {
-        return new self('');
+        return new AbsolutePath('');
     }
 
     public function equals(self $path): bool
@@ -35,10 +35,7 @@ final class Path
         return $this->value === $path->value;
     }
 
-    public function absolute(): bool
-    {
-        return $this->toString()[0] === '/';
-    }
+    abstract public function absolute(): bool;
 
     public function directory(): bool
     {
