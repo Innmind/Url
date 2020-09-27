@@ -4,6 +4,7 @@
 |-----------|
 | [![codecov](https://codecov.io/gh/Innmind/Url/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Url) |
 | [![Build Status](https://github.com/Innmind/Url/workflows/CI/badge.svg)](https://github.com/Innmind/Url/actions?query=workflow%3ACI) |
+| [![Type Coverage](https://shepherd.dev/github/Innmind/Url/coverage.svg)](https://shepherd.dev/github/Innmind/Url) |
 
 Url abstraction library
 
