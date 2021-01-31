@@ -36,7 +36,7 @@ jobs:
         if: ${{ matrix.dependencies == 'highest' }}
         run: composer install --no-progress
       - name: PHPUnit
-        run: vendor/bin/phpunit --coverage-clover=coverage.clover
+        run: php -dmemory_limit=-1 vendor/bin/phpunit --coverage-clover=coverage.clover
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
