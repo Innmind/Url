@@ -38,6 +38,7 @@ final class Url
     public static function of(string $string): self
     {
         try {
+            /** @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string} */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
             throw new DomainException($string);
