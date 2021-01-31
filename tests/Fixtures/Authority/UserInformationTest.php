@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class UserInformationTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = UserInformation::any();

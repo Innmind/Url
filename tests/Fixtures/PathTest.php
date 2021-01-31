@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class PathTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Path::any();
@@ -26,6 +29,9 @@ class PathTest extends TestCase
         }
     }
 
+    /**
+     * @group fixtures
+     */
     public function testDirectories()
     {
         $set = Path::directories();

@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class AuthorityTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Authority::any();
