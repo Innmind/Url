@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class PasswordTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Password::any();

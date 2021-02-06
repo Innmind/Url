@@ -16,7 +16,7 @@ abstract class Path
         $this->value = $value;
     }
 
-    public static function of(string $value): self
+    final public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
             throw new DomainException($value);
@@ -25,24 +25,24 @@ abstract class Path
         return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
     }
 
-    public static function none(): self
+    final public static function none(): self
     {
         return new AbsolutePath('');
     }
 
-    public function equals(self $path): bool
+    final public function equals(self $path): bool
     {
         return $this->value === $path->value;
     }
 
     abstract public function absolute(): bool;
 
-    public function directory(): bool
+    final public function directory(): bool
     {
         return $this->toString()[-1] === '/';
     }
 
-    public function resolve(self $path): self
+    final public function resolve(self $path): self
     {
         if ($path->absolute()) {
             return $path;
@@ -57,7 +57,7 @@ abstract class Path
         return self::of($parent.'/'.$path->toString());
     }
 
-    public function format(Query $query, Fragment $fragment): string
+    final public function format(Query $query, Fragment $fragment): string
     {
         $end = $query->format().$fragment->format();
 
@@ -68,7 +68,7 @@ abstract class Path
         return $this->value.$end;
     }
 
-    public function toString(): string
+    final public function toString(): string
     {
         return $this->value === '' ? '/' : $this->value;
     }

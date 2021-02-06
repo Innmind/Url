@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class SchemeTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Scheme::any();

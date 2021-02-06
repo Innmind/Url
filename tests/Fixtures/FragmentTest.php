@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class FragmentTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Fragment::any();

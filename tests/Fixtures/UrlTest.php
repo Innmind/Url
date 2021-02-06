@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class UrlTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Url::any();

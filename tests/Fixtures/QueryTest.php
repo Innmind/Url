@@ -13,6 +13,9 @@ use Innmind\BlackBox\{
 
 class QueryTest extends TestCase
 {
+    /**
+     * @group fixtures
+     */
     public function testInterface()
     {
         $set = Query::any();

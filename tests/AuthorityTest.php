@@ -154,7 +154,6 @@ class AuthorityTest extends TestCase
         $this->assertEquals(Port::none(), $authority2->port());
     }
 
-
     public function testNullInterface()
     {
         $authority = Authority::none();

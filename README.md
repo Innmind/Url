@@ -1,10 +1,8 @@
 # Url
 
-| `develop` |
-|-----------|
-| [![codecov](https://codecov.io/gh/Innmind/Url/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Url) |
-| [![Build Status](https://github.com/Innmind/Url/workflows/CI/badge.svg?branch=master)](https://github.com/Innmind/Url/actions?query=workflow%3ACI) |
-| [![Type Coverage](https://shepherd.dev/github/Innmind/Url/coverage.svg)](https://shepherd.dev/github/Innmind/Url) |
+[![Build Status](https://github.com/innmind/url/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/url/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/innmind/url/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/url)
+[![Type Coverage](https://shepherd.dev/github/innmind/url/coverage.svg)](https://shepherd.dev/github/innmind/url)
 
 Url abstraction library
 
