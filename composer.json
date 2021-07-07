@@ -15,8 +15,8 @@
         "issues": "http://github.com/Innmind/Url/issues"
     },
     "require": {
-        "php": "~7.4|~8.0",
-        "innmind/immutable": "~3.0",
+        "php": "~8.0",
+        "innmind/immutable": "dev-next",
         "league/uri": "~5.1"
     },
     "autoload": {
