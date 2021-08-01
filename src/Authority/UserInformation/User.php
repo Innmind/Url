@@ -9,6 +9,9 @@ use Innmind\Url\{
 };
 use Innmind\Immutable\Str;
 
+/**
+ * @psalm-immutable
+ */
 final class User
 {
     private const PATTERN = '/^[\pL\pN-]+$/';
@@ -19,6 +22,9 @@ final class User
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -28,6 +34,9 @@ final class User
         return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self('');

@@ -13,6 +13,9 @@ use Innmind\Url\{
 };
 use League\Uri;
 
+/**
+ * @psalm-immutable
+ */
 final class Url
 {
     private Scheme $scheme;
@@ -35,10 +38,16 @@ final class Url
         $this->fragment = $fragment;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $string): self
     {
         try {
-            /** @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string} */
+            /**
+             * @psalm-suppress ImpureFunctionCall
+             * @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string}
+             */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
             throw new DomainException($string);
