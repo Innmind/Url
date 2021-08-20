@@ -88,6 +88,26 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url->fragment()->toString());
     }
 
+    /**
+     * @dataProvider fromString
+     * @dataProvider parseable
+     */
+    public function testValidStringsReturnAnUrl($string)
+    {
+        $this->assertInstanceOf(Url::class, Url::maybe($string)->match(
+            static fn($url) => $url,
+            static fn() => null,
+        ));
+    }
+
+    public function testMaybeReturnNothingForUnparseableStrings()
+    {
+        $this->assertNull(Url::maybe('http://user:password/path')->match(
+            static fn($url) => $url,
+            static fn() => null,
+        ));
+    }
+
     public function testThrowWhenBuildingFromInvalidString()
     {
         $this->expectException(DomainException::class);

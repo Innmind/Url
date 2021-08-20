@@ -11,6 +11,7 @@ use Innmind\Url\{
     Authority\Port,
     Exception\DomainException,
 };
+use Innmind\Immutable\Maybe;
 use League\Uri;
 
 /**
@@ -67,6 +68,22 @@ final class Url
             $data['query'] ? Query::of($data['query']) : Query::none(),
             $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
         );
+    }
+
+    /**
+     * Similar to self::of() but will return nothing instead of throwing an
+     * exception
+     *
+     * @return Maybe<self>
+     */
+    public static function maybe(string $string): Maybe
+    {
+        try {
+            return Maybe::just(self::of($string));
+        } catch (DomainException $e) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
     }
 
     public function equals(self $url): bool
