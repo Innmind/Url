@@ -74,6 +74,8 @@ final class Url
      * Similar to self::of() but will return nothing instead of throwing an
      * exception
      *
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function maybe(string $string): Maybe
