@@ -17,7 +17,7 @@ class UserInformationTest extends TestCase
     {
         $ui = UserInformation::of(
             $u = User::of('foo'),
-            $p = Password::of('bar')
+            $p = Password::of('bar'),
         );
 
         $this->assertInstanceOf(UserInformation::class, $ui);
@@ -37,11 +37,11 @@ class UserInformationTest extends TestCase
     {
         $this->assertSame(
             'foo',
-            UserInformation::of(User::of('foo'), Password::none())->toString()
+            UserInformation::of(User::of('foo'), Password::none())->toString(),
         );
         $this->assertSame(
             '',
-            UserInformation::of(User::none(), Password::none())->toString()
+            UserInformation::of(User::none(), Password::none())->toString(),
         );
     }
 

@@ -8,6 +8,9 @@ use Innmind\Url\{
     Authority\UserInformation\Password,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class UserInformation
 {
     private User $user;
@@ -21,11 +24,17 @@ final class UserInformation
         $this->string = $password->format($user);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(User $user, Password $password): self
     {
         return new self($user, $password);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self(

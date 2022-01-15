@@ -5,6 +5,9 @@ namespace Innmind\Url\Authority;
 
 use Innmind\Url\Exception\DomainException;
 
+/**
+ * @psalm-immutable
+ */
 final class Port
 {
     private ?int $value;
@@ -18,11 +21,17 @@ final class Port
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(int $value): self
     {
         return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self(null);

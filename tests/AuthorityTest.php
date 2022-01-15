@@ -24,10 +24,10 @@ class AuthorityTest extends TestCase
         $a = Authority::of(
             $u = UserInformation::of(
                 User::none(),
-                Password::none()
+                Password::none(),
             ),
             $h = Host::none(),
-            $p = Port::none()
+            $p = Port::none(),
         );
 
         $this->assertInstanceOf(Authority::class, $a);
@@ -39,10 +39,10 @@ class AuthorityTest extends TestCase
         $a = Authority::of(
             UserInformation::of(
                 User::of('foo'),
-                Password::of('bar')
+                Password::of('bar'),
             ),
             Host::of('localhost'),
-            Port::of(8080)
+            Port::of(8080),
         );
 
         $this->assertSame('foo:bar@localhost:8080', $a->toString());
@@ -50,10 +50,10 @@ class AuthorityTest extends TestCase
         $a = Authority::of(
             UserInformation::of(
                 User::none(),
-                Password::none()
+                Password::none(),
             ),
             Host::of('localhost'),
-            Port::none()
+            Port::none(),
         );
 
         $this->assertSame('localhost', $a->toString());
@@ -64,10 +64,10 @@ class AuthorityTest extends TestCase
         $authority = Authority::of(
             UserInformation::none(),
             Host::none(),
-            Port::none()
+            Port::none(),
         );
         $authority2 = $authority->withUserInformation(
-            $info = UserInformation::none()
+            $info = UserInformation::none(),
         );
 
         $this->assertNotSame($authority, $authority2);
@@ -84,7 +84,7 @@ class AuthorityTest extends TestCase
                 Password::of('bar'),
             ),
             Host::none(),
-            Port::none()
+            Port::none(),
         );
         $authority2 = $authority->withoutUserInformation();
 
@@ -99,7 +99,7 @@ class AuthorityTest extends TestCase
         $authority = Authority::of(
             UserInformation::none(),
             Host::none(),
-            Port::none()
+            Port::none(),
         );
         $authority2 = $authority->withHost($host = Host::none());
 
@@ -114,7 +114,7 @@ class AuthorityTest extends TestCase
         $authority = Authority::of(
             UserInformation::none(),
             Host::of('example.com'),
-            Port::none()
+            Port::none(),
         );
         $authority2 = $authority->withoutHost();
 
@@ -129,7 +129,7 @@ class AuthorityTest extends TestCase
         $authority = Authority::of(
             UserInformation::none(),
             Host::none(),
-            Port::none()
+            Port::none(),
         );
         $authority2 = $authority->withPort($port = Port::none());
 
@@ -144,7 +144,7 @@ class AuthorityTest extends TestCase
         $authority = Authority::of(
             UserInformation::none(),
             Host::none(),
-            Port::of(8080)
+            Port::of(8080),
         );
         $authority2 = $authority->withoutPort();
 
@@ -160,19 +160,19 @@ class AuthorityTest extends TestCase
 
         $this->assertInstanceOf(
             Authority::class,
-            $authority
+            $authority,
         );
         $this->assertEquals(
             UserInformation::none(),
-            $authority->userInformation()
+            $authority->userInformation(),
         );
         $this->assertEquals(
             Host::none(),
-            $authority->host()
+            $authority->host(),
         );
         $this->assertEquals(
             Port::none(),
-            $authority->port()
+            $authority->port(),
         );
         $this->assertSame('', $authority->toString());
     }
@@ -181,7 +181,7 @@ class AuthorityTest extends TestCase
     {
         $authority = Authority::none();
         $authority2 = $authority->withUserInformation(
-            $info = UserInformation::none()
+            $info = UserInformation::none(),
         );
 
         $this->assertNotSame($authority, $authority2);

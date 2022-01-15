@@ -11,8 +11,12 @@ use Innmind\Url\{
     Authority\Port,
     Exception\DomainException,
 };
+use Innmind\Immutable\Maybe;
 use League\Uri;
 
+/**
+ * @psalm-immutable
+ */
 final class Url
 {
     private Scheme $scheme;
@@ -26,7 +30,7 @@ final class Url
         Authority $authority,
         Path $path,
         Query $query,
-        Fragment $fragment
+        Fragment $fragment,
     ) {
         $this->scheme = $scheme;
         $this->authority = $authority;
@@ -35,10 +39,16 @@ final class Url
         $this->fragment = $fragment;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $string): self
     {
         try {
-            /** @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string} */
+            /**
+             * @psalm-suppress ImpureFunctionCall
+             * @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string}
+             */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
             throw new DomainException($string);
@@ -58,6 +68,24 @@ final class Url
             $data['query'] ? Query::of($data['query']) : Query::none(),
             $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
         );
+    }
+
+    /**
+     * Similar to self::of() but will return nothing instead of throwing an
+     * exception
+     *
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    public static function maybe(string $string): Maybe
+    {
+        try {
+            return Maybe::just(self::of($string));
+        } catch (DomainException $e) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
     }
 
     public function equals(self $url): bool
