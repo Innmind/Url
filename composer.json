@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "~8.0",
-        "innmind/immutable": "dev-next",
+        "innmind/immutable": "~4.0",
         "league/uri-parser": "~1.2",
         "league/uri-components": "~1.3"
     },
