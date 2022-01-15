@@ -285,6 +285,7 @@ class UrlTest extends TestCase
     {
         $this
             ->forAll(Fixture::any(), Fixture::any())
+            ->filter(fn($a, $b) => $a->toString() !== $b->toString())
             ->then(function($a, $b) {
                 $this->assertTrue($a->equals($a));
                 $this->assertTrue($a->equals(new Url(
