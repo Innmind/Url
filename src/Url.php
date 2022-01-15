@@ -30,7 +30,7 @@ final class Url
         Authority $authority,
         Path $path,
         Query $query,
-        Fragment $fragment
+        Fragment $fragment,
     ) {
         $this->scheme = $scheme;
         $this->authority = $authority;

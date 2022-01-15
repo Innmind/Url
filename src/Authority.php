@@ -21,7 +21,7 @@ final class Authority
     private function __construct(
         UserInformation $userInformation,
         Host $host,
-        Port $port
+        Port $port,
     ) {
         $this->userInformation = $userInformation;
         $this->host = $host;
@@ -34,7 +34,7 @@ final class Authority
     public static function of(
         UserInformation $userInformation,
         Host $host,
-        Port $port
+        Port $port,
     ): self {
         return new self($userInformation, $host, $port);
     }

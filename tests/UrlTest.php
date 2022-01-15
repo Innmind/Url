@@ -32,14 +32,14 @@ class UrlTest extends TestCase
             Authority::of(
                 UserInformation::of(
                     User::of('foo'),
-                    Password::of('bar')
+                    Password::of('bar'),
                 ),
                 Host::of('localhost'),
-                Port::of(8080)
+                Port::of(8080),
             ),
             Path::of('/foo'),
             Query::of('foo=bar'),
-            Fragment::of('baz')
+            Fragment::of('baz'),
         );
 
         $this->assertInstanceOf(Url::class, $u);
@@ -52,12 +52,12 @@ class UrlTest extends TestCase
                 Authority::of(
                     UserInformation::of(User::none(), Password::none()),
                     Host::none(),
-                    Port::none()
+                    Port::none(),
                 ),
                 Path::none(),
                 Query::none(),
-                Fragment::none()
-            ))->toString()
+                Fragment::none(),
+            ))->toString(),
         );
     }
 
@@ -73,7 +73,7 @@ class UrlTest extends TestCase
         string $port,
         string $path,
         string $query,
-        string $fragment
+        string $fragment,
     ) {
         $url = Url::of($url);
 
@@ -123,7 +123,7 @@ class UrlTest extends TestCase
     {
         $this->assertSame(
             $url,
-            Url::of($url)->toString()
+            Url::of($url)->toString(),
         );
     }
 
@@ -134,7 +134,7 @@ class UrlTest extends TestCase
     {
         $this->assertInstanceOf(
             Url::class,
-            Url::of($url)
+            Url::of($url),
         );
     }
 
