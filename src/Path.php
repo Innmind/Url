@@ -6,6 +6,9 @@ namespace Innmind\Url;
 use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
+/**
+ * @psalm-immutable
+ */
 abstract class Path
 {
     private const PATTERN = '~\S+~';
@@ -16,6 +19,9 @@ abstract class Path
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     final public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -25,6 +31,9 @@ abstract class Path
         return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     final public static function none(): self
     {
         return new AbsolutePath('');

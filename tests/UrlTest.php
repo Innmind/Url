@@ -32,14 +32,14 @@ class UrlTest extends TestCase
             Authority::of(
                 UserInformation::of(
                     User::of('foo'),
-                    Password::of('bar')
+                    Password::of('bar'),
                 ),
                 Host::of('localhost'),
-                Port::of(8080)
+                Port::of(8080),
             ),
             Path::of('/foo'),
             Query::of('foo=bar'),
-            Fragment::of('baz')
+            Fragment::of('baz'),
         );
 
         $this->assertInstanceOf(Url::class, $u);
@@ -52,12 +52,12 @@ class UrlTest extends TestCase
                 Authority::of(
                     UserInformation::of(User::none(), Password::none()),
                     Host::none(),
-                    Port::none()
+                    Port::none(),
                 ),
                 Path::none(),
                 Query::none(),
-                Fragment::none()
-            ))->toString()
+                Fragment::none(),
+            ))->toString(),
         );
     }
 
@@ -73,7 +73,7 @@ class UrlTest extends TestCase
         string $port,
         string $path,
         string $query,
-        string $fragment
+        string $fragment,
     ) {
         $url = Url::of($url);
 
@@ -86,6 +86,26 @@ class UrlTest extends TestCase
         $this->assertSame($path, $url->path()->toString());
         $this->assertSame($query, $url->query()->toString());
         $this->assertSame($fragment, $url->fragment()->toString());
+    }
+
+    /**
+     * @dataProvider fromString
+     * @dataProvider parseable
+     */
+    public function testValidStringsReturnAnUrl($string)
+    {
+        $this->assertInstanceOf(Url::class, Url::maybe($string)->match(
+            static fn($url) => $url,
+            static fn() => null,
+        ));
+    }
+
+    public function testMaybeReturnNothingForUnparseableStrings()
+    {
+        $this->assertNull(Url::maybe('http://user:password/path')->match(
+            static fn($url) => $url,
+            static fn() => null,
+        ));
     }
 
     public function testThrowWhenBuildingFromInvalidString()
@@ -103,7 +123,7 @@ class UrlTest extends TestCase
     {
         $this->assertSame(
             $url,
-            Url::of($url)->toString()
+            Url::of($url)->toString(),
         );
     }
 
@@ -114,7 +134,7 @@ class UrlTest extends TestCase
     {
         $this->assertInstanceOf(
             Url::class,
-            Url::of($url)
+            Url::of($url),
         );
     }
 
@@ -265,6 +285,7 @@ class UrlTest extends TestCase
     {
         $this
             ->forAll(Fixture::any(), Fixture::any())
+            ->filter(fn($a, $b) => $a->toString() !== $b->toString())
             ->then(function($a, $b) {
                 $this->assertTrue($a->equals($a));
                 $this->assertTrue($a->equals(new Url(

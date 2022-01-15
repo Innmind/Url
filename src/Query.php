@@ -7,6 +7,9 @@ use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 use League\Uri;
 
+/**
+ * @psalm-immutable
+ */
 final class Query
 {
     private const PATTERN = '/^\S+$/';
@@ -21,11 +24,15 @@ final class Query
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $value): self
     {
         try {
             return new self($value);
         } catch (DomainException $e) {
+            /** @psalm-suppress ImpureFunctionCall */
             return new self(
                 Uri\build_query(
                     Uri\parse_query($value),
@@ -34,6 +41,9 @@ final class Query
         }
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         $self = new self('void');

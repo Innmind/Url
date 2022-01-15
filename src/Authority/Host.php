@@ -6,6 +6,9 @@ namespace Innmind\Url\Authority;
 use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
+/**
+ * @psalm-immutable
+ */
 final class Host
 {
     private const PATTERN = '~^\S+$~ix';
@@ -16,6 +19,9 @@ final class Host
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -25,6 +31,9 @@ final class Host
         return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self('');

@@ -9,6 +9,9 @@ use Innmind\Url\Authority\{
     Port,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class Authority
 {
     private UserInformation $userInformation;
@@ -18,21 +21,27 @@ final class Authority
     private function __construct(
         UserInformation $userInformation,
         Host $host,
-        Port $port
+        Port $port,
     ) {
         $this->userInformation = $userInformation;
         $this->host = $host;
         $this->port = $port;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(
         UserInformation $userInformation,
         Host $host,
-        Port $port
+        Port $port,
     ): self {
         return new self($userInformation, $host, $port);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self(

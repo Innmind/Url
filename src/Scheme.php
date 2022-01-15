@@ -6,6 +6,9 @@ namespace Innmind\Url;
 use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
+/**
+ * @psalm-immutable
+ */
 final class Scheme
 {
     private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
@@ -16,6 +19,9 @@ final class Scheme
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -25,6 +31,9 @@ final class Scheme
         return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function none(): self
     {
         return new self('');
