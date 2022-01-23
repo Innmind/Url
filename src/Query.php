@@ -5,7 +5,7 @@ namespace Innmind\Url;
 
 use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
-use League\Uri;
+use League\Uri\QueryString;
 
 /**
  * @psalm-immutable
@@ -32,11 +32,9 @@ final class Query
         try {
             return new self($value);
         } catch (DomainException $e) {
-            /** @psalm-suppress ImpureFunctionCall */
+            /** @psalm-suppress ImpureMethodCall */
             return new self(
-                Uri\build_query(
-                    Uri\parse_query($value),
-                ),
+                (string) QueryString::build(QueryString::parse($value)),
             );
         }
     }
