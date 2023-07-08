@@ -300,7 +300,7 @@ class UrlTest extends TestCase
             });
     }
 
-    public function cases(): array
+    public static function cases(): array
     {
         return [
             ['#foobar'],
@@ -308,7 +308,7 @@ class UrlTest extends TestCase
         ];
     }
 
-    public function parseable(): array
+    public static function parseable(): array
     {
         return [
             ['/wiki/Category:42'],
@@ -374,7 +374,7 @@ class UrlTest extends TestCase
         ];
     }
 
-    public function fromString(): array
+    public static function fromString(): array
     {
         return [
             ['http://foo:bar@localhost:8080/foo?bar=baz#whatever', 'http', 'foo', 'bar', 'localhost', '8080', '/foo', 'bar=baz', 'whatever'],
