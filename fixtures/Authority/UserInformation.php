@@ -13,13 +13,13 @@ final class UserInformation
      */
     public static function any(): Set
     {
-        return new Set\Either(
+        return Set\Either::any(
             Set\Composite::immutable(
                 static function($user, $password): Model {
                     return Model::of($user, $password);
                 },
                 UserInformation\User::any(),
-                new Set\Either(
+                Set\Either::any(
                     UserInformation\Password::any(),
                     Set\Elements::of(Model\Password::none()),
                 ),

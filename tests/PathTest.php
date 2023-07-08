@@ -81,7 +81,7 @@ class PathTest extends TestCase
         $this->assertInstanceOf(RelativePath::class, Path::of('../somewhere'));
     }
 
-    public function resolutions(): array
+    public static function resolutions(): array
     {
         return [
             'target is absolute' => [

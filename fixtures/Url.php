@@ -24,19 +24,19 @@ final class Url
                 return new Model($scheme, $authority, $path, $query, $fragment);
             },
             Scheme::any(),
-            new Set\Either(
+            Set\Either::any(
                 Authority::any(),
                 Set\Elements::of(AuthorityModel::none()),
             ),
-            new Set\Either(
+            Set\Either::any(
                 Path::any(),
                 Set\Elements::of(PathModel::none()),
             ),
-            new Set\Either(
+            Set\Either::any(
                 Query::any(),
                 Set\Elements::of(QueryModel::none()),
             ),
-            new Set\Either(
+            Set\Either::any(
                 Fragment::any(),
                 Set\Elements::of(FragmentModel::none()),
             ),

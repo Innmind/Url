@@ -18,11 +18,11 @@ final class Authority
                 return Model::of($userInfo, $host, $port);
             },
             Authority\UserInformation::any(),
-            new Set\Either(
+            Set\Either::any(
                 Authority\Host::any(),
                 Set\Elements::of(Model\Host::none()),
             ),
-            new Set\Either(
+            Set\Either::any(
                 Authority\Port::any(),
                 Set\Elements::of(Model\Port::none()),
             ),
