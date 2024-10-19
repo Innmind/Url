@@ -15,11 +15,12 @@ use Innmind\Immutable\Str;
 final class Password
 {
     private const PATTERN = '/^[\pL\pN-]+$/';
-    private string $value;
+    /** @var \SensitiveParameterValue<string> */
+    private \SensitiveParameterValue $value;
 
     private function __construct(string $value)
     {
-        $this->value = $value;
+        $this->value = new \SensitiveParameterValue($value);
     }
 
     /**
@@ -44,12 +45,12 @@ final class Password
 
     public function equals(self $password): bool
     {
-        return $this->value === $password->value;
+        return $this->value->getValue() === $password->value->getValue();
     }
 
     public function format(User $user): string
     {
-        if ($this->value === '') {
+        if ($this->value->getValue() === '') {
             return $user->toString();
         }
 
@@ -57,11 +58,11 @@ final class Password
             throw new PasswordCannotBeSpecifiedWithoutAUser;
         }
 
-        return $user->toString().':'.$this->value;
+        return $user->toString().':'.(string) $this->value->getValue();
     }
 
     public function toString(): string
     {
-        return $this->value;
+        return $this->value->getValue();
     }
 }
