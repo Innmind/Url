@@ -45,9 +45,9 @@ final class Authority
     public static function none(): self
     {
         return new self(
-            Authority\UserInformation::none(),
-            Authority\Host::none(),
-            Authority\Port::none(),
+            UserInformation::none(),
+            Host::none(),
+            Port::none(),
         );
     }
 

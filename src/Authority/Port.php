@@ -53,7 +53,10 @@ final class Port
 
     public function value(): int
     {
-        return $this->value ?: 0;
+        return match ($this->value) {
+            null => 0,
+            default => $this->value,
+        };
     }
 
     public function toString(): string

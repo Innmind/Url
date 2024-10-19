@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.1 - 2024-10-19
+
+### Changed
+
+- `Innmind\Url\Authority\UserInformation\Password` inner value is now stored inside a `\SensitiveParameterValue` to prevent a password being accidently displayed in a dump/log.
+
 ## 4.3.0 - 2023-09-16
 
 ### Added

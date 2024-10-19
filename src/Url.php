@@ -55,18 +55,42 @@ final class Url
         }
 
         return new self(
-            $data['scheme'] ? Scheme::of($data['scheme']) : Scheme::none(),
+            match ($data['scheme']) {
+                null, '' => Scheme::none(),
+                default => Scheme::of($data['scheme']),
+            },
             Authority::of(
                 UserInformation::of(
-                    $data['user'] ? User::of($data['user']) : User::none(),
-                    $data['pass'] ? Password::of($data['pass']) : Password::none(),
+                    match ($data['user']) {
+                        null, '' => User::none(),
+                        default => User::of($data['user']),
+                    },
+                    match ($data['pass']) {
+                        null, '' => Password::none(),
+                        default => Password::of($data['pass']),
+                    },
                 ),
-                $data['host'] ? Host::of($data['host']) : Host::none(),
-                $data['port'] ? Port::of((int) $data['port']) : Port::none(),
+                match ($data['host']) {
+                    null, '' => Host::none(),
+                    default => Host::of($data['host']),
+                },
+                match ($data['port']) {
+                    null, '' => Port::none(),
+                    default => Port::of((int) $data['port']),
+                },
             ),
-            $data['path'] && !empty($data['path']) ? Path::of($data['path']) : Path::none(),
-            $data['query'] ? Query::of($data['query']) : Query::none(),
-            $data['fragment'] ? Fragment::of($data['fragment']) : Fragment::none(),
+            match ($data['path']) {
+                null, '' => Path::none(),
+                default => Path::of($data['path']),
+            },
+            match ($data['query']) {
+                null, '' => Query::none(),
+                default => Query::of($data['query']),
+            },
+            match ($data['fragment']) {
+                null, '' => Fragment::none(),
+                default => Fragment::of($data['fragment']),
+            },
         );
     }
 
