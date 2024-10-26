@@ -15,13 +15,11 @@ final class UserInformation
 {
     private User $user;
     private Password $password;
-    private string $string;
 
     private function __construct(User $user, Password $password)
     {
         $this->user = $user;
         $this->password = $password;
-        $this->string = $password->format($user);
     }
 
     /**
@@ -86,6 +84,6 @@ final class UserInformation
 
     public function toString(): string
     {
-        return $this->string;
+        return $this->password->format($this->user);
     }
 }
