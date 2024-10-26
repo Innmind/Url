@@ -18,6 +18,8 @@ final class UserInformation
 
     private function __construct(User $user, Password $password)
     {
+        // Make sure a user is specified when a password is specified
+        $password->format($user);
         $this->user = $user;
         $this->password = $password;
     }
