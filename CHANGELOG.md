@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.2 - 2024-10-26
+
+### Fixed
+
+- The password was still being visible inside the `Innmind\Url\Authority\UserInformation::$string` property. The property has been removed.
+
 ## 4.3.1 - 2024-10-19
 
 ### Changed
