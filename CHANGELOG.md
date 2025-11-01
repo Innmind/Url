@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Require PHP `8.4`
+
 ## 4.3.2 - 2024-10-26
 
 ### Fixed

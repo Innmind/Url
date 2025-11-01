@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Url/issues"
     },
     "require": {
-        "php": "~8.2",
+        "php": "~8.4",
         "innmind/immutable": "~4.15|~5.0",
         "league/uri-parser": "~1.2",
         "league/uri-components": "~2.0"
