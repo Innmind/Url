@@ -30,7 +30,7 @@ class UrlTest extends TestCase
 
     public function testInterface()
     {
-        $u = new Url(
+        $u = Url::from(
             Scheme::of('http'),
             Authority::of(
                 UserInformation::of(
@@ -50,7 +50,7 @@ class UrlTest extends TestCase
 
         $this->assertSame(
             '/',
-            (new Url(
+            Url::from(
                 Scheme::none(),
                 Authority::of(
                     UserInformation::of(User::none(), Password::none()),
@@ -60,7 +60,7 @@ class UrlTest extends TestCase
                 Path::none(),
                 Query::none(),
                 Fragment::none(),
-            ))->toString(),
+            )->toString(),
         );
     }
 
@@ -283,7 +283,7 @@ class UrlTest extends TestCase
             ->filter(static fn($a, $b) => $a->toString() !== $b->toString())
             ->then(function($a, $b) {
                 $this->assertTrue($a->equals($a));
-                $this->assertTrue($a->equals(new Url(
+                $this->assertTrue($a->equals(Url::from(
                     $a->scheme(),
                     $a->authority(),
                     $a->path(),

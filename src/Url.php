@@ -22,24 +22,32 @@ use League\Uri;
  */
 final class Url
 {
-    private Scheme $scheme;
-    private Authority $authority;
-    private Path $path;
-    private Query $query;
-    private Fragment $fragment;
+    private function __construct(
+        private Scheme $scheme,
+        private Authority $authority,
+        private Path $path,
+        private Query $query,
+        private Fragment $fragment,
+    ) {
+    }
 
-    public function __construct(
+    /**
+     * @psalm-pure
+     */
+    public static function from(
         Scheme $scheme,
         Authority $authority,
         Path $path,
         Query $query,
         Fragment $fragment,
-    ) {
-        $this->scheme = $scheme;
-        $this->authority = $authority;
-        $this->path = $path;
-        $this->query = $query;
-        $this->fragment = $fragment;
+    ): self {
+        return new self(
+            $scheme,
+            $authority,
+            $path,
+            $query,
+            $fragment,
+        );
     }
 
     /**
