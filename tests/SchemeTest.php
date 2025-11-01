@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests;
 
-use Innmind\Url\{
-    Scheme,
-    Exception\DomainException,
-};
+use Innmind\Url\Scheme;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class SchemeTest extends TestCase
@@ -21,7 +18,7 @@ class SchemeTest extends TestCase
 
     public function testThrowWhenInvalidData()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('http://');
 
         Scheme::of('http://');

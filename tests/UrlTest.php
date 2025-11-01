@@ -15,7 +15,6 @@ use Innmind\Url\{
     Path,
     Query,
     Fragment,
-    Exception\DomainException,
 };
 use Fixtures\Innmind\Url\Url as Fixture;
 use Innmind\BlackBox\{
@@ -109,7 +108,7 @@ class UrlTest extends TestCase
 
     public function testThrowWhenBuildingFromInvalidString()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
 
         Url::of('http://user:password/path');
     }

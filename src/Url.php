@@ -9,7 +9,6 @@ use Innmind\Url\{
     Authority\UserInformation\Password,
     Authority\Host,
     Authority\Port,
-    Exception\DomainException,
 };
 use Innmind\Immutable\{
     Maybe,
@@ -62,7 +61,7 @@ final class Url
              */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
-            throw new DomainException;
+            throw new \DomainException;
         }
 
         return new self(

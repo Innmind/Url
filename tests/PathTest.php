@@ -7,7 +7,6 @@ use Innmind\Url\{
     Path,
     AbsolutePath,
     RelativePath,
-    Exception\DomainException,
 };
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -27,7 +26,7 @@ class PathTest extends TestCase
 
     public function testThrowWhenInvalidPath()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('');
 
         Path::of('');

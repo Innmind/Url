@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -25,7 +24,7 @@ final class Fragment
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return new self($value);

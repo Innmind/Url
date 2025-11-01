@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 use League\Uri\QueryString;
 
@@ -18,7 +17,7 @@ final class Query
     private function __construct(string $value)
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         $this->value = $value;
@@ -31,7 +30,7 @@ final class Query
     {
         try {
             return new self($value);
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             /** @psalm-suppress ImpureMethodCall */
             return new self(
                 (string) QueryString::build(QueryString::parse($value)),

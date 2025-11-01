@@ -12,6 +12,12 @@
 - `Innmind\Url\Url` constructor is now private, use `::from()` instead
 - Passwords are now longer included in error messages
 
+### Removed
+
+- `Innmind\Url\Exception\Exception`
+- `Innmind\Url\Exception\DomainException`
+- `Innmind\Url\Exception\PasswordCannotBeSpecifiedWithoutAUser`
+
 ## 4.3.2 - 2024-10-26
 
 ### Fixed
