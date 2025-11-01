@@ -40,19 +40,7 @@ class PathTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-<<<<<<< HEAD
             $this->assertTrue($value->immutable());
-||||||| 522c10b
-            $this->assertTrue($value->isImmutable());
-=======
-
-            if (\interface_exists(Set\Implementation::class)) {
-                $this->assertTrue($value->immutable());
-            } else {
-                $this->assertTrue($value->isImmutable());
-            }
-
->>>>>>> @{-1}
             $this->assertInstanceOf(Model::class, $value->unwrap());
             $this->assertTrue($value->unwrap()->directory());
         }
