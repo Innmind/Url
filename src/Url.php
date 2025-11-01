@@ -147,18 +147,24 @@ final class Url
 
     public function withScheme(Scheme $scheme): self
     {
-        $self = clone $this;
-        $self->scheme = $scheme;
-
-        return $self;
+        return new self(
+            $scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutScheme(): self
     {
-        $self = clone $this;
-        $self->scheme = Scheme::none();
-
-        return $self;
+        return new self(
+            Scheme::none(),
+            $this->authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function authority(): Authority
@@ -168,18 +174,24 @@ final class Url
 
     public function withAuthority(Authority $authority): self
     {
-        $self = clone $this;
-        $self->authority = $authority;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutAuthority(): self
     {
-        $self = clone $this;
-        $self->authority = Authority::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            Authority::none(),
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function path(): Path
@@ -189,18 +201,24 @@ final class Url
 
     public function withPath(Path $path): self
     {
-        $self = clone $this;
-        $self->path = $path;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutPath(): self
     {
-        $self = clone $this;
-        $self->path = Path::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            Path::none(),
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function query(): Query
@@ -210,18 +228,24 @@ final class Url
 
     public function withQuery(Query $query): self
     {
-        $self = clone $this;
-        $self->query = $query;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $query,
+            $this->fragment,
+        );
     }
 
     public function withoutQuery(): self
     {
-        $self = clone $this;
-        $self->query = Query::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            Query::none(),
+            $this->fragment,
+        );
     }
 
     public function fragment(): Fragment
@@ -231,18 +255,24 @@ final class Url
 
     public function withFragment(Fragment $fragment): self
     {
-        $self = clone $this;
-        $self->fragment = $fragment;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            $fragment,
+        );
     }
 
     public function withoutFragment(): self
     {
-        $self = clone $this;
-        $self->fragment = Fragment::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            Fragment::none(),
+        );
     }
 
     public function toString(): string
