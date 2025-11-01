@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
  */
 abstract class Path
 {
-    private const PATTERN = '~\S+~';
+    private const string PATTERN = '~\S+~';
     private string $value;
 
     final private function __construct(string $value)

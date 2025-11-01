@@ -12,7 +12,7 @@ use League\Uri\QueryString;
  */
 final class Query
 {
-    private const PATTERN = '/^\S+$/';
+    private const string PATTERN = '/^\S+$/';
     private string $value;
 
     private function __construct(string $value)
