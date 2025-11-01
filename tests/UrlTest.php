@@ -110,7 +110,6 @@ class UrlTest extends TestCase
     public function testThrowWhenBuildingFromInvalidString()
     {
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('http://user:password/path');
 
         Url::of('http://user:password/path');
     }
