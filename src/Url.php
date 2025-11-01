@@ -11,7 +11,10 @@ use Innmind\Url\{
     Authority\Port,
     Exception\DomainException,
 };
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\{
+    Maybe,
+    Attempt,
+};
 use League\Uri;
 
 /**
@@ -104,12 +107,20 @@ final class Url
      */
     public static function maybe(string $string): Maybe
     {
-        try {
-            return Maybe::just(self::of($string));
-        } catch (DomainException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return self::attempt($string)->maybe();
+    }
+
+    /**
+     * Similar to self::of() but will return nothing instead of throwing an
+     * exception
+     *
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function attempt(string $string): Attempt
+    {
+        return Attempt::of(static fn() => self::of($string));
     }
 
     public function equals(self $url): bool

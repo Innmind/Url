@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\Url\Url::attempt()`
+
 ### Changed
 
 - Require PHP `8.4`
