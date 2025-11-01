@@ -53,7 +53,7 @@ final class Url
     /**
      * @psalm-pure
      */
-    public static function of(string $string): self
+    public static function of(#[\SensitiveParameter] string $string): self
     {
         try {
             /**
@@ -62,7 +62,7 @@ final class Url
              */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
-            throw new DomainException($string);
+            throw new DomainException;
         }
 
         return new self(
@@ -113,7 +113,7 @@ final class Url
      *
      * @return Maybe<self>
      */
-    public static function maybe(string $string): Maybe
+    public static function maybe(#[\SensitiveParameter] string $string): Maybe
     {
         return self::attempt($string)->maybe();
     }
@@ -126,7 +126,7 @@ final class Url
      *
      * @return Attempt<self>
      */
-    public static function attempt(string $string): Attempt
+    public static function attempt(#[\SensitiveParameter] string $string): Attempt
     {
         return Attempt::of(static fn() => self::of($string));
     }

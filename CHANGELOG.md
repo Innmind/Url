@@ -10,6 +10,7 @@
 
 - Require PHP `8.4`
 - `Innmind\Url\Url` constructor is now private, use `::from()` instead
+- Passwords are now longer included in error messages
 
 ## 4.3.2 - 2024-10-26
 

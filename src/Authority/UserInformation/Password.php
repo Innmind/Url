@@ -26,10 +26,10 @@ final class Password
     /**
      * @psalm-pure
      */
-    public static function of(string $value): self
+    public static function of(#[\SensitiveParameter] string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new DomainException;
         }
 
         return new self($value);

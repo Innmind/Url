@@ -22,7 +22,6 @@ class PasswordTest extends TestCase
     public function testThrowWhenInvalidPassword()
     {
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('foo@bar');
 
         Password::of('foo@bar');
     }
