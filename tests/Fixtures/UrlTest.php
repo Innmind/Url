@@ -5,8 +5,8 @@ namespace Tests\Innmind\Url\Fixtures;
 
 use Fixtures\Innmind\Url\Url;
 use Innmind\Url\Url as Model;
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Set,
     Random,
 };
@@ -24,7 +24,7 @@ class UrlTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }

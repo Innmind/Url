@@ -9,7 +9,8 @@ use Innmind\Url\{
     RelativePath,
     Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PathTest extends TestCase
 {
@@ -61,9 +62,7 @@ class PathTest extends TestCase
         $this->assertFalse(Path::of('/somewhere')->equals(Path::of('/')));
     }
 
-    /**
-     * @dataProvider resolutions
-     */
+    #[DataProvider('resolutions')]
     public function testResolve($expected, $source, $target)
     {
         $this->assertInstanceOf(Path::class, Path::of($source)->resolve(Path::of($target)));

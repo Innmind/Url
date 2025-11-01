@@ -12,7 +12,7 @@ use Innmind\Url\{
     Authority\Port,
 };
 use Fixtures\Innmind\Url\Authority as Fixture;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\PHPUnit\BlackBox;
 
 class AuthorityTest extends TestCase

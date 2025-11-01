@@ -9,7 +9,7 @@ use Innmind\Url\{
     Authority\UserInformation\Password,
     Exception\PasswordCannotBeSpecifiedWithoutAUser,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class UserInformationTest extends TestCase
 {

@@ -7,7 +7,7 @@ use Innmind\Url\{
     Authority\Host,
     Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class HostTest extends TestCase
 {
