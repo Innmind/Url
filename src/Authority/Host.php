@@ -11,11 +11,9 @@ use Innmind\Immutable\Str;
 final class Host
 {
     private const PATTERN = '~^\S+$~ix';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**

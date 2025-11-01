@@ -11,11 +11,9 @@ use Innmind\Immutable\Str;
 final class Fragment
 {
     private const PATTERN = '/^\S+$/';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
