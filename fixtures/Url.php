@@ -15,28 +15,28 @@ use Innmind\BlackBox\Set;
 final class Url
 {
     /**
-     * @return Set<Model>
+     * @return Set\Provider<Model>
      */
-    public static function any(): Set
+    public static function any(): Set\Provider
     {
-        return Set\Composite::immutable(
+        return Set::compose(
             Model::from(...),
             Scheme::any(),
-            Set\Either::any(
+            Set::either(
                 Authority::any(),
-                Set\Elements::of(AuthorityModel::none()),
+                Set::of(AuthorityModel::none()),
             ),
-            Set\Either::any(
+            Set::either(
                 Path::any(),
-                Set\Elements::of(PathModel::none()),
+                Set::of(PathModel::none()),
             ),
-            Set\Either::any(
+            Set::either(
                 Query::any(),
-                Set\Elements::of(QueryModel::none()),
+                Set::of(QueryModel::none()),
             ),
-            Set\Either::any(
+            Set::either(
                 Fragment::any(),
-                Set\Elements::of(FragmentModel::none()),
+                Set::of(FragmentModel::none()),
             ),
         );
     }
