@@ -22,7 +22,7 @@ class PortTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('-1');
 
-        Port::of(-1);
+        $_ = Port::of(-1);
     }
 
     public function testNull()

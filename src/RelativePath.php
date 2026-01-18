@@ -9,6 +9,7 @@ namespace Innmind\Url;
 final class RelativePath extends Path
 {
     #[\Override]
+    #[\NoDiscard]
     public function absolute(): bool
     {
         return false;

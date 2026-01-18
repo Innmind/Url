@@ -19,6 +19,7 @@ final class Scheme
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -31,16 +32,19 @@ final class Scheme
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $scheme): bool
     {
         return $this->value === $scheme->value;
     }
 
+    #[\NoDiscard]
     public function format(Authority $authority): string
     {
         if ($this->value === '') {
@@ -50,6 +54,7 @@ final class Scheme
         return $this->value.'://'.$authority->toString();
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

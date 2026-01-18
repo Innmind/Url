@@ -29,7 +29,7 @@ class UserInformationTest extends TestCase
     {
         $this->expectException(\DomainException::class);
 
-        UserInformation::of(User::none(), Password::of('foo'));
+        $_ = UserInformation::of(User::none(), Password::of('foo'));
     }
 
     public function testString()

@@ -20,6 +20,7 @@ final class User
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -32,16 +33,19 @@ final class User
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $user): bool
     {
         return $this->value === $user->value;
     }
 
+    #[\NoDiscard]
     public function format(Host $host, Password $password): string
     {
         if ($this->value === '') {
@@ -51,6 +55,7 @@ final class User
         return $password->format($this).'@'.$host->toString();
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

@@ -20,7 +20,7 @@ class PasswordTest extends TestCase
     {
         $this->expectException(\DomainException::class);
 
-        Password::of('foo@bar');
+        $_ = Password::of('foo@bar');
     }
 
     public function testNull()

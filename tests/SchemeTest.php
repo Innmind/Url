@@ -21,7 +21,7 @@ class SchemeTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('http://');
 
-        Scheme::of('http://');
+        $_ = Scheme::of('http://');
     }
 
     public function testNull()

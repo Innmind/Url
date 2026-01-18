@@ -21,7 +21,7 @@ class UserTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('user@me');
 
-        User::of('user@me');
+        $_ = User::of('user@me');
     }
 
     public function testNull()

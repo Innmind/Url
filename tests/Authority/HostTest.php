@@ -21,7 +21,7 @@ class HostTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('foo bar');
 
-        Host::of('foo bar');
+        $_ = Host::of('foo bar');
     }
 
     public function testNull()

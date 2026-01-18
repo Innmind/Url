@@ -20,8 +20,8 @@ class PathTest extends TestCase
         $this->assertInstanceOf(Path::class, $p);
         $this->assertSame('/foo/bar/', $p->toString());
 
-        Path::of('/'); //check it doesn't throw
-        Path::of('relative/path');
+        $_ = Path::of('/'); //check it doesn't throw
+        $_ = Path::of('relative/path');
     }
 
     public function testThrowWhenInvalidPath()
@@ -29,7 +29,7 @@ class PathTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('');
 
-        Path::of('');
+        $_ = Path::of('');
     }
 
     public function testNull()
