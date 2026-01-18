@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -12,20 +11,19 @@ use Innmind\Immutable\Str;
 final class Fragment
 {
     private const PATTERN = '/^\S+$/';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return new self($value);
@@ -34,16 +32,19 @@ final class Fragment
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $fragment): bool
     {
         return $this->value === $fragment->value;
     }
 
+    #[\NoDiscard]
     public function format(): string
     {
         if ($this->value === '') {
@@ -53,6 +54,7 @@ final class Fragment
         return '#'.$this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

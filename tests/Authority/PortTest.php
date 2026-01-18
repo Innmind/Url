@@ -3,11 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority;
 
-use Innmind\Url\{
-    Authority\Port,
-    Exception\DomainException,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Url\Authority\Port;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class PortTest extends TestCase
 {
@@ -22,10 +19,10 @@ class PortTest extends TestCase
 
     public function testThrowWhenNegativePort()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('-1');
 
-        Port::of(-1);
+        $_ = Port::of(-1);
     }
 
     public function testNull()

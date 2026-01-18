@@ -8,6 +8,8 @@ namespace Innmind\Url;
  */
 final class AbsolutePath extends Path
 {
+    #[\Override]
+    #[\NoDiscard]
     public function absolute(): bool
     {
         return true;

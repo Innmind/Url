@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url\Tests;
 
 use Innmind\Url\Query;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase
 {

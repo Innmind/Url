@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -12,20 +11,19 @@ use Innmind\Immutable\Str;
 final class Scheme
 {
     private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return new self($value);
@@ -34,16 +32,19 @@ final class Scheme
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $scheme): bool
     {
         return $this->value === $scheme->value;
     }
 
+    #[\NoDiscard]
     public function format(Authority $authority): string
     {
         if ($this->value === '') {
@@ -53,6 +54,7 @@ final class Scheme
         return $this->value.'://'.$authority->toString();
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

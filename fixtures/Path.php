@@ -13,12 +13,7 @@ final class Path
      */
     public static function any(): Set
     {
-        return Set\Decorate::immutable(
-            static function(string $value): Model {
-                return Model::of($value);
-            },
-            self::strings(),
-        );
+        return self::strings()->map(Model::of(...));
     }
 
     /**
@@ -26,12 +21,9 @@ final class Path
      */
     public static function directories(): Set
     {
-        return Set\Decorate::immutable(
-            static function(string $value): Model {
-                return Model::of(\rtrim($value, '/').'/');
-            },
-            self::strings()
-        );
+        return self::strings()
+            ->map(static fn($value) => \rtrim($value, '/').'/')
+            ->map(Model::of(...));
     }
 
     /**
@@ -39,8 +31,8 @@ final class Path
      */
     private static function strings(): Set
     {
-        return Set\Strings::any()->filter(static function(string $value): bool {
-            return (bool) \preg_match('~\S+~', $value);
-        });
+        return Set::strings()->filter(
+            static fn($value) => (bool) \preg_match('~\S+~', $value),
+        );
     }
 }

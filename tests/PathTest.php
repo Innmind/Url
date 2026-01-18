@@ -7,9 +7,9 @@ use Innmind\Url\{
     Path,
     AbsolutePath,
     RelativePath,
-    Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PathTest extends TestCase
 {
@@ -20,16 +20,16 @@ class PathTest extends TestCase
         $this->assertInstanceOf(Path::class, $p);
         $this->assertSame('/foo/bar/', $p->toString());
 
-        Path::of('/'); //check it doesn't throw
-        Path::of('relative/path');
+        $_ = Path::of('/'); //check it doesn't throw
+        $_ = Path::of('relative/path');
     }
 
     public function testThrowWhenInvalidPath()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('');
 
-        Path::of('');
+        $_ = Path::of('');
     }
 
     public function testNull()
@@ -61,9 +61,7 @@ class PathTest extends TestCase
         $this->assertFalse(Path::of('/somewhere')->equals(Path::of('/')));
     }
 
-    /**
-     * @dataProvider resolutions
-     */
+    #[DataProvider('resolutions')]
     public function testResolve($expected, $source, $target)
     {
         $this->assertInstanceOf(Path::class, Path::of($source)->resolve(Path::of($target)));

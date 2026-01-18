@@ -3,11 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority\UserInformation;
 
-use Innmind\Url\{
-    Authority\UserInformation\User,
-    Exception\DomainException,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Url\Authority\UserInformation\User;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
@@ -21,10 +18,10 @@ class UserTest extends TestCase
 
     public function testThrowWhenInvalidUser()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('user@me');
 
-        User::of('user@me');
+        $_ = User::of('user@me');
     }
 
     public function testNull()

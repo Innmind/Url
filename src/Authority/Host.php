@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -12,20 +11,19 @@ use Innmind\Immutable\Str;
 final class Host
 {
     private const PATTERN = '~^\S+$~ix';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return new self($value);
@@ -34,16 +32,19 @@ final class Host
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $host): bool
     {
         return $this->value === $host->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

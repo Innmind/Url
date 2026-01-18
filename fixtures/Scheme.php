@@ -13,11 +13,6 @@ final class Scheme
      */
     public static function any(): Set
     {
-        return Set\Decorate::immutable(
-            static function(string $value): Model {
-                return Model::of($value);
-            },
-            Set\Elements::of('http', 'https', 'ftp', 'ssh'),
-        );
+        return Set::of('http', 'https', 'ftp', 'ssh')->map(Model::of(...));
     }
 }
