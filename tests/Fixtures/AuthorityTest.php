@@ -5,8 +5,8 @@ namespace Tests\Innmind\Url\Fixtures;
 
 use Fixtures\Innmind\Url\Authority;
 use Innmind\Url\Authority as Model;
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Set,
     Random,
 };
@@ -20,17 +20,11 @@ class AuthorityTest extends TestCase
     {
         $set = Authority::any();
 
-        $this->assertInstanceOf(Set::class, $set);
+        $this->assertInstanceOf(Set\Provider::class, $set);
 
-        foreach ($set->values(Random::default) as $value) {
+        foreach ($set->toSet()->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-
-            if (\interface_exists(Set\Implementation::class)) {
-                $this->assertTrue($value->immutable());
-            } else {
-                $this->assertTrue($value->isImmutable());
-            }
-
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }

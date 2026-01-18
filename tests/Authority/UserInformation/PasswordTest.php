@@ -3,11 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Tests\Authority\UserInformation;
 
-use Innmind\Url\{
-    Authority\UserInformation\Password,
-    Exception\DomainException,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Url\Authority\UserInformation\Password;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class PasswordTest extends TestCase
 {
@@ -21,8 +18,7 @@ class PasswordTest extends TestCase
 
     public function testThrowWhenInvalidPassword()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('foo@bar');
+        $this->expectException(\DomainException::class);
 
         Password::of('foo@bar');
     }

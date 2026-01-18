@@ -9,9 +9,11 @@ use Innmind\Url\{
     Authority\UserInformation\Password,
     Authority\Host,
     Authority\Port,
-    Exception\DomainException,
 };
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\{
+    Maybe,
+    Attempt,
+};
 use League\Uri;
 
 /**
@@ -19,30 +21,38 @@ use League\Uri;
  */
 final class Url
 {
-    private Scheme $scheme;
-    private Authority $authority;
-    private Path $path;
-    private Query $query;
-    private Fragment $fragment;
-
-    public function __construct(
-        Scheme $scheme,
-        Authority $authority,
-        Path $path,
-        Query $query,
-        Fragment $fragment,
+    private function __construct(
+        private Scheme $scheme,
+        private Authority $authority,
+        private Path $path,
+        private Query $query,
+        private Fragment $fragment,
     ) {
-        $this->scheme = $scheme;
-        $this->authority = $authority;
-        $this->path = $path;
-        $this->query = $query;
-        $this->fragment = $fragment;
     }
 
     /**
      * @psalm-pure
      */
-    public static function of(string $string): self
+    public static function from(
+        Scheme $scheme,
+        Authority $authority,
+        Path $path,
+        Query $query,
+        Fragment $fragment,
+    ): self {
+        return new self(
+            $scheme,
+            $authority,
+            $path,
+            $query,
+            $fragment,
+        );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(#[\SensitiveParameter] string $string): self
     {
         try {
             /**
@@ -51,7 +61,7 @@ final class Url
              */
             $data = Uri\parse(\trim($string));
         } catch (\Exception $e) {
-            throw new DomainException($string);
+            throw new \DomainException;
         }
 
         return new self(
@@ -102,14 +112,22 @@ final class Url
      *
      * @return Maybe<self>
      */
-    public static function maybe(string $string): Maybe
+    public static function maybe(#[\SensitiveParameter] string $string): Maybe
     {
-        try {
-            return Maybe::just(self::of($string));
-        } catch (DomainException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return self::attempt($string)->maybe();
+    }
+
+    /**
+     * Similar to self::of() but will return nothing instead of throwing an
+     * exception
+     *
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function attempt(#[\SensitiveParameter] string $string): Attempt
+    {
+        return Attempt::of(static fn() => self::of($string));
     }
 
     public function equals(self $url): bool
@@ -128,18 +146,24 @@ final class Url
 
     public function withScheme(Scheme $scheme): self
     {
-        $self = clone $this;
-        $self->scheme = $scheme;
-
-        return $self;
+        return new self(
+            $scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutScheme(): self
     {
-        $self = clone $this;
-        $self->scheme = Scheme::none();
-
-        return $self;
+        return new self(
+            Scheme::none(),
+            $this->authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function authority(): Authority
@@ -149,18 +173,24 @@ final class Url
 
     public function withAuthority(Authority $authority): self
     {
-        $self = clone $this;
-        $self->authority = $authority;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $authority,
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutAuthority(): self
     {
-        $self = clone $this;
-        $self->authority = Authority::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            Authority::none(),
+            $this->path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function path(): Path
@@ -170,18 +200,24 @@ final class Url
 
     public function withPath(Path $path): self
     {
-        $self = clone $this;
-        $self->path = $path;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $path,
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function withoutPath(): self
     {
-        $self = clone $this;
-        $self->path = Path::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            Path::none(),
+            $this->query,
+            $this->fragment,
+        );
     }
 
     public function query(): Query
@@ -191,18 +227,24 @@ final class Url
 
     public function withQuery(Query $query): self
     {
-        $self = clone $this;
-        $self->query = $query;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $query,
+            $this->fragment,
+        );
     }
 
     public function withoutQuery(): self
     {
-        $self = clone $this;
-        $self->query = Query::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            Query::none(),
+            $this->fragment,
+        );
     }
 
     public function fragment(): Fragment
@@ -212,18 +254,24 @@ final class Url
 
     public function withFragment(Fragment $fragment): self
     {
-        $self = clone $this;
-        $self->fragment = $fragment;
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            $fragment,
+        );
     }
 
     public function withoutFragment(): self
     {
-        $self = clone $this;
-        $self->fragment = Fragment::none();
-
-        return $self;
+        return new self(
+            $this->scheme,
+            $this->authority,
+            $this->path,
+            $this->query,
+            Fragment::none(),
+        );
     }
 
     public function toString(): string

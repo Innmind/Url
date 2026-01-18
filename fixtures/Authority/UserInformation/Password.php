@@ -13,13 +13,8 @@ final class Password
      */
     public static function any(): Set
     {
-        return Set\Decorate::immutable(
-            static function(string $value): Model {
-                return Model::of($value);
-            },
-            Set\Strings::any()->filter(static function(string $value): bool {
-                return (bool) \preg_match('/^[\pL\pN-]+$/', $value);
-            }),
-        );
+        return Set::strings()
+            ->filter(static fn($value) => (bool) \preg_match('/^[\pL\pN-]+$/', $value))
+            ->map(Model::of(...));
     }
 }

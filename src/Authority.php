@@ -14,18 +14,11 @@ use Innmind\Url\Authority\{
  */
 final class Authority
 {
-    private UserInformation $userInformation;
-    private Host $host;
-    private Port $port;
-
     private function __construct(
-        UserInformation $userInformation,
-        Host $host,
-        Port $port,
+        private UserInformation $userInformation,
+        private Host $host,
+        private Port $port,
     ) {
-        $this->userInformation = $userInformation;
-        $this->host = $host;
-        $this->port = $port;
     }
 
     /**

@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\Url\Url::attempt()`
+
+### Changed
+
+- Require PHP `8.4`
+- `Innmind\Url\Url` constructor is now private, use `::from()` instead
+- Passwords are now longer included in error messages
+
+### Removed
+
+- `Innmind\Url\Exception\Exception`
+- `Innmind\Url\Exception\DomainException`
+- `Innmind\Url\Exception\PasswordCannotBeSpecifiedWithoutAUser`
+
 ## 4.4.0 - 2025-03-20
 
 ### Added

@@ -13,11 +13,8 @@ final class Port
      */
     public static function any(): Set
     {
-        return Set\Decorate::immutable(
-            static function(int $value): Model {
-                return Model::of($value);
-            },
-            Set\Integers::above(0),
-        );
+        return Set::integers()
+            ->above(0)
+            ->map(Model::of(...));
     }
 }

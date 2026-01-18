@@ -13,15 +13,10 @@ use Innmind\Url\{
  */
 final class UserInformation
 {
-    private User $user;
-    private Password $password;
-
-    private function __construct(User $user, Password $password)
-    {
-        // Make sure a user is specified when a password is specified
-        $password->format($user);
-        $this->user = $user;
-        $this->password = $password;
+    private function __construct(
+        private User $user,
+        private Password $password,
+    ) {
     }
 
     /**
@@ -29,6 +24,9 @@ final class UserInformation
      */
     public static function of(User $user, Password $password): self
     {
+        // Make sure a user is specified when a password is specified
+        $password->format($user);
+
         return new self($user, $password);
     }
 
@@ -56,12 +54,12 @@ final class UserInformation
 
     public function withUser(User $user): self
     {
-        return new self($user, $this->password);
+        return self::of($user, $this->password);
     }
 
     public function withoutUser(): self
     {
-        return new self(User::none(), $this->password);
+        return self::of(User::none(), $this->password);
     }
 
     public function password(): Password
@@ -71,12 +69,12 @@ final class UserInformation
 
     public function withPassword(Password $password): self
     {
-        return new self($this->user, $password);
+        return self::of($this->user, $password);
     }
 
     public function withoutPassword(): self
     {
-        return new self($this->user, Password::none());
+        return self::of($this->user, Password::none());
     }
 
     public function format(Host $host): string

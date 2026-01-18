@@ -5,8 +5,8 @@ namespace Tests\Innmind\Url\Fixtures;
 
 use Fixtures\Innmind\Url\Path;
 use Innmind\Url\Path as Model;
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Set,
     Random,
 };
@@ -24,13 +24,7 @@ class PathTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-
-            if (\interface_exists(Set\Implementation::class)) {
-                $this->assertTrue($value->immutable());
-            } else {
-                $this->assertTrue($value->isImmutable());
-            }
-
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }
@@ -46,13 +40,7 @@ class PathTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-
-            if (\interface_exists(Set\Implementation::class)) {
-                $this->assertTrue($value->immutable());
-            } else {
-                $this->assertTrue($value->isImmutable());
-            }
-
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
             $this->assertTrue($value->unwrap()->directory());
         }

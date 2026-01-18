@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -11,12 +10,10 @@ use Innmind\Immutable\Str;
  */
 abstract class Path
 {
-    private const PATTERN = '~\S+~';
-    private string $value;
+    private const string PATTERN = '~\S+~';
 
-    final private function __construct(string $value)
+    final private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
@@ -25,7 +22,7 @@ abstract class Path
     final public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Url\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 /**
@@ -12,11 +11,9 @@ use Innmind\Immutable\Str;
 final class Scheme
 {
     private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
-    private string $value;
 
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
@@ -25,7 +22,7 @@ final class Scheme
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException($value);
         }
 
         return new self($value);

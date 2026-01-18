@@ -9,22 +9,20 @@ use Innmind\BlackBox\Set;
 final class Authority
 {
     /**
-     * @return Set<Model>
+     * @return Set\Provider<Model>
      */
-    public static function any(): Set
+    public static function any(): Set\Provider
     {
-        return Set\Composite::immutable(
-            static function($userInfo, $host, $port): Model {
-                return Model::of($userInfo, $host, $port);
-            },
+        return Set::compose(
+            Model::of(...),
             Authority\UserInformation::any(),
-            Set\Either::any(
+            Set::either(
                 Authority\Host::any(),
-                Set\Elements::of(Model\Host::none()),
+                Set::of(Model\Host::none()),
             ),
-            Set\Either::any(
+            Set::either(
                 Authority\Port::any(),
-                Set\Elements::of(Model\Port::none()),
+                Set::of(Model\Port::none()),
             ),
         );
     }

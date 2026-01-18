@@ -12,7 +12,7 @@ use Innmind\Url\{
     Authority\Port,
 };
 use Fixtures\Innmind\Url\Authority as Fixture;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\PHPUnit\BlackBox;
 
 class AuthorityTest extends TestCase
@@ -215,12 +215,12 @@ class AuthorityTest extends TestCase
         $this->assertSame($port, $authority2->port());
     }
 
-    public function testEquals()
+    public function testEquals(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(Fixture::any(), Fixture::any())
             ->filter(static fn($a, $b) => $a->toString() !== $b->toString())
-            ->then(function($a, $b) {
+            ->prove(function($a, $b) {
                 $this->assertTrue($a->equals($a));
                 $this->assertTrue(
                     $a->equals(Authority::of(

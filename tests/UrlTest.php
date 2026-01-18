@@ -15,11 +15,13 @@ use Innmind\Url\{
     Path,
     Query,
     Fragment,
-    Exception\DomainException,
 };
 use Fixtures\Innmind\Url\Url as Fixture;
-use PHPUnit\Framework\TestCase;
-use Innmind\BlackBox\PHPUnit\BlackBox;
+use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
+    PHPUnit\BlackBox,
+};
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlTest extends TestCase
 {
@@ -27,7 +29,7 @@ class UrlTest extends TestCase
 
     public function testInterface()
     {
-        $u = new Url(
+        $u = Url::from(
             Scheme::of('http'),
             Authority::of(
                 UserInformation::of(
@@ -47,7 +49,7 @@ class UrlTest extends TestCase
 
         $this->assertSame(
             '/',
-            (new Url(
+            Url::from(
                 Scheme::none(),
                 Authority::of(
                     UserInformation::of(User::none(), Password::none()),
@@ -57,13 +59,11 @@ class UrlTest extends TestCase
                 Path::none(),
                 Query::none(),
                 Fragment::none(),
-            ))->toString(),
+            )->toString(),
         );
     }
 
-    /**
-     * @dataProvider fromString
-     */
+    #[DataProvider('fromString')]
     public function testOf(
         string $url,
         string $scheme,
@@ -88,10 +88,8 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url->fragment()->toString());
     }
 
-    /**
-     * @dataProvider fromString
-     * @dataProvider parseable
-     */
+    #[DataProvider('fromString')]
+    #[DataProvider('parseable')]
     public function testValidStringsReturnAnUrl($string)
     {
         $this->assertInstanceOf(Url::class, Url::maybe($string)->match(
@@ -110,15 +108,12 @@ class UrlTest extends TestCase
 
     public function testThrowWhenBuildingFromInvalidString()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('http://user:password/path');
+        $this->expectException(\DomainException::class);
 
         Url::of('http://user:password/path');
     }
 
-    /**
-     * @dataProvider cases
-     */
+    #[DataProvider('cases')]
     public function testFormatNotAltered(string $url)
     {
         $this->assertSame(
@@ -127,9 +122,7 @@ class UrlTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider parseable
-     */
+    #[DataProvider('parseable')]
     public function testParse(string $url)
     {
         $this->assertInstanceOf(
@@ -281,14 +274,14 @@ class UrlTest extends TestCase
         $this->assertFalse(Url::of('some/path')->path()->absolute());
     }
 
-    public function testEquals()
+    public function testEquals(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(Fixture::any(), Fixture::any())
             ->filter(static fn($a, $b) => $a->toString() !== $b->toString())
-            ->then(function($a, $b) {
+            ->prove(function($a, $b) {
                 $this->assertTrue($a->equals($a));
-                $this->assertTrue($a->equals(new Url(
+                $this->assertTrue($a->equals(Url::from(
                     $a->scheme(),
                     $a->authority(),
                     $a->path(),

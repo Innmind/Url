@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Url\Exception\{
-    DomainException,
-    PasswordCannotBeSpecifiedWithoutAUser,
-};
 use Innmind\Immutable\Str;
 
 /**
@@ -26,10 +22,10 @@ final class Password
     /**
      * @psalm-pure
      */
-    public static function of(string $value): self
+    public static function of(#[\SensitiveParameter] string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new DomainException($value);
+            throw new \DomainException;
         }
 
         return new self($value);
@@ -55,7 +51,7 @@ final class Password
         }
 
         if ($user->toString() === '') {
-            throw new PasswordCannotBeSpecifiedWithoutAUser;
+            throw new \DomainException('Password cannot be specified without a user');
         }
 
         return $user->toString().':'.(string) $this->value->getValue();

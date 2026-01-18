@@ -7,9 +7,8 @@ use Innmind\Url\{
     Authority\UserInformation,
     Authority\UserInformation\User,
     Authority\UserInformation\Password,
-    Exception\PasswordCannotBeSpecifiedWithoutAUser,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class UserInformationTest extends TestCase
 {
@@ -28,7 +27,7 @@ class UserInformationTest extends TestCase
 
     public function testThrowWhenNullUserButPasswordPresent()
     {
-        $this->expectException(PasswordCannotBeSpecifiedWithoutAUser::class);
+        $this->expectException(\DomainException::class);
 
         UserInformation::of(User::none(), Password::of('foo'));
     }
