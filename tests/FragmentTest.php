@@ -21,7 +21,7 @@ class FragmentTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('foo bar');
 
-        Fragment::of('foo bar');
+        $_ = Fragment::of('foo bar');
     }
 
     public function testNull()

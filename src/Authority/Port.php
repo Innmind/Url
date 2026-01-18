@@ -15,6 +15,7 @@ final class Port
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(int $value): self
     {
         if ($value < 0) {
@@ -27,16 +28,19 @@ final class Port
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self(null);
     }
 
+    #[\NoDiscard]
     public function equals(self $port): bool
     {
         return $this->value === $port->value;
     }
 
+    #[\NoDiscard]
     public function format(): string
     {
         if ($this->value === null) {
@@ -46,6 +50,7 @@ final class Port
         return ':'.$this->value;
     }
 
+    #[\NoDiscard]
     public function value(): int
     {
         return match ($this->value) {
@@ -54,6 +59,7 @@ final class Port
         };
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         if ($this->value === null) {

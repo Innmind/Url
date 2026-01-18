@@ -19,6 +19,7 @@ final class Fragment
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -31,16 +32,19 @@ final class Fragment
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $fragment): bool
     {
         return $this->value === $fragment->value;
     }
 
+    #[\NoDiscard]
     public function format(): string
     {
         if ($this->value === '') {
@@ -50,6 +54,7 @@ final class Fragment
         return '#'.$this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

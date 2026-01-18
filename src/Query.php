@@ -26,6 +26,7 @@ final class Query
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(string $value): self
     {
         try {
@@ -41,6 +42,7 @@ final class Query
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         $self = new self('void');
@@ -49,11 +51,13 @@ final class Query
         return $self;
     }
 
+    #[\NoDiscard]
     public function equals(self $query): bool
     {
         return $this->value === $query->value;
     }
 
+    #[\NoDiscard]
     public function format(): string
     {
         if ($this->value === '') {
@@ -63,6 +67,7 @@ final class Query
         return '?'.$this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value;

@@ -33,6 +33,7 @@ final class Url
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function from(
         Scheme $scheme,
         Authority $authority,
@@ -52,6 +53,7 @@ final class Url
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(#[\SensitiveParameter] string $string): self
     {
         try {
@@ -112,6 +114,7 @@ final class Url
      *
      * @return Maybe<self>
      */
+    #[\NoDiscard]
     public static function maybe(#[\SensitiveParameter] string $string): Maybe
     {
         return self::attempt($string)->maybe();
@@ -125,11 +128,13 @@ final class Url
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function attempt(#[\SensitiveParameter] string $string): Attempt
     {
         return Attempt::of(static fn() => self::of($string));
     }
 
+    #[\NoDiscard]
     public function equals(self $url): bool
     {
         return $this->scheme->equals($url->scheme()) &&
@@ -139,11 +144,13 @@ final class Url
             $this->fragment->equals($url->fragment());
     }
 
+    #[\NoDiscard]
     public function scheme(): Scheme
     {
         return $this->scheme;
     }
 
+    #[\NoDiscard]
     public function withScheme(Scheme $scheme): self
     {
         return new self(
@@ -155,6 +162,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function withoutScheme(): self
     {
         return new self(
@@ -166,11 +174,13 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function authority(): Authority
     {
         return $this->authority;
     }
 
+    #[\NoDiscard]
     public function withAuthority(Authority $authority): self
     {
         return new self(
@@ -182,6 +192,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function withoutAuthority(): self
     {
         return new self(
@@ -193,11 +204,13 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function path(): Path
     {
         return $this->path;
     }
 
+    #[\NoDiscard]
     public function withPath(Path $path): self
     {
         return new self(
@@ -209,6 +222,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function withoutPath(): self
     {
         return new self(
@@ -220,11 +234,13 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function query(): Query
     {
         return $this->query;
     }
 
+    #[\NoDiscard]
     public function withQuery(Query $query): self
     {
         return new self(
@@ -236,6 +252,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function withoutQuery(): self
     {
         return new self(
@@ -247,11 +264,13 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function fragment(): Fragment
     {
         return $this->fragment;
     }
 
+    #[\NoDiscard]
     public function withFragment(Fragment $fragment): self
     {
         return new self(
@@ -263,6 +282,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function withoutFragment(): self
     {
         return new self(
@@ -274,6 +294,7 @@ final class Url
         );
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);

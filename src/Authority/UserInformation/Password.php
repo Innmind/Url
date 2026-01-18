@@ -22,6 +22,7 @@ final class Password
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function of(#[\SensitiveParameter] string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -34,16 +35,19 @@ final class Password
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function none(): self
     {
         return new self('');
     }
 
+    #[\NoDiscard]
     public function equals(self $password): bool
     {
         return $this->value->getValue() === $password->value->getValue();
     }
 
+    #[\NoDiscard]
     public function format(User $user): string
     {
         if ($this->value->getValue() === '') {
@@ -57,6 +61,7 @@ final class Password
         return $user->toString().':'.(string) $this->value->getValue();
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return $this->value->getValue();

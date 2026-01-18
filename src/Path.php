@@ -19,6 +19,7 @@ abstract class Path
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     final public static function of(string $value): self
     {
         if (!Str::of($value)->matches(self::PATTERN)) {
@@ -31,11 +32,13 @@ abstract class Path
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     final public static function none(): self
     {
         return new AbsolutePath('');
     }
 
+    #[\NoDiscard]
     final public function equals(self $path): bool
     {
         return $this->value === $path->value;
@@ -43,11 +46,13 @@ abstract class Path
 
     abstract public function absolute(): bool;
 
+    #[\NoDiscard]
     final public function directory(): bool
     {
         return $this->toString()[-1] === '/';
     }
 
+    #[\NoDiscard]
     final public function resolve(self $path): self
     {
         if ($path->absolute()) {
@@ -63,6 +68,7 @@ abstract class Path
         return self::of($parent.'/'.$path->toString());
     }
 
+    #[\NoDiscard]
     final public function format(Query $query, Fragment $fragment): string
     {
         $end = $query->format().$fragment->format();
@@ -74,6 +80,7 @@ abstract class Path
         return $this->value.$end;
     }
 
+    #[\NoDiscard]
     final public function toString(): string
     {
         return $this->value === '' ? '/' : $this->value;

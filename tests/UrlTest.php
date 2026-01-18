@@ -110,7 +110,7 @@ class UrlTest extends TestCase
     {
         $this->expectException(\DomainException::class);
 
-        Url::of('http://user:password/path');
+        $_ = Url::of('http://user:password/path');
     }
 
     #[DataProvider('cases')]
