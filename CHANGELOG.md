@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Require PHP `8.5`
+- User, password, query and fragment values are not url encoded (allowing for previously invalid values)
+
 ## 5.0.0 - 2026-01-18
 
 ### Added
