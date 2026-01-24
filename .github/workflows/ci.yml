@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   blackbox:
     uses: innmind/github-workflows/.github/workflows/black-box.yml@main
+    name: 'BlackBox'
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
@@ -16,6 +17,7 @@ jobs:
       dependency-versions: ${{ matrix.dependency-versions }}
   coverage:
     uses: innmind/github-workflows/.github/workflows/coverage.yml@main
+    name: 'Coverage'
     secrets: inherit
     strategy:
       matrix:
@@ -28,6 +30,7 @@ jobs:
       dependency-versions: ${{ matrix.dependency-versions }}
   psalm:
     uses: innmind/github-workflows/.github/workflows/psalm.yml@main
+    name: 'Psalm'
     strategy:
       matrix:
         php-version: ['8.5']
@@ -35,6 +38,7 @@ jobs:
       php-version: ${{ matrix.php-version }}
   cs:
     uses: innmind/github-workflows/.github/workflows/cs.yml@main
+    name: 'CS'
     strategy:
       matrix:
         php-version: ['8.5']
