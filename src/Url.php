@@ -14,7 +14,7 @@ use Innmind\Immutable\{
     Maybe,
     Attempt,
 };
-use League\Uri;
+use Uri\WhatWg\Url as _Url;
 
 /**
  * @psalm-immutable
@@ -57,53 +57,10 @@ final class Url
     public static function of(#[\SensitiveParameter] string $string): self
     {
         try {
-            /**
-             * @psalm-suppress ImpureFunctionCall
-             * @var array{scheme: ?string, user: ?string, pass: ?string, host: ?string, port: ?string, path: ?string, query: ?string, fragment: ?string}
-             */
-            $data = Uri\parse(\trim($string));
+            return self::tryUrl($string);
         } catch (\Exception $e) {
             throw new \DomainException;
         }
-
-        return new self(
-            match ($data['scheme']) {
-                null, '' => Scheme::none(),
-                default => Scheme::of($data['scheme']),
-            },
-            Authority::of(
-                UserInformation::of(
-                    match ($data['user']) {
-                        null, '' => User::none(),
-                        default => User::of($data['user']),
-                    },
-                    match ($data['pass']) {
-                        null, '' => Password::none(),
-                        default => Password::of($data['pass']),
-                    },
-                ),
-                match ($data['host']) {
-                    null, '' => Host::none(),
-                    default => Host::of($data['host']),
-                },
-                match ($data['port']) {
-                    null, '' => Port::none(),
-                    default => Port::of((int) $data['port']),
-                },
-            ),
-            match ($data['path']) {
-                null, '' => Path::none(),
-                default => Path::of($data['path']),
-            },
-            match ($data['query']) {
-                null, '' => Query::none(),
-                default => Query::of($data['query']),
-            },
-            match ($data['fragment']) {
-                null, '' => Fragment::none(),
-                default => Fragment::of($data['fragment']),
-            },
-        );
     }
 
     /**
@@ -298,5 +255,125 @@ final class Url
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
+    }
+
+    /**
+     * @psalm-pure
+     * @psalm-suppress ImpureMethodCall
+     */
+    private static function tryUrl(#[\SensitiveParameter] string $string): self
+    {
+        $string = \trim($string);
+        $url = new _Url($string, new _Url('http://a.org'));
+        $scheme = $url->getScheme();
+        $user = $url->getUsername();
+        $password = $url->getPassword();
+        $host = $url->getUnicodeHost();
+        $port = $url->getPort();
+        $path = $url->getPath();
+        $query = $url->getQuery();
+        $fragment = $url->getFragment();
+
+        if (!\is_null($host) && !\str_contains($string, $host)) {
+            $host = $url->getAsciiHost();
+        }
+
+        if (
+            $scheme === 'http' &&
+            !\str_starts_with($string, 'http://')
+        ) {
+            $scheme = null;
+        }
+
+        $scheme = match ($scheme) {
+            null => Scheme::none(),
+            default => Scheme::of($scheme),
+        };
+        $user = match ($user) {
+            null => User::none(),
+            default => User::of($user),
+        };
+        $password = match ($password) {
+            null => Password::none(),
+            default => Password::of($password),
+        };
+        $host = match ($host) {
+            null, '' => Host::none(),
+            default => Host::of($host),
+        };
+        $port = match ($port) {
+            null => Port::none(),
+            default => Port::of($port),
+        };
+        $path = match ($path) {
+            '' => Path::none(),
+            default => Path::of($path),
+        };
+        $query = match ($query) {
+            null => Query::none(),
+            default => Query::of($query),
+        };
+        $fragment = match ($fragment) {
+            null => Fragment::none(),
+            default => Fragment::of($fragment),
+        };
+
+        if ($host->toString() === 'a.org') {
+            if (!\str_contains($string, 'a.org')) {
+                $host = Host::none();
+            } else {
+                $start = self::from(
+                    $scheme,
+                    Authority::of(
+                        UserInformation::of($user, $password),
+                        $host,
+                        $port,
+                    ),
+                    Path::none(),
+                    Query::none(),
+                    Fragment::none(),
+                );
+                $withScheme = $start->toString();
+                $schemeLess = '//'.$start
+                    ->withoutScheme()
+                    ->toString();
+
+                if (
+                    !\str_starts_with($string, $withScheme) &&
+                    !\str_starts_with($string, $schemeLess)
+                ) {
+                    $host = Host::none();
+                }
+            }
+        }
+
+        $authority = Authority::of(
+            UserInformation::of(
+                $user,
+                $password,
+            ),
+            $host,
+            $port,
+        );
+
+        if (
+            $scheme->equals(Scheme::none()) &&
+            $authority->equals(Authority::none()) &&
+            !\str_starts_with($string, '/')
+        ) {
+            $path = \substr($path->toString(), 1);
+            $path = match ($path) {
+                '' => Path::none(),
+                default => Path::of($path),
+            };
+        }
+
+        return self::from(
+            $scheme,
+            $authority,
+            $path,
+            $query,
+            $fragment,
+        );
     }
 }
