@@ -4,15 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\Authority\Host;
-use Innmind\Immutable\Str;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class User
 {
-    private const PATTERN = '/^[\pL\pN-]+$/';
-
     private function __construct(private string $value)
     {
     }
@@ -23,11 +21,17 @@ final class User
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withUsername($value);
+
+            /** @psalm-suppress ImpureMethodCall */
+            return new self((string) $url->getUsername());
+        } catch (\Exception) {
             throw new \DomainException($value);
         }
-
-        return new self($value);
     }
 
     /**

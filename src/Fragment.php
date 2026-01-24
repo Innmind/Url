@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Immutable\Str;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class Fragment
 {
-    private const PATTERN = '/^\S+$/';
-
     private function __construct(private string $value)
     {
     }
@@ -22,11 +20,17 @@ final class Fragment
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withFragment($value);
+
+            /** @psalm-suppress ImpureMethodCall */
+            return new self((string) $url->getFragment());
+        } catch (\Exception) {
             throw new \DomainException($value);
         }
-
-        return new self($value);
     }
 
     /**
