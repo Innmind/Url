@@ -59,6 +59,7 @@ final class Host
         return $strings
             ->filter(static fn($value) => (bool) \preg_match('~^\S+$~ix', $value))
             ->exclude(static fn($value) => \str_contains($value, '..'))
+            ->exclude(static fn($value) => (bool) \preg_match('/\.\d+$/', $value))
             ->map(Model::of(...));
     }
 }
