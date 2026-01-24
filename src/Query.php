@@ -3,24 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Immutable\Str;
-use League\Uri\QueryString;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class Query
 {
-    private const string PATTERN = '/^\S+$/';
-    private string $value;
-
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new \DomainException($value);
-        }
-
-        $this->value = $value;
     }
 
     /**
@@ -30,12 +21,15 @@ final class Query
     public static function of(string $value): self
     {
         try {
-            return new self($value);
-        } catch (\DomainException $e) {
             /** @psalm-suppress ImpureMethodCall */
-            return new self(
-                (string) QueryString::build(QueryString::parse($value)),
-            );
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withQuery($value);
+
+            /** @psalm-suppress ImpureMethodCall */
+            return new self((string) $url->getQuery());
+        } catch (\Exception) {
+            throw new \DomainException($value);
         }
     }
 
@@ -45,10 +39,7 @@ final class Query
     #[\NoDiscard]
     public static function none(): self
     {
-        $self = new self('void');
-        $self->value = '';
-
-        return $self;
+        return new self('');
     }
 
     #[\NoDiscard]

@@ -3,14 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Immutable\Str;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class Password
 {
-    private const PATTERN = '/^[\pL\pN-]+$/';
     /** @var \SensitiveParameterValue<string> */
     private \SensitiveParameterValue $value;
 
@@ -25,11 +24,17 @@ final class Password
     #[\NoDiscard]
     public static function of(#[\SensitiveParameter] string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new \DomainException;
-        }
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withPassword($value);
 
-        return new self($value);
+            /** @psalm-suppress ImpureMethodCall */
+            return new self((string) $url->getPassword());
+        } catch (\Exception) {
+            throw new \DomainException($value);
+        }
     }
 
     /**

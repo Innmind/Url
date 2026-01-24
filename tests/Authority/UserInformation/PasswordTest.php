@@ -14,13 +14,7 @@ class PasswordTest extends TestCase
 
         $this->assertInstanceOf(Password::class, $p);
         $this->assertSame('foo', $p->toString());
-    }
-
-    public function testThrowWhenInvalidPassword()
-    {
-        $this->expectException(\DomainException::class);
-
-        $_ = Password::of('foo@bar');
+        $this->assertSame('foo%40bar', Password::of('foo@bar')->toString());
     }
 
     public function testNull()

@@ -421,7 +421,7 @@ class UrlTest extends TestCase
                 'del.icio.us',
                 '',
                 '/post',
-                'url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New%20Hitchhiker\'s%20author%20announced',
+                'url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New%20Hitchhiker%27s%20author%20announced',
                 '',
             ],
         ];

@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Immutable\Str;
+use Uri\Rfc3986\Uri as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class Scheme
 {
-    private const PATTERN = '/^[a-zA-Z0-9\-+.]+$/';
-
     private function __construct(private string $value)
     {
     }
@@ -22,11 +20,17 @@ final class Scheme
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withScheme($value);
+
+            /** @psalm-suppress ImpureMethodCall */
+            return new self((string) $url->getScheme());
+        } catch (\Exception) {
             throw new \DomainException($value);
         }
-
-        return new self($value);
     }
 
     /**

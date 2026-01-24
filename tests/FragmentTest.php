@@ -14,14 +14,7 @@ class FragmentTest extends TestCase
 
         $this->assertInstanceOf(Fragment::class, $f);
         $this->assertSame('foo', $f->toString());
-    }
-
-    public function testThrowWhenInvalidFragment()
-    {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('foo bar');
-
-        $_ = Fragment::of('foo bar');
+        $this->assertSame('foo%20bar', Fragment::of('foo bar')->toString());
     }
 
     public function testNull()

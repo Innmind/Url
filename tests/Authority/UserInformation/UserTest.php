@@ -14,14 +14,7 @@ class UserTest extends TestCase
 
         $this->assertInstanceOf(User::class, $u);
         $this->assertSame('foo', $u->toString());
-    }
-
-    public function testThrowWhenInvalidUser()
-    {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('user@me');
-
-        $_ = User::of('user@me');
+        $this->assertSame('user%40me', User::of('user@me')->toString());
     }
 
     public function testNull()
