@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Innmind\Immutable\Str;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 abstract class Path
 {
-    private const string PATTERN = '~\S+~';
-
     final private function __construct(private string $value)
     {
     }
@@ -22,11 +20,20 @@ abstract class Path
     #[\NoDiscard]
     final public static function of(string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
-            throw new \DomainException($value);
+        if ($value === '') {
+            throw new \DomainException;
         }
 
-        return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org/');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withPath($value);
+
+            return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
+        } catch (\Exception) {
+            throw new \DomainException($value);
+        }
     }
 
     /**
