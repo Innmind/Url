@@ -424,6 +424,28 @@ class UrlTest extends TestCase
                 'url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New%20Hitchhiker%27s%20author%20announced',
                 '',
             ],
+            [
+                'mysql://root:root@127.0.0.1:3306/example',
+                'mysql',
+                'root',
+                'root',
+                '127.0.0.1',
+                '3306',
+                '/example',
+                '',
+                '',
+            ],
+            [
+                'ssh://user@some-server:2222',
+                'ssh',
+                'user',
+                '',
+                'some-server',
+                '2222',
+                '',
+                '',
+                '',
+            ],
         ];
     }
 }
