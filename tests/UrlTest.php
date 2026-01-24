@@ -458,6 +458,17 @@ class UrlTest extends TestCase
                 '',
             ],
             [
+                '/redirect?to=a.org',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '/redirect',
+                'to=a.org',
+                '',
+            ],
+            [
                 'relative/path?with=query#and-fragment',
                 '',
                 '',
