@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
-use Innmind\Immutable\Str;
+use Uri\WhatWg\Url as Concrete;
 
 /**
  * @psalm-immutable
  */
 final class Host
 {
-    private const PATTERN = '~^\S+$~ix';
-
     private function __construct(private string $value)
     {
     }
@@ -22,11 +20,17 @@ final class Host
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        if (!Str::of($value)->matches(self::PATTERN)) {
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            $url = new Concrete('http://a.org');
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $url->withHost($value);
+
+            /** @psalm-suppress ImpureMethodCall */
+            return new self($value);
+        } catch (\Exception) {
             throw new \DomainException($value);
         }
-
-        return new self($value);
     }
 
     /**
