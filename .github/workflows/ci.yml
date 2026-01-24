@@ -37,6 +37,7 @@ jobs:
         run-php-version: ['8.5']
     with:
       php-version: ${{ matrix.php-version }}
+      run-php-version: ${{ matrix.run-php-version }}
   cs:
     uses: innmind/github-workflows/.github/workflows/cs.yml@main
     name: 'CS'
