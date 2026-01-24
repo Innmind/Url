@@ -298,7 +298,7 @@ final class Url
             default => Password::of($password),
         };
         $host = match ($host) {
-            null => Host::none(),
+            null, '' => Host::none(),
             default => Host::of($host),
         };
         $port = match ($port) {
