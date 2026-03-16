@@ -348,11 +348,7 @@ final class Url
             $authority->equals(Authority::none()) &&
             !\str_starts_with($string, '/')
         ) {
-            $path = \substr($path->toString(), 1);
-            $path = match ($path) {
-                '' => Path::none(),
-                default => Path::of($path),
-            };
+            $path = Path::initiallyRelative($path);
         }
 
         return self::from(

@@ -71,6 +71,20 @@ abstract class Path
         return new RelativePath($path);
     }
 
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    final public static function initiallyRelative(self $self): self
+    {
+        $path = \substr($self->toString(), 1);
+
+        return match ($path) {
+            '' => self::none(),
+            default => new RelativePath($path),
+        };
+    }
+
     #[\NoDiscard]
     final public function equals(self $path): bool
     {
