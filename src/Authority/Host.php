@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority;
 
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -40,6 +41,21 @@ final class Host
     public static function none(): self
     {
         return new self('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $host = $parsed->getRawHost();
+
+        return match ($host) {
+            null => self::none(),
+            default => new self($host),
+        };
     }
 
     #[\NoDiscard]

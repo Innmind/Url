@@ -15,6 +15,7 @@ use Innmind\Immutable\{
     Attempt,
 };
 use Uri\WhatWg\Url as _Url;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -56,6 +57,12 @@ final class Url
     #[\NoDiscard]
     public static function of(#[\SensitiveParameter] string $string): self
     {
+        $self = self::tryUri($string);
+
+        if (!\is_null($self)) {
+            return $self;
+        }
+
         try {
             return self::tryUrl($string);
         } catch (\Exception $e) {
@@ -255,6 +262,34 @@ final class Url
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
+    }
+
+    /**
+     * @psalm-pure
+     * @psalm-suppress ImpureMethodCall
+     */
+    private static function tryUri(#[\SensitiveParameter] string $string): ?self
+    {
+        $uri = Uri::parse($string);
+
+        if (\is_null($uri)) {
+            return null;
+        }
+
+        return new self(
+            Scheme::parsed($uri),
+            Authority::of(
+                UserInformation::of(
+                    User::parsed($uri),
+                    Password::parsed($uri),
+                ),
+                Host::parsed($uri),
+                Port::parsed($uri),
+            ),
+            Path::parsed($uri),
+            Query::parsed($uri),
+            Fragment::parsed($uri),
+        );
     }
 
     /**

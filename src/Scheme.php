@@ -34,6 +34,21 @@ final class Scheme
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Concrete $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $scheme = $parsed->getScheme();
+
+        return match ($scheme) {
+            null => self::none(),
+            default => new self($scheme),
+        };
+    }
+
+    /**
      * @psalm-pure
      */
     #[\NoDiscard]

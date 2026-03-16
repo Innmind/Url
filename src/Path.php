@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url;
 
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -43,6 +44,26 @@ abstract class Path
     final public static function none(): self
     {
         return new AbsolutePath('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    final public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $path = $parsed->getRawPath();
+
+        if ($path === '') {
+            return self::none();
+        }
+
+        if ($path[0] === '/') {
+            return new AbsolutePath($path);
+        }
+
+        return new RelativePath($path);
     }
 
     #[\NoDiscard]

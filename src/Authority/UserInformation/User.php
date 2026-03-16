@@ -5,6 +5,7 @@ namespace Innmind\Url\Authority\UserInformation;
 
 use Innmind\Url\Authority\Host;
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -41,6 +42,21 @@ final class User
     public static function none(): self
     {
         return new self('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $user = $parsed->getUsername();
+
+        return match ($user) {
+            null => self::none(),
+            default => new self($user),
+        };
     }
 
     #[\NoDiscard]

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url;
 
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -40,6 +41,21 @@ final class Query
     public static function none(): self
     {
         return new self('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $query = $parsed->getQuery();
+
+        return match ($query) {
+            null => self::none(),
+            default => new self($query),
+        };
     }
 
     #[\NoDiscard]

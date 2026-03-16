@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Url\Authority\UserInformation;
 
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -44,6 +45,21 @@ final class Password
     public static function none(): self
     {
         return new self('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $password = $parsed->getPassword();
+
+        return match ($password) {
+            null => self::none(),
+            default => new self($password),
+        };
     }
 
     #[\NoDiscard]

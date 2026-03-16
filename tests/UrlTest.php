@@ -293,6 +293,15 @@ class UrlTest extends TestCase
             });
     }
 
+    #[DataProvider('normalized')]
+    public function testParsedUrlIsNotAltered($url)
+    {
+        $this->assertSame(
+            $url,
+            Url::of($url)->toString(),
+        );
+    }
+
     public static function cases(): array
     {
         return [
@@ -367,6 +376,104 @@ class UrlTest extends TestCase
         ];
     }
 
+    public static function normalized(): array
+    {
+        return [
+            ['/wiki/Category:42'],
+            ['/wiki/Category:42?some=query'],
+            ['http://a.pl/'],
+            ['http://www.google.com/'],
+            ['http://www.google.museum/'],
+            ['https://google.com/'],
+            ['http://www.example.coop/'],
+            ['http://www.test-example.com/'],
+            ['http://www.symfony.com/'],
+            ['http://symfony.fake/blog/'],
+            ['http://symfony.com/'],
+            ['http://symfony.com/search?type=&q=url+validator'],
+            ['http://www.symfony.com/doc/current/book/validation.html#supported-constraints'],
+            ['http://very.long.domain.name.com/'],
+            ['http://localhost/'],
+            ['http://myhost123/'],
+            ['http://127.0.0.1/'],
+            ['http://127.0.0.1/'],
+            ['http://[::1]/'],
+            ['http://[::1]/'],
+            ['http://[1:2:3:0:4:5:6:7]/'],
+            ['http://sãopaulo.com/'],
+            ['http://xn--sopaulo-xwa.com/'],
+            ['http://sãopaulo.com.br/'],
+            ['http://xn--sopaulo-xwa.com.br/'],
+            ['http://пример.испытание/'],
+            ['http://xn--e1afmkfd.xn--80akhbyknj4f/'],
+            ['http://مثال.إختبار/'],
+            ['http://xn--mgbh0fb.xn--kgbechtv/'],
+            ['http://例子.测试/'],
+            ['http://xn--fsqu00a.xn--0zwm56d/'],
+            ['http://例子.測試/'],
+            ['http://xn--fsqu00a.xn--g6w251d/'],
+            ['http://例え.テスト/'],
+            ['http://xn--r8jz45g.xn--zckzah/'],
+            ['http://مثال.آزمایشی/'],
+            ['http://xn--mgbh0fb.xn--hgbk6aj7f53bba/'],
+            ['http://실례.테스트/'],
+            ['http://xn--9n2bp8q.xn--9t4b11yi5a/'],
+            ['http://العربية.idn.icann.org/'],
+            ['http://xn--ogb.idn.icann.org/'],
+            ['http://xn--e1afmkfd.xn--80akhbyknj4f.xn--e1afmkfd/'],
+            ['http://xn--espaa-rta.xn--ca-ol-fsay5a/'],
+            ['http://xn--d1abbgf6aiiy.xn--p1ai/'],
+            ['http://☎.com/'],
+            ['http://username:password@symfony.com/'],
+            ['http://user-name@symfony.com/'],
+            ['http://symfony.com/'],
+            ['http://symfony.com/?query=1'],
+            ['http://symfony.com/#fragment'],
+            ['http://www.independent.co.uk/service/privacy-policy-a6184181.html'],
+            ['http://del.icio.us/post?url=http://news.bbc.co.uk/2/hi/entertainment/7619828.stm&amp;title=New%20Hitchhiker%27s%20author%20announced'],
+            ['example.com'],
+            ['http://example.com/'],
+            ['http://example.com/bar'],
+            ['http://xn--example.com/foo/baz'],
+            ['http://xn--example.com/foo/baz/'],
+            ['http://xn--example.com/foo/'],
+            ['http://xn--example.com:80/foo/'],
+            ['https://xn--example.com:443/foo/'],
+            ['http://xn-elsewhere.com/'],
+            ['/path/to/content'],
+            ['/path/to/content?query=foo#fragment'],
+            ['/path/to/content/'],
+            ['/foo/baz'],
+            ['foo'],
+            ['./bar'],
+            ['bar'],
+            ['bar/baz?query=string#fragment'],
+            ['?query=string'],
+            ['#fragment'],
+            ['/absolute'],
+            ['../'],
+            ['xn--example.com/'],
+            ['../bar'],
+            ['../bar/foo'],
+            ['http://example.com/foo'],
+            ['http://xn--example.com/foo/bar'],
+            ['http://xn--example.com/foo/bar/baz?query=string#fragment'],
+            ['http://xn--example.com/bar/foo'],
+            ['http://xn--example.com/foo/baz?query=string'],
+            ['http://xn--example.com/foo/baz/?query=string'],
+            ['http://xn--example.com/foo/baz/#fragment'],
+            ['http://xn--example.com/foo/baz#fragment'],
+            ['http://xn--example.com/absolute'],
+            ['http://xn--example.com:80/'],
+            ['https://xn--example.com:443/'],
+            ['http://xn--example.com/'],
+            ['/path/bar'],
+            ['/path/to/bar'],
+            ['/path/to/content/bar'],
+            ['/bar/foo'],
+        ];
+    }
+
     public static function fromString(): array
     {
         return [
@@ -386,9 +493,9 @@ class UrlTest extends TestCase
             ['http://symfony.com/search?type=&q=url+validator', 'http', '', '', 'symfony.com', '', '/search', 'type=&q=url+validator', ''],
             ['http://symfony.com/#', 'http', '', '', 'symfony.com', '', '/', '', ''],
             ['http://symfony.com/#?', 'http', '', '', 'symfony.com', '', '/', '', '?'],
-            ['http://127.0.0.1:80/', 'http', '', '', '127.0.0.1', '', '/', '', ''],
-            ['http://[::1]:80/', 'http', '', '', '[::1]', '', '/', '', ''],
-            ['http://[1:2:3::4:5:6:7]/', 'http', '', '', '[1:2:3:0:4:5:6:7]', '', '/', '', ''],
+            ['http://127.0.0.1:80/', 'http', '', '', '127.0.0.1', '80', '/', '', ''],
+            ['http://[::1]:80/', 'http', '', '', '[::1]', '80', '/', '', ''],
+            ['http://[1:2:3::4:5:6:7]/', 'http', '', '', '[1:2:3::4:5:6:7]', '', '/', '', ''],
             ['http://sãopaulo.com/', 'http', '', '', 'sãopaulo.com', '', '/', '', ''],
             ['http://xn--sopaulo-xwa.com/', 'http', '', '', 'xn--sopaulo-xwa.com', '', '/', '', ''],
             ['http://пример.испытание/', 'http', '', '', 'пример.испытание', '', '/', '', ''],

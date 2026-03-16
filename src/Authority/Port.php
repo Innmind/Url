@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
+use Uri\Rfc3986\Uri;
+
 /**
  * @psalm-immutable
  */
@@ -32,6 +34,21 @@ final class Port
     public static function none(): self
     {
         return new self(null);
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $port = $parsed->getPort();
+
+        return match ($port) {
+            null => self::none(),
+            default => new self($port),
+        };
     }
 
     #[\NoDiscard]
