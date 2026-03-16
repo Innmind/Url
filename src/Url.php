@@ -28,6 +28,7 @@ final class Url
         private Path $path,
         private Query $query,
         private Fragment $fragment,
+        private _Url|Uri|null $parsed,
     ) {
     }
 
@@ -48,6 +49,7 @@ final class Url
             $path,
             $query,
             $fragment,
+            null,
         );
     }
 
@@ -123,6 +125,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -135,6 +138,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -153,6 +157,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -165,6 +170,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -183,6 +189,7 @@ final class Url
             $path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -195,6 +202,7 @@ final class Url
             Path::none(),
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -213,6 +221,7 @@ final class Url
             $this->path,
             $query,
             $this->fragment,
+            null,
         );
     }
 
@@ -225,6 +234,7 @@ final class Url
             $this->path,
             Query::none(),
             $this->fragment,
+            null,
         );
     }
 
@@ -243,6 +253,7 @@ final class Url
             $this->path,
             $this->query,
             $fragment,
+            null,
         );
     }
 
@@ -255,6 +266,7 @@ final class Url
             $this->path,
             $this->query,
             Fragment::none(),
+            null,
         );
     }
 
@@ -289,6 +301,7 @@ final class Url
             Path::parsed($uri),
             Query::parsed($uri),
             Fragment::parsed($uri),
+            $uri,
         );
     }
 
@@ -351,12 +364,13 @@ final class Url
             $path = Path::initiallyRelative($path);
         }
 
-        return self::from(
+        return new self(
             $scheme,
             $authority,
             $path,
             $query,
             $fragment,
+            $url,
         );
     }
 }
