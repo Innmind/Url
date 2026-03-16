@@ -22,13 +22,7 @@ final class Query
     public static function of(string $value): self
     {
         try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withQuery($value);
-
-            /** @psalm-suppress ImpureMethodCall */
-            return new self((string) $url->getQuery());
+            return Url::of('http://a.org/?'.$value)->query();
         } catch (\Exception) {
             throw new \DomainException($value);
         }

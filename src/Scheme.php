@@ -21,14 +21,12 @@ final class Scheme
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Uri('http://a.org');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withScheme($value);
+        if (\str_ends_with($value, '://')) {
+            throw new \DomainException($value);
+        }
 
-            /** @psalm-suppress ImpureMethodCall */
-            return new self((string) $url->getScheme());
+        try {
+            return Url::of($value.'://a.org/')->scheme();
         } catch (\Exception) {
             throw new \DomainException($value);
         }

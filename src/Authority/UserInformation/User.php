@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
-use Innmind\Url\Authority\Host;
+use Innmind\Url\{
+    Url,
+    Authority\Host,
+};
 use Uri\WhatWg\Url as Concrete;
 use Uri\Rfc3986\Uri;
 
@@ -23,13 +26,13 @@ final class User
     public static function of(string $value): self
     {
         try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withUsername($value);
-
-            /** @psalm-suppress ImpureMethodCall */
-            return new self((string) $url->getUsername());
+            return Url::of(\sprintf(
+                'http://%s@a.org',
+                $value,
+            ))
+                ->authority()
+                ->userInformation()
+                ->user();
         } catch (\Exception) {
             throw new \DomainException($value);
         }

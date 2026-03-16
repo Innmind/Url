@@ -26,15 +26,16 @@ abstract class Path
         }
 
         try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org/');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withPath($value);
-
-            return $value[0] === '/' ? new AbsolutePath($value) : new RelativePath($value);
+            $path = Url::of($value)->path();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if ($path instanceof RelativePath) {
+            return new RelativePath($value);
+        }
+
+        return new AbsolutePath($value);
     }
 
     /**
