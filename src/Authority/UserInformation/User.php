@@ -48,7 +48,7 @@ final class User
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
+    public static function parsed(Uri|Concrete $parsed): self
     {
         /** @psalm-suppress ImpureMethodCall */
         $user = $parsed->getUsername();

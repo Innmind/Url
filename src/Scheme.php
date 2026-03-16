@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Uri\Rfc3986\Uri as Concrete;
+use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -22,7 +23,7 @@ final class Scheme
     {
         try {
             /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org');
+            $url = new Uri('http://a.org');
             /** @psalm-suppress ImpureMethodCall */
             $url = $url->withScheme($value);
 
@@ -37,7 +38,7 @@ final class Scheme
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Concrete $parsed): self
+    public static function parsed(Uri $parsed): self
     {
         /** @psalm-suppress ImpureMethodCall */
         $scheme = $parsed->getScheme();
@@ -46,6 +47,27 @@ final class Scheme
             null => self::none(),
             default => new self($scheme),
         };
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsedUrl(
+        Concrete $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
+        /** @psalm-suppress ImpureMethodCall */
+        $scheme = $parsed->getScheme();
+
+        if (
+            $scheme === 'http' &&
+            !\str_starts_with($origin, 'http://')
+        ) {
+            return self::none();
+        }
+
+        return new self($scheme);
     }
 
     /**

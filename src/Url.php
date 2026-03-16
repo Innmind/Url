@@ -300,85 +300,37 @@ final class Url
     {
         $string = \trim($string);
         $url = new _Url($string, new _Url('http://a.org'));
-        $scheme = $url->getScheme();
-        $user = $url->getUsername();
-        $password = $url->getPassword();
-        $host = $url->getUnicodeHost();
-        $port = $url->getPort();
-        $path = $url->getPath();
-        $query = $url->getQuery();
-        $fragment = $url->getFragment();
+        $scheme = Scheme::parsedUrl($url, $string);
+        $user = User::parsed($url);
+        $password = Password::parsed($url);
+        $host = Host::parsedUrl($url, $string);
+        $port = Port::parsed($url);
+        $path = Path::parsed($url);
+        $query = Query::parsed($url);
+        $fragment = Fragment::parsed($url);
 
-        if (!\is_null($host) && !\str_contains($string, $host)) {
-            $host = $url->getAsciiHost();
-        }
+        if ($host->toString() === 'a.org' && \str_contains($string, 'a.org')) {
+            $start = self::from(
+                $scheme,
+                Authority::of(
+                    UserInformation::of($user, $password),
+                    $host,
+                    $port,
+                ),
+                Path::none(),
+                Query::none(),
+                Fragment::none(),
+            );
+            $withScheme = $start->toString();
+            $schemeLess = '//'.$start
+                ->withoutScheme()
+                ->toString();
 
-        if (
-            $scheme === 'http' &&
-            !\str_starts_with($string, 'http://')
-        ) {
-            $scheme = null;
-        }
-
-        $scheme = match ($scheme) {
-            null => Scheme::none(),
-            default => Scheme::of($scheme),
-        };
-        $user = match ($user) {
-            null => User::none(),
-            default => User::of($user),
-        };
-        $password = match ($password) {
-            null => Password::none(),
-            default => Password::of($password),
-        };
-        $host = match ($host) {
-            null, '' => Host::none(),
-            default => Host::of($host),
-        };
-        $port = match ($port) {
-            null => Port::none(),
-            default => Port::of($port),
-        };
-        $path = match ($path) {
-            '' => Path::none(),
-            default => Path::of($path),
-        };
-        $query = match ($query) {
-            null => Query::none(),
-            default => Query::of($query),
-        };
-        $fragment = match ($fragment) {
-            null => Fragment::none(),
-            default => Fragment::of($fragment),
-        };
-
-        if ($host->toString() === 'a.org') {
-            if (!\str_contains($string, 'a.org')) {
+            if (
+                !\str_starts_with($string, $withScheme) &&
+                !\str_starts_with($string, $schemeLess)
+            ) {
                 $host = Host::none();
-            } else {
-                $start = self::from(
-                    $scheme,
-                    Authority::of(
-                        UserInformation::of($user, $password),
-                        $host,
-                        $port,
-                    ),
-                    Path::none(),
-                    Query::none(),
-                    Fragment::none(),
-                );
-                $withScheme = $start->toString();
-                $schemeLess = '//'.$start
-                    ->withoutScheme()
-                    ->toString();
-
-                if (
-                    !\str_starts_with($string, $withScheme) &&
-                    !\str_starts_with($string, $schemeLess)
-                ) {
-                    $host = Host::none();
-                }
             }
         }
 

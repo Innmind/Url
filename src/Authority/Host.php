@@ -58,6 +58,32 @@ final class Host
         };
     }
 
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsedUrl(
+        Concrete $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
+        /** @psalm-suppress ImpureMethodCall */
+        $host = $parsed->getUnicodeHost();
+
+        if (!\is_null($host) && !\str_contains($origin, $host)) {
+            /** @psalm-suppress ImpureMethodCall */
+            $host = $parsed->getAsciiHost();
+        }
+
+        if ($host === 'a.org' && !\str_contains($origin, 'a.org')) {
+            return self::none();
+        }
+
+        return match ($host) {
+            null => self::none(),
+            default => new self($host),
+        };
+    }
+
     #[\NoDiscard]
     public function equals(self $host): bool
     {

@@ -50,10 +50,15 @@ abstract class Path
      * @internal
      * @psalm-pure
      */
-    final public static function parsed(Uri $parsed): self
+    final public static function parsed(Uri|Concrete $parsed): self
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $path = $parsed->getRawPath();
+        if ($parsed instanceof Uri) {
+            /** @psalm-suppress ImpureMethodCall */
+            $path = $parsed->getRawPath();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $path = $parsed->getPath();
+        }
 
         if ($path === '') {
             return self::none();

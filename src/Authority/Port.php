@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority;
 
+use Uri\WhatWg\Url as Concrete;
 use Uri\Rfc3986\Uri;
 
 /**
@@ -40,7 +41,7 @@ final class Port
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
+    public static function parsed(Uri|Concrete $parsed): self
     {
         /** @psalm-suppress ImpureMethodCall */
         $port = $parsed->getPort();

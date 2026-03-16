@@ -47,7 +47,7 @@ final class Query
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
+    public static function parsed(Uri|Concrete $parsed): self
     {
         /** @psalm-suppress ImpureMethodCall */
         $query = $parsed->getQuery();
