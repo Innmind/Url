@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Url\Authority\UserInformation;
 
+use Innmind\Url\Url;
 use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -25,13 +27,13 @@ final class Password
     public static function of(#[\SensitiveParameter] string $value): self
     {
         try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withPassword($value);
-
-            /** @psalm-suppress ImpureMethodCall */
-            return new self((string) $url->getPassword());
+            return Url::of(\sprintf(
+                'http://u:%s@a.org',
+                $value,
+            ))
+                ->authority()
+                ->userInformation()
+                ->password();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
@@ -44,6 +46,21 @@ final class Password
     public static function none(): self
     {
         return new self('');
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri|Concrete $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $password = $parsed->getPassword();
+
+        return match ($password) {
+            null => self::none(),
+            default => new self($password),
+        };
     }
 
     #[\NoDiscard]

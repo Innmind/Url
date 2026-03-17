@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Url;
 
-use Uri\Rfc3986\Uri as Concrete;
+use Uri\WhatWg\Url as Concrete;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -20,17 +21,51 @@ final class Scheme
     #[\NoDiscard]
     public static function of(string $value): self
     {
-        try {
-            /** @psalm-suppress ImpureMethodCall */
-            $url = new Concrete('http://a.org');
-            /** @psalm-suppress ImpureMethodCall */
-            $url = $url->withScheme($value);
+        if (\str_ends_with($value, '://')) {
+            throw new \DomainException($value);
+        }
 
-            /** @psalm-suppress ImpureMethodCall */
-            return new self((string) $url->getScheme());
+        try {
+            return Url::of($value.'://a.org/')->scheme();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsed(Uri $parsed): self
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $scheme = $parsed->getScheme();
+
+        return match ($scheme) {
+            null => self::none(),
+            default => new self($scheme),
+        };
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function parsedUrl(
+        Concrete $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
+        /** @psalm-suppress ImpureMethodCall */
+        $scheme = $parsed->getScheme();
+
+        if (
+            $scheme === 'http' &&
+            !\str_starts_with($origin, 'http://')
+        ) {
+            return self::none();
+        }
+
+        return new self($scheme);
     }
 
     /**
