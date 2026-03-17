@@ -13,6 +13,7 @@ use Innmind\Url\{
 use Innmind\Immutable\{
     Maybe,
     Attempt,
+    Str,
 };
 use Uri\WhatWg\Url as _Url;
 use Uri\Rfc3986\Uri;
@@ -270,10 +271,125 @@ final class Url
         );
     }
 
+    /**
+     * @return Attempt<self>
+     */
+    #[\NoDiscard]
+    public function resolve(self $destination): Attempt
+    {
+        return match ($this->parsed) {
+            null => Attempt::result($this->manualResolve($destination)),
+            default => $this->nativeResolve($this->parsed, $destination),
+        };
+    }
+
     #[\NoDiscard]
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
+    }
+
+    private function manualResolve(self $destination): self
+    {
+        if (!$destination->authority()->equals(Authority::none())) {
+            return $destination;
+        }
+
+        if (
+            !$destination->path()->equals(Path::none()) &&
+            $destination->path()->absolute()
+        ) {
+            return $this
+                ->withPath($destination->path())
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        if (
+            $destination->path()->equals(Path::none()) &&
+            !$destination->query()->equals(Query::none())
+        ) {
+            return $this
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        if (
+            $destination->path()->equals(Path::none()) &&
+            !$destination->fragment()->equals(Fragment::none())
+        ) {
+            return $this->withFragment($destination->fragment());
+        }
+
+        $destinationPath = Str::of($destination->path()->toString());
+        $originPath = $this->path;
+
+        if (!$originPath->directory()) {
+            $originPath = $this->up($originPath);
+        }
+
+        if ($destinationPath->startsWith('./')) {
+            $destinationPath = $destinationPath->substring(2);
+        }
+
+        if ($destinationPath->startsWith('../')) {
+            $destinationPath = $destinationPath->substring(3);
+            $originPath = $this->up($originPath);
+        }
+
+        if ($destinationPath->empty()) {
+            return $this
+                ->withPath($originPath)
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        return $this
+            ->withPath($originPath->resolve(Path::of($destinationPath->toString())))
+            ->withQuery($destination->query())
+            ->withFragment($destination->fragment());
+    }
+
+    /**
+     * @return Attempt<self>
+     */
+    private function nativeResolve(
+        _Url|Uri $parsed,
+        self $destination,
+    ): Attempt {
+        try {
+            $uri = $destination->toString();
+
+            if (
+                !$destination->authority()->equals(Authority::none()) &&
+                $destination->scheme()->equals(Scheme::none())
+            ) {
+                $uri = '//'.$uri;
+            }
+
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $parsed->resolve($uri);
+
+            if ($url instanceof Uri) {
+                /** @psalm-suppress ImpureMethodCall */
+                $url = $url->toRawString();
+            } else {
+                /** @psalm-suppress ImpureMethodCall */
+                $url = $url->toUnicodeString();
+            }
+
+            return self::attempt($url);
+        } catch (\Throwable $e) {
+            return Attempt::result(self::manualResolve($destination));
+        }
+    }
+
+    private function up(Path $path): Path
+    {
+        $path = $path->toString();
+        $up = \dirname($path);
+
+        return Path::of(\rtrim($up, '/').'/');
     }
 
     /**
