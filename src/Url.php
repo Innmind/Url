@@ -13,8 +13,10 @@ use Innmind\Url\{
 use Innmind\Immutable\{
     Maybe,
     Attempt,
+    Str,
 };
 use Uri\WhatWg\Url as _Url;
+use Uri\Rfc3986\Uri;
 
 /**
  * @psalm-immutable
@@ -27,6 +29,7 @@ final class Url
         private Path $path,
         private Query $query,
         private Fragment $fragment,
+        private _Url|Uri|null $parsed,
     ) {
     }
 
@@ -47,6 +50,7 @@ final class Url
             $path,
             $query,
             $fragment,
+            null,
         );
     }
 
@@ -56,6 +60,12 @@ final class Url
     #[\NoDiscard]
     public static function of(#[\SensitiveParameter] string $string): self
     {
+        $self = self::tryUri($string);
+
+        if (!\is_null($self)) {
+            return $self;
+        }
+
         try {
             return self::tryUrl($string);
         } catch (\Exception $e) {
@@ -116,6 +126,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -128,6 +139,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -146,6 +158,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -158,6 +171,7 @@ final class Url
             $this->path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -176,6 +190,7 @@ final class Url
             $path,
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -188,6 +203,7 @@ final class Url
             Path::none(),
             $this->query,
             $this->fragment,
+            null,
         );
     }
 
@@ -206,6 +222,7 @@ final class Url
             $this->path,
             $query,
             $this->fragment,
+            null,
         );
     }
 
@@ -218,6 +235,7 @@ final class Url
             $this->path,
             Query::none(),
             $this->fragment,
+            null,
         );
     }
 
@@ -236,6 +254,7 @@ final class Url
             $this->path,
             $this->query,
             $fragment,
+            null,
         );
     }
 
@@ -248,13 +267,158 @@ final class Url
             $this->path,
             $this->query,
             Fragment::none(),
+            null,
         );
+    }
+
+    /**
+     * @return Attempt<self>
+     */
+    #[\NoDiscard]
+    public function resolve(self $destination): Attempt
+    {
+        return match ($this->parsed) {
+            null => Attempt::result($this->manualResolve($destination)),
+            default => $this->nativeResolve($this->parsed, $destination),
+        };
     }
 
     #[\NoDiscard]
     public function toString(): string
     {
         return $this->scheme->format($this->authority).$this->path->format($this->query, $this->fragment);
+    }
+
+    private function manualResolve(self $destination): self
+    {
+        if (!$destination->authority()->equals(Authority::none())) {
+            return $destination;
+        }
+
+        if (
+            !$destination->path()->equals(Path::none()) &&
+            $destination->path()->absolute()
+        ) {
+            return $this
+                ->withPath($destination->path())
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        if (
+            $destination->path()->equals(Path::none()) &&
+            !$destination->query()->equals(Query::none())
+        ) {
+            return $this
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        if (
+            $destination->path()->equals(Path::none()) &&
+            !$destination->fragment()->equals(Fragment::none())
+        ) {
+            return $this->withFragment($destination->fragment());
+        }
+
+        $destinationPath = Str::of($destination->path()->toString());
+        $originPath = $this->path;
+
+        if (!$originPath->directory()) {
+            $originPath = $this->up($originPath);
+        }
+
+        if ($destinationPath->startsWith('./')) {
+            $destinationPath = $destinationPath->substring(2);
+        }
+
+        if ($destinationPath->startsWith('../')) {
+            $destinationPath = $destinationPath->substring(3);
+            $originPath = $this->up($originPath);
+        }
+
+        if ($destinationPath->empty()) {
+            return $this
+                ->withPath($originPath)
+                ->withQuery($destination->query())
+                ->withFragment($destination->fragment());
+        }
+
+        return $this
+            ->withPath($originPath->resolve(Path::of($destinationPath->toString())))
+            ->withQuery($destination->query())
+            ->withFragment($destination->fragment());
+    }
+
+    /**
+     * @return Attempt<self>
+     */
+    private function nativeResolve(
+        _Url|Uri $parsed,
+        self $destination,
+    ): Attempt {
+        try {
+            $uri = $destination->toString();
+
+            if (
+                !$destination->authority()->equals(Authority::none()) &&
+                $destination->scheme()->equals(Scheme::none())
+            ) {
+                $uri = '//'.$uri;
+            }
+
+            /** @psalm-suppress ImpureMethodCall */
+            $url = $parsed->resolve($uri);
+
+            if ($url instanceof Uri) {
+                /** @psalm-suppress ImpureMethodCall */
+                $url = $url->toRawString();
+            } else {
+                /** @psalm-suppress ImpureMethodCall */
+                $url = $url->toUnicodeString();
+            }
+
+            return self::attempt($url);
+        } catch (\Throwable $e) {
+            return Attempt::result(self::manualResolve($destination));
+        }
+    }
+
+    private function up(Path $path): Path
+    {
+        $path = $path->toString();
+        $up = \dirname($path);
+
+        return Path::of(\rtrim($up, '/').'/');
+    }
+
+    /**
+     * @psalm-pure
+     * @psalm-suppress ImpureMethodCall
+     */
+    private static function tryUri(#[\SensitiveParameter] string $string): ?self
+    {
+        $uri = Uri::parse($string);
+
+        if (\is_null($uri)) {
+            return null;
+        }
+
+        return new self(
+            Scheme::parsed($uri),
+            Authority::of(
+                UserInformation::of(
+                    User::parsed($uri),
+                    Password::parsed($uri),
+                ),
+                Host::parsed($uri),
+                Port::parsed($uri),
+            ),
+            Path::parsed($uri),
+            Query::parsed($uri),
+            Fragment::parsed($uri),
+            $uri,
+        );
     }
 
     /**
@@ -265,85 +429,37 @@ final class Url
     {
         $string = \trim($string);
         $url = new _Url($string, new _Url('http://a.org'));
-        $scheme = $url->getScheme();
-        $user = $url->getUsername();
-        $password = $url->getPassword();
-        $host = $url->getUnicodeHost();
-        $port = $url->getPort();
-        $path = $url->getPath();
-        $query = $url->getQuery();
-        $fragment = $url->getFragment();
+        $scheme = Scheme::parsedUrl($url, $string);
+        $user = User::parsed($url);
+        $password = Password::parsed($url);
+        $host = Host::parsedUrl($url, $string);
+        $port = Port::parsed($url);
+        $path = Path::parsed($url);
+        $query = Query::parsed($url);
+        $fragment = Fragment::parsed($url);
 
-        if (!\is_null($host) && !\str_contains($string, $host)) {
-            $host = $url->getAsciiHost();
-        }
+        if ($host->toString() === 'a.org' && \str_contains($string, 'a.org')) {
+            $start = self::from(
+                $scheme,
+                Authority::of(
+                    UserInformation::of($user, $password),
+                    $host,
+                    $port,
+                ),
+                Path::none(),
+                Query::none(),
+                Fragment::none(),
+            );
+            $withScheme = $start->toString();
+            $schemeLess = '//'.$start
+                ->withoutScheme()
+                ->toString();
 
-        if (
-            $scheme === 'http' &&
-            !\str_starts_with($string, 'http://')
-        ) {
-            $scheme = null;
-        }
-
-        $scheme = match ($scheme) {
-            null => Scheme::none(),
-            default => Scheme::of($scheme),
-        };
-        $user = match ($user) {
-            null => User::none(),
-            default => User::of($user),
-        };
-        $password = match ($password) {
-            null => Password::none(),
-            default => Password::of($password),
-        };
-        $host = match ($host) {
-            null, '' => Host::none(),
-            default => Host::of($host),
-        };
-        $port = match ($port) {
-            null => Port::none(),
-            default => Port::of($port),
-        };
-        $path = match ($path) {
-            '' => Path::none(),
-            default => Path::of($path),
-        };
-        $query = match ($query) {
-            null => Query::none(),
-            default => Query::of($query),
-        };
-        $fragment = match ($fragment) {
-            null => Fragment::none(),
-            default => Fragment::of($fragment),
-        };
-
-        if ($host->toString() === 'a.org') {
-            if (!\str_contains($string, 'a.org')) {
+            if (
+                !\str_starts_with($string, $withScheme) &&
+                !\str_starts_with($string, $schemeLess)
+            ) {
                 $host = Host::none();
-            } else {
-                $start = self::from(
-                    $scheme,
-                    Authority::of(
-                        UserInformation::of($user, $password),
-                        $host,
-                        $port,
-                    ),
-                    Path::none(),
-                    Query::none(),
-                    Fragment::none(),
-                );
-                $withScheme = $start->toString();
-                $schemeLess = '//'.$start
-                    ->withoutScheme()
-                    ->toString();
-
-                if (
-                    !\str_starts_with($string, $withScheme) &&
-                    !\str_starts_with($string, $schemeLess)
-                ) {
-                    $host = Host::none();
-                }
             }
         }
 
@@ -361,19 +477,16 @@ final class Url
             $authority->equals(Authority::none()) &&
             !\str_starts_with($string, '/')
         ) {
-            $path = \substr($path->toString(), 1);
-            $path = match ($path) {
-                '' => Path::none(),
-                default => Path::of($path),
-            };
+            $path = Path::initiallyRelative($path);
         }
 
-        return self::from(
+        return new self(
             $scheme,
             $authority,
             $path,
             $query,
             $fragment,
+            $url,
         );
     }
 }

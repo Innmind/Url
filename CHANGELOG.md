@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.0 - 2026-03-17
+
+### Added
+
+- `Innmind\Url\Url::resolve()`
+
+### Fixed
+
+- Urls made only of relative paths were improperly parsed
+
 ## 5.1.0 - 2026-01-24
 
 ### Changed
