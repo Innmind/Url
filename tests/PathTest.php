@@ -110,6 +110,13 @@ class PathTest extends TestCase
             });
     }
 
+    public function testPathStartingWithBackslashIsInvalid()
+    {
+        $this->assert()->throws(
+            static fn() => Path::of('\\\\'),
+        );
+    }
+
     public static function resolutions(): array
     {
         return [
