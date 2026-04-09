@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.2.1 - 2026-04-09
+
+### Fixed
+
+- Some relative paths were parsed as absolute ones
+- Resolving a relative path from a root path returned an invalid path (as it started with 2 `/`)
+
 ## 5.2.0 - 2026-03-17
 
 ### Added

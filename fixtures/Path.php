@@ -31,8 +31,9 @@ final class Path
      */
     private static function strings(): Set
     {
-        return Set::strings()->filter(
-            static fn($value) => (bool) \preg_match('~\S+~', $value),
-        );
+        return Set::strings()
+            ->filter(static fn($value) => (bool) \preg_match('~\S+~', $value))
+            ->exclude(static fn($value) => \str_contains($value, '//'))
+            ->exclude(static fn($value) => \str_starts_with($value, '\\'));
     }
 }
