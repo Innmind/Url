@@ -8,11 +8,17 @@ use Innmind\Url\{
     AbsolutePath,
     RelativePath,
 };
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use Fixtures\Innmind\Url\Path as FPath;
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    PHPUnit\Framework\TestCase,
+};
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class PathTest extends TestCase
 {
+    use BlackBox;
+
     public function testInterface()
     {
         $p = Path::of('/foo/bar/');
@@ -77,6 +83,19 @@ class PathTest extends TestCase
         $this->assertInstanceOf(RelativePath::class, Path::of('somewhere/'));
         $this->assertInstanceOf(RelativePath::class, Path::of('./somewhere'));
         $this->assertInstanceOf(RelativePath::class, Path::of('../somewhere'));
+    }
+
+    public function testAbsolutePathsAlwaysStartWithASlash(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(FPath::any())
+            ->prove(function($path) {
+                if ($path->absolute()) {
+                    $this->assertStringStartsWith('/', $path->toString());
+                } else {
+                    $this->assertStringStartsNotWith('/', $path->toString());
+                }
+            });
     }
 
     public static function resolutions(): array

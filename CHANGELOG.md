@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Some relative paths were parsed as absolute ones
+
 ## 5.2.0 - 2026-03-17
 
 ### Added
