@@ -121,6 +121,10 @@ abstract class Path
 
         $parent = \dirname($this->toString());
 
+        if ($parent === '/') {
+            return self::of('/'.$path->toString());
+        }
+
         return self::of($parent.'/'.$path->toString());
     }
 
