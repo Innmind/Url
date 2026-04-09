@@ -35,6 +35,14 @@ abstract class Path
             return new RelativePath($value);
         }
 
+        // For some paths the parsing removes chars leading to the parsing
+        // thinking the path is absolute when the specified one is relative.
+        // But since we don't use the parsed string, to avoid using encoded
+        // strings, then the relative path is returned as an absolute one.
+        if ($value[0] !== '/') {
+            return new RelativePath($value);
+        }
+
         return new AbsolutePath($value);
     }
 
