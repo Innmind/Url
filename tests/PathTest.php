@@ -98,6 +98,18 @@ class PathTest extends TestCase
             });
     }
 
+    public function testResolveAbsolutility(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(FPath::any(), FPath::any())
+            ->prove(function($a, $b) {
+                $this->assertSame(
+                    $a->absolute() || $b->absolute(),
+                    $a->resolve($b)->absolute(),
+                );
+            });
+    }
+
     public static function resolutions(): array
     {
         return [
@@ -125,6 +137,11 @@ class PathTest extends TestCase
                 'some/some/target',
                 'some/source',
                 'some/target',
+            ],
+            'relative to the root' => [
+                '/target',
+                '/source',
+                'target',
             ],
         ];
     }
