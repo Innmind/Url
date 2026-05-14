@@ -19,9 +19,9 @@ use Innmind\Url\{
 use Fixtures\Innmind\Url\Url as Fixture;
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
+    PHPUnit\Framework\Attributes\DataProvider,
     PHPUnit\BlackBox,
 };
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlTest extends TestCase
 {
@@ -108,9 +108,12 @@ class UrlTest extends TestCase
 
     public function testThrowWhenBuildingFromInvalidString()
     {
-        $this->expectException(\DomainException::class);
-
-        $_ = Url::of('http://user:password/path');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Url::of('http://user:password/path'),
+                \DomainException::class,
+            );
     }
 
     #[DataProvider('cases')]

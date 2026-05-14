@@ -27,9 +27,12 @@ class UserInformationTest extends TestCase
 
     public function testThrowWhenNullUserButPasswordPresent()
     {
-        $this->expectException(\DomainException::class);
-
-        $_ = UserInformation::of(User::none(), Password::of('foo'));
+        $this
+            ->assert()
+            ->throws(
+                static fn() => UserInformation::of(User::none(), Password::of('foo')),
+                \DomainException::class,
+            );
     }
 
     public function testString()

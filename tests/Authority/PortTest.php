@@ -19,10 +19,12 @@ class PortTest extends TestCase
 
     public function testThrowWhenNegativePort()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('-1');
-
-        $_ = Port::of(-1);
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Port::of(-1),
+                \DomainException::class,
+            );
     }
 
     public function testNull()

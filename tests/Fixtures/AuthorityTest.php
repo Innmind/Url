@@ -18,13 +18,12 @@ class AuthorityTest extends TestCase
      */
     public function testInterface()
     {
-        $set = Authority::any();
+        $set = Authority::any()->take(100);
 
-        $this->assertInstanceOf(Set\Provider::class, $set);
+        $this->assertInstanceOf(Set::class, $set);
 
         foreach ($set->toSet()->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }

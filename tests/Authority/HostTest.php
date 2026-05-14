@@ -18,10 +18,12 @@ class HostTest extends TestCase
 
     public function testThrowWhenInvalidHost()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('foo bar');
-
-        $_ = Host::of('foo bar');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Host::of('foo bar'),
+                \DomainException::class,
+            );
     }
 
     public function testNull()

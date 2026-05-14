@@ -9,9 +9,9 @@ use Innmind\BlackBox\Set;
 final class Authority
 {
     /**
-     * @return Set\Provider<Model>
+     * @return Set<Model>
      */
-    public static function any(): Set\Provider
+    public static function any(): Set
     {
         return Set::compose(
             Model::of(...),
