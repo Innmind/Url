@@ -12,8 +12,10 @@ use Innmind\Url\{
     Authority\Port,
 };
 use Fixtures\Innmind\Url\Authority as Fixture;
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use Innmind\BlackBox\PHPUnit\BlackBox;
+use Innmind\BlackBox\PHPUnit\{
+    Framework\TestCase,
+    BlackBox,
+};
 
 class AuthorityTest extends TestCase
 {

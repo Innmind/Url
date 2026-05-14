@@ -12,8 +12,8 @@ use Fixtures\Innmind\Url\Path as FPath;
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     PHPUnit\Framework\TestCase,
+    PHPUnit\Framework\Attributes\DataProvider,
 };
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class PathTest extends TestCase
 {
@@ -32,10 +32,12 @@ class PathTest extends TestCase
 
     public function testThrowWhenInvalidPath()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('');
-
-        $_ = Path::of('');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Path::of(''),
+                \DomainException::class,
+            );
     }
 
     public function testNull()

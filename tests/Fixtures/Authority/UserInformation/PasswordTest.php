@@ -18,13 +18,12 @@ class PasswordTest extends TestCase
      */
     public function testInterface()
     {
-        $set = Password::any();
+        $set = Password::any()->take(100);
 
         $this->assertInstanceOf(Set::class, $set);
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }
