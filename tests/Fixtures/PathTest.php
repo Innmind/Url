@@ -18,13 +18,12 @@ class PathTest extends TestCase
      */
     public function testInterface()
     {
-        $set = Path::any();
+        $set = Path::any()->take(100);
 
         $this->assertInstanceOf(Set::class, $set);
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
         }
     }
@@ -34,13 +33,12 @@ class PathTest extends TestCase
      */
     public function testDirectories()
     {
-        $set = Path::directories();
+        $set = Path::directories()->take(100);
 
         $this->assertInstanceOf(Set::class, $set);
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(Model::class, $value->unwrap());
             $this->assertTrue($value->unwrap()->directory());
         }

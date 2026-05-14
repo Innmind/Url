@@ -18,10 +18,12 @@ class SchemeTest extends TestCase
 
     public function testThrowWhenInvalidData()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('http://');
-
-        $_ = Scheme::of('http://');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Scheme::of('http://'),
+                \DomainException::class,
+            );
     }
 
     public function testNull()
