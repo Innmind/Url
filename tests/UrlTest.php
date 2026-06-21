@@ -88,6 +88,14 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url->fragment()->toString());
     }
 
+    public function testParseSchemeLessUrl()
+    {
+        $this->assertSame(
+            '//مثال.إختبار/',
+            Url::of('//مثال.إختبار/')->toString(),
+        );
+    }
+
     #[DataProvider('fromString')]
     #[DataProvider('parseable')]
     public function testValidStringsReturnAnUrl($string)
@@ -268,7 +276,7 @@ class UrlTest extends TestCase
     {
         $url = Url::of('//example.com');
 
-        $this->assertSame('example.com/', $url->toString());
+        $this->assertSame('//example.com/', $url->toString());
     }
 
     public function testPathIsAbsolute()
@@ -315,6 +323,20 @@ class UrlTest extends TestCase
                 ->unwrap()
                 ->toString(),
         );
+    }
+
+    public function testSchemeLessUrls(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(Fixture::any())
+            ->prove(function($url) {
+                $this->assertStringStartsWith(
+                    '//',
+                    $url
+                        ->withScheme(Scheme::less())
+                        ->toString(),
+                );
+            });
     }
 
     public static function cases(): array
@@ -612,13 +634,14 @@ class UrlTest extends TestCase
                 'with=query',
                 'and-fragment',
             ],
+            ['//مثال.إختبار/', '', '', '', 'مثال.إختبار', '', '/', '', ''],
         ];
     }
 
     public static function resolvable(): array
     {
         return [
-            ['//example.com', 'foo', 'example.com/foo'],
+            ['//example.com', 'foo', '//example.com/foo'],
             ['http://example.com', 'foo', 'http://example.com/foo'],
             ['http://example.com/bar', 'http://example.com/foo', 'http://example.com/foo'],
             ['http://xn--example.com/foo/baz', './bar', 'http://xn--example.com/foo/bar'],

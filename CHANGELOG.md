@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\Url\Scheme::less()`
+
+### Changed
+
+- _Scheme less_ urls now keep their leading `//` when converted to strings
+
 ## 5.3.0 - 2026-05-14
 
 ### Changed

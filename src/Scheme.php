@@ -11,8 +11,10 @@ use Uri\Rfc3986\Uri;
  */
 final class Scheme
 {
-    private function __construct(private string $value)
-    {
+    private function __construct(
+        private string $value,
+        private bool $less = false,
+    ) {
     }
 
     /**
@@ -36,13 +38,18 @@ final class Scheme
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
-    {
+    public static function parsed(
+        Uri $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
         /** @psalm-suppress ImpureMethodCall */
         $scheme = $parsed->getScheme();
 
         return match ($scheme) {
-            null => self::none(),
+            null => match (\str_starts_with($origin, '//')) {
+                true => self::less(),
+                false => self::none(),
+            },
             default => new self($scheme),
         };
     }
@@ -57,6 +64,13 @@ final class Scheme
     ): self {
         /** @psalm-suppress ImpureMethodCall */
         $scheme = $parsed->getScheme();
+
+        if (
+            $scheme === 'http' &&
+            \str_starts_with($origin, '//')
+        ) {
+            return self::less();
+        }
 
         if (
             $scheme === 'http' &&
@@ -77,15 +91,31 @@ final class Scheme
         return new self('');
     }
 
+    /**
+     * This will force the url to start with '//' unlike `::none()`
+     *
+     * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function less(): self
+    {
+        return new self('', true);
+    }
+
     #[\NoDiscard]
     public function equals(self $scheme): bool
     {
-        return $this->value === $scheme->value;
+        return $this->value === $scheme->value &&
+            $this->less === $scheme->less;
     }
 
     #[\NoDiscard]
     public function format(Authority $authority): string
     {
+        if ($this->less) {
+            return '//'.$authority->toString();
+        }
+
         if ($this->value === '') {
             return $authority->toString();
         }

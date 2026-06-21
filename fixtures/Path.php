@@ -34,6 +34,7 @@ final class Path
         return Set::strings()
             ->filter(static fn($value) => (bool) \preg_match('~\S+~', $value))
             ->exclude(static fn($value) => \str_contains($value, '//'))
-            ->exclude(static fn($value) => \str_starts_with($value, '\\'));
+            ->exclude(static fn($value) => \str_starts_with($value, '\\'))
+            ->map(static fn($value) => \trim($value, ' '));
     }
 }
