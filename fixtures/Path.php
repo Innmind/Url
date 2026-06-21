@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Fixtures\Innmind\Url;
 
-use Innmind\Url\Path as Model;
+use Innmind\Url\{
+    Path as Model,
+    Url,
+};
 use Innmind\BlackBox\Set;
 
 final class Path
@@ -73,6 +76,11 @@ final class Path
             ->exclude(static fn($value) => \str_contains($value, '//'))
             ->exclude(static fn($value) => \str_contains($value, '\\@'))
             ->exclude(static fn($value) => \str_starts_with($value, '\\'))
-            ->map(static fn($value) => \trim($value, ' '));
+            ->map(static fn($value) => \trim($value, ' '))
+            ->exclude(static fn($value) => $value === '')
+            ->filter(static fn($value) => Url::attempt($value)->match(
+                static fn() => true,
+                static fn() => false,
+            ));
     }
 }
