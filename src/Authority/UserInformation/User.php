@@ -15,9 +15,12 @@ use Uri\Rfc3986\Uri;
  */
 final class User
 {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
     private function __construct(
         private string $value,
-        private Uri|Concrete|null $parsed,
+        private ?\WeakReference $parsed,
     ) {
     }
 
@@ -28,10 +31,13 @@ final class User
     public static function of(string $value): self
     {
         try {
-            $self = Url::of(\sprintf(
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of(\sprintf(
                 'http://%s@a.org',
                 $value,
-            ))
+            ));
+            $self = $url
                 ->authority()
                 ->userInformation()
                 ->user();
@@ -39,7 +45,10 @@ final class User
             throw new \DomainException($value);
         }
 
-        if (\is_null($self->parsed)) {
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
             // it means the Url parsed the user as null and the provided value
             // as been parsed as another component
             if ($value !== '') {
@@ -51,16 +60,15 @@ final class User
 
         /** @psalm-suppress ImpureMethodCall */
         if (
-            !\in_array($self->parsed->getPassword(), ['', null], true) ||
-            !\in_array($self->parsed->getPath(), ['/', '', null], true) ||
-            !\is_null($self->parsed->getQuery()) ||
-            !\is_null($self->parsed->getFragment())
+            !\in_array($parsed->getPassword(), ['', null], true) ||
+            !\in_array($parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
         ) {
             throw new \DomainException($value);
         }
 
-        // the parsed object is longer necessary at this point
-        return new self($self->value, null);
+        return $self;
     }
 
     /**
@@ -86,9 +94,10 @@ final class User
             $user = $parsed->getUsername();
         }
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($user) {
             null => self::none(),
-            default => new self($user, $parsed),
+            default => new self($user, \WeakReference::create($parsed)),
         };
     }
 

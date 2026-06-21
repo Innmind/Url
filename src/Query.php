@@ -11,9 +11,12 @@ use Uri\Rfc3986\Uri;
  */
 final class Query
 {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
     private function __construct(
         private string $value,
-        private Uri|Concrete|null $parsed,
+        private ?\WeakReference $parsed,
     ) {
     }
 
@@ -24,22 +27,27 @@ final class Query
     public static function of(string $value): self
     {
         try {
-            $self = Url::of('http://a.org/?'.$value)->query();
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of('http://a.org/?'.$value);
+            $self = $url->query();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
 
-        if (\is_null($self->parsed)) {
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
             return $self;
         }
 
         /** @psalm-suppress ImpureMethodCall */
-        if (!\is_null($self->parsed->getFragment())) {
+        if (!\is_null($parsed->getFragment())) {
             throw new \DomainException($value);
         }
 
-        // the parsed object is longer necessary at this point
-        return new self($self->value, null);
+        return $self;
     }
 
     /**
@@ -65,9 +73,10 @@ final class Query
             $query = $parsed->getQuery();
         }
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($query) {
             null => self::none(),
-            default => new self($query, $parsed),
+            default => new self($query, \WeakReference::create($parsed)),
         };
     }
 

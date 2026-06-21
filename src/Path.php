@@ -11,9 +11,12 @@ use Uri\Rfc3986\Uri;
  */
 abstract class Path
 {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
     final private function __construct(
         private string $value,
-        private Uri|Concrete|null $parsed,
+        private ?\WeakReference $parsed,
     ) {
     }
 
@@ -28,19 +31,25 @@ abstract class Path
         }
 
         try {
-            $path = Url::of($value)->path();
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of($value);
+            $path = $url->path();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
 
-        if (!\is_null($path->parsed)) {
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $path->parsed?->get();
+
+        if (!\is_null($parsed)) {
             /** @psalm-suppress ImpureMethodCall */
-            if (!\is_null($path->parsed->getQuery())) {
+            if (!\is_null($parsed->getQuery())) {
                 throw new \DomainException($value);
             }
 
             /** @psalm-suppress ImpureMethodCall */
-            if (!\is_null($path->parsed->getFragment())) {
+            if (!\is_null($parsed->getFragment())) {
                 throw new \DomainException($value);
             }
         }
@@ -88,10 +97,12 @@ abstract class Path
         }
 
         if ($path[0] === '/') {
-            return new AbsolutePath($path, $parsed);
+            /** @psalm-suppress ImpureMethodCall */
+            return new AbsolutePath($path, \WeakReference::create($parsed));
         }
 
-        return new RelativePath($path, $parsed);
+        /** @psalm-suppress ImpureMethodCall */
+        return new RelativePath($path, \WeakReference::create($parsed));
     }
 
     /**

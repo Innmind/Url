@@ -12,9 +12,12 @@ use Uri\Rfc3986\Uri;
  */
 final class Host
 {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
     private function __construct(
         private string $value,
-        private Uri|Concrete|null $parsed,
+        private ?\WeakReference $parsed,
     ) {
     }
 
@@ -25,29 +28,34 @@ final class Host
     public static function of(string $value): self
     {
         try {
-            $self = Url::of('http://'.$value)
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of('http://'.$value);
+            $self = $url
                 ->authority()
                 ->host();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
 
-        if (\is_null($self->parsed)) {
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
             return $self;
         }
 
         /** @psalm-suppress ImpureMethodCall */
         if (
-            !\is_null($self->parsed->getPort()) ||
-            !\in_array($self->parsed->getPath(), ['/', '', null], true) ||
-            !\is_null($self->parsed->getQuery()) ||
-            !\is_null($self->parsed->getFragment())
+            !\is_null($parsed->getPort()) ||
+            !\in_array($parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
         ) {
             throw new \DomainException($value);
         }
 
-        // the parsed object is longer necessary at this point
-        return new self($self->value, null);
+        return $self;
     }
 
     /**
@@ -68,9 +76,10 @@ final class Host
         /** @psalm-suppress ImpureMethodCall */
         $host = $parsed->getRawHost();
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($host) {
             null => self::none(),
-            default => new self($host, $parsed),
+            default => new self($host, \WeakReference::create($parsed)),
         };
     }
 
@@ -94,9 +103,10 @@ final class Host
             return self::none();
         }
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($host) {
             null => self::none(),
-            default => new self($host, $parsed),
+            default => new self($host, \WeakReference::create($parsed)),
         };
     }
 

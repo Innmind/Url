@@ -11,10 +11,13 @@ use Uri\Rfc3986\Uri;
  */
 final class Scheme
 {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
     private function __construct(
         private string $value,
         private bool $less,
-        private Uri|Concrete|null $parsed,
+        private ?\WeakReference $parsed,
     ) {
     }
 
@@ -29,30 +32,31 @@ final class Scheme
         }
 
         try {
-            $self = Url::of($value.'://a.org/')->scheme();
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of($value.'://a.org/');
+            $self = $url->scheme();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
 
-        if (\is_null($self->parsed)) {
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
             return $self;
         }
 
         /** @psalm-suppress ImpureMethodCall */
         if (
-            $self->parsed->getPath() !== '/' ||
-            !\is_null($self->parsed->getQuery()) ||
-            !\is_null($self->parsed->getFragment())
+            $parsed->getPath() !== '/' ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
         ) {
             throw new \DomainException($value);
         }
 
-        // the parsed object is longer necessary at this point
-        return new self(
-            $self->value,
-            $self->less,
-            null,
-        );
+        return $self;
     }
 
     /**
@@ -66,12 +70,17 @@ final class Scheme
         /** @psalm-suppress ImpureMethodCall */
         $scheme = $parsed->getRawScheme();
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($scheme) {
             null => match (\str_starts_with($origin, '//')) {
                 true => self::less(),
                 false => self::none(),
             },
-            default => new self($scheme, false, $parsed),
+            default => new self(
+                $scheme,
+                false,
+                \WeakReference::create($parsed),
+            ),
         };
     }
 
@@ -100,7 +109,12 @@ final class Scheme
             return self::none();
         }
 
-        return new self($scheme, false, $parsed);
+        /** @psalm-suppress ImpureMethodCall */
+        return new self(
+            $scheme,
+            false,
+            \WeakReference::create($parsed),
+        );
     }
 
     /**
