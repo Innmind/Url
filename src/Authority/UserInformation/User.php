@@ -53,8 +53,13 @@ final class User
      */
     public static function parsed(Uri|Concrete $parsed): self
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $user = $parsed->getUsername();
+        if ($parsed instanceof Uri) {
+            /** @psalm-suppress ImpureMethodCall */
+            $user = $parsed->getRawUsername();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $user = $parsed->getUsername();
+        }
 
         return match ($user) {
             null => self::none(),

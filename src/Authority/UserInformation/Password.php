@@ -54,8 +54,13 @@ final class Password
      */
     public static function parsed(Uri|Concrete $parsed): self
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $password = $parsed->getPassword();
+        if ($parsed instanceof Uri) {
+            /** @psalm-suppress ImpureMethodCall */
+            $password = $parsed->getRawPassword();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $password = $parsed->getPassword();
+        }
 
         return match ($password) {
             null => self::none(),

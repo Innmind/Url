@@ -339,6 +339,14 @@ class UrlTest extends TestCase
             });
     }
 
+    public function testParsingIdempotencyOfPartiallyEncodedUrls()
+    {
+        $this->assertSame(
+            'http://h.tld/a%20b?x=%2e',
+            Url::of(Url::of('http://h.tld/a b?x=%2e')->toString())->toString(),
+        );
+    }
+
     public static function cases(): array
     {
         return [
