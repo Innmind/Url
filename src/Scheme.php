@@ -67,6 +67,13 @@ final class Scheme
 
         if (
             $scheme === 'http' &&
+            \str_starts_with($origin, '//')
+        ) {
+            return self::less();
+        }
+
+        if (
+            $scheme === 'http' &&
             !\str_starts_with($origin, 'http://')
         ) {
             return self::none();

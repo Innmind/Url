@@ -88,6 +88,14 @@ class UrlTest extends TestCase
         $this->assertSame($fragment, $url->fragment()->toString());
     }
 
+    public function testParseSchemeLessUrl()
+    {
+        $this->assertSame(
+            '//مثال.إختبار/',
+            Url::of('//مثال.إختبار/')->toString(),
+        );
+    }
+
     #[DataProvider('fromString')]
     #[DataProvider('parseable')]
     public function testValidStringsReturnAnUrl($string)
@@ -626,6 +634,7 @@ class UrlTest extends TestCase
                 'with=query',
                 'and-fragment',
             ],
+            ['//مثال.إختبار/', '', '', '', 'مثال.إختبار', '', '/', '', ''],
         ];
     }
 
