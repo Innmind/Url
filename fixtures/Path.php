@@ -30,6 +30,7 @@ final class Path
         return self::strings()
             ->map(static fn($value) => \ltrim($value, '/'))
             ->exclude(static fn($value) => \str_ends_with($value, '\\'))
+            ->exclude(static fn($value) => $value === '')
             ->map(Model::of(...));
     }
 
