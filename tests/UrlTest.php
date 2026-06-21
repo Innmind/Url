@@ -358,6 +358,17 @@ class UrlTest extends TestCase
             });
     }
 
+    public function testAnyUrlsCanBeResolved(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(Fixture::any(), Fixture::any())
+            ->prove(function($a, $b) {
+                $this->assert()->not()->throws(
+                    static fn() => $a->resolve($b)->unwrap(),
+                );
+            });
+    }
+
     public static function cases(): array
     {
         return [
