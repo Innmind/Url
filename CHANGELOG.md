@@ -1,5 +1,25 @@
 # Changelog
 
+## 5.3.1 - 2026-06-21
+
+### Added
+
+- `Innmind\Url\Scheme::less()`
+
+### Changed
+
+- _Scheme less_ urls now keep their leading `//` when converted to strings
+
+### Fixed
+
+- Url parsing idempotency with partially encoded characters
+- `Query::of()` silently lost characters
+- `Path::of()` silently lost characters
+- `Host::of()` silently lost characters
+- `Password::of()` silently lost characters
+- `User::of()` silently lost characters
+- `Scheme::of()` silently lost characters
+
 ## 5.3.0 - 2026-05-14
 
 ### Changed

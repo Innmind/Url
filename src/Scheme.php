@@ -11,8 +11,14 @@ use Uri\Rfc3986\Uri;
  */
 final class Scheme
 {
-    private function __construct(private string $value)
-    {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
+    private function __construct(
+        private string $value,
+        private bool $less,
+        private ?\WeakReference $parsed,
+    ) {
     }
 
     /**
@@ -26,24 +32,55 @@ final class Scheme
         }
 
         try {
-            return Url::of($value.'://a.org/')->scheme();
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of($value.'://a.org/');
+            $self = $url->scheme();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            $parsed->getPath() !== '/' ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        return $self;
     }
 
     /**
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
-    {
+    public static function parsed(
+        Uri $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
         /** @psalm-suppress ImpureMethodCall */
-        $scheme = $parsed->getScheme();
+        $scheme = $parsed->getRawScheme();
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($scheme) {
-            null => self::none(),
-            default => new self($scheme),
+            null => match (\str_starts_with($origin, '//')) {
+                true => self::less(),
+                false => self::none(),
+            },
+            default => new self(
+                $scheme,
+                false,
+                \WeakReference::create($parsed),
+            ),
         };
     }
 
@@ -60,12 +97,24 @@ final class Scheme
 
         if (
             $scheme === 'http' &&
+            \str_starts_with($origin, '//')
+        ) {
+            return self::less();
+        }
+
+        if (
+            $scheme === 'http' &&
             !\str_starts_with($origin, 'http://')
         ) {
             return self::none();
         }
 
-        return new self($scheme);
+        /** @psalm-suppress ImpureMethodCall */
+        return new self(
+            $scheme,
+            false,
+            \WeakReference::create($parsed),
+        );
     }
 
     /**
@@ -74,18 +123,34 @@ final class Scheme
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', false, null);
+    }
+
+    /**
+     * This will force the url to start with '//' unlike `::none()`
+     *
+     * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function less(): self
+    {
+        return new self('', true, null);
     }
 
     #[\NoDiscard]
     public function equals(self $scheme): bool
     {
-        return $this->value === $scheme->value;
+        return $this->value === $scheme->value &&
+            $this->less === $scheme->less;
     }
 
     #[\NoDiscard]
     public function format(Authority $authority): string
     {
+        if ($this->less) {
+            return '//'.$authority->toString();
+        }
+
         if ($this->value === '') {
             return $authority->toString();
         }

@@ -38,4 +38,20 @@ class HostTest extends TestCase
         $this->assertTrue(Host::of('example.com')->equals(Host::of('example.com')));
         $this->assertFalse(Host::of('example.net')->equals(Host::of('example.com')));
     }
+
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => Host::of('example.com/foo'),
+        );
+        $this->assert()->throws(
+            static fn() => Host::of('example.com?foo'),
+        );
+        $this->assert()->throws(
+            static fn() => Host::of('example.com#foo'),
+        );
+        $this->assert()->throws(
+            static fn() => Host::of('example.com/foo?bar#baz'),
+        );
+    }
 }
