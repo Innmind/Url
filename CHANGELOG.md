@@ -18,6 +18,7 @@
 - `Host::of()` silently lost characters
 - `Password::of()` silently lost characters
 - `User::of()` silently lost characters
+- `Scheme::of()` silently lost characters
 
 ## 5.3.0 - 2026-05-14
 

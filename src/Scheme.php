@@ -13,7 +13,8 @@ final class Scheme
 {
     private function __construct(
         private string $value,
-        private bool $less = false,
+        private bool $less,
+        private Uri|Concrete|null $parsed,
     ) {
     }
 
@@ -28,10 +29,30 @@ final class Scheme
         }
 
         try {
-            return Url::of($value.'://a.org/')->scheme();
+            $self = Url::of($value.'://a.org/')->scheme();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if (\is_null($self->parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            $self->parsed->getPath() !== '/' ||
+            !\is_null($self->parsed->getQuery()) ||
+            !\is_null($self->parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        // the parsed object is longer necessary at this point
+        return new self(
+            $self->value,
+            $self->less,
+            null,
+        );
     }
 
     /**
@@ -50,7 +71,7 @@ final class Scheme
                 true => self::less(),
                 false => self::none(),
             },
-            default => new self($scheme),
+            default => new self($scheme, false, $parsed),
         };
     }
 
@@ -79,7 +100,7 @@ final class Scheme
             return self::none();
         }
 
-        return new self($scheme);
+        return new self($scheme, false, $parsed);
     }
 
     /**
@@ -88,7 +109,7 @@ final class Scheme
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', false, null);
     }
 
     /**
@@ -99,7 +120,7 @@ final class Scheme
     #[\NoDiscard]
     public static function less(): self
     {
-        return new self('', true);
+        return new self('', true, null);
     }
 
     #[\NoDiscard]
