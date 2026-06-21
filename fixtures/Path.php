@@ -27,10 +27,11 @@ final class Path
      */
     public static function relative(): Set
     {
-        return self::strings()
-            ->map(static fn($value) => \ltrim($value, '/'))
-            ->exclude(static fn($value) => \str_ends_with($value, '\\'))
-            ->map(Model::of(...));
+        return self::build(
+            self::strings()
+                ->map(static fn($value) => \ltrim($value, '/'))
+                ->exclude(static fn($value) => \str_ends_with($value, '\\')),
+        );
     }
 
     /**
@@ -38,10 +39,11 @@ final class Path
      */
     public static function absolute(): Set
     {
-        return self::strings()
-            ->map(static fn($value) => '/'.\ltrim($value, '/'))
-            ->exclude(static fn($value) => \str_ends_with($value, '\\'))
-            ->map(Model::of(...));
+        return self::build(
+            self::strings()
+                ->map(static fn($value) => '/'.\ltrim($value, '/'))
+                ->exclude(static fn($value) => \str_ends_with($value, '\\')),
+        );
     }
 
     /**
@@ -49,9 +51,10 @@ final class Path
      */
     public static function directories(): Set
     {
-        return self::strings()
-            ->map(static fn($value) => \rtrim($value, '/').'/')
-            ->map(Model::of(...));
+        return self::build(
+            self::strings()
+                ->map(static fn($value) => \rtrim($value, '/').'/'),
+        );
     }
 
     /**
@@ -76,11 +79,22 @@ final class Path
             ->exclude(static fn($value) => \str_contains($value, '//'))
             ->exclude(static fn($value) => \str_contains($value, '\\@'))
             ->exclude(static fn($value) => \str_starts_with($value, '\\'))
-            ->map(static fn($value) => \trim($value, ' '))
+            ->map(static fn($value) => \trim($value, ' '));
+    }
+
+    /**
+     * @param Set<string> $strings
+     *
+     * @return Set<Model>
+     */
+    private static function build(Set $strings): Set
+    {
+        return $strings
             ->exclude(static fn($value) => $value === '')
             ->filter(static fn($value) => Url::attempt($value)->match(
                 static fn() => true,
                 static fn() => false,
-            ));
+            ))
+            ->map(Model::of(...));
     }
 }
