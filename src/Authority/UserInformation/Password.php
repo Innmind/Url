@@ -14,10 +14,16 @@ final class Password
 {
     /** @var \SensitiveParameterValue<string> */
     private \SensitiveParameterValue $value;
+    /** @var ?\WeakReference<Uri|Concrete> */
+    private ?\WeakReference $parsed;
 
-    private function __construct(string $value)
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
+    private function __construct(string $value, ?\WeakReference $parsed)
     {
         $this->value = new \SensitiveParameterValue($value);
+        $this->parsed = $parsed;
     }
 
     /**
@@ -27,16 +33,37 @@ final class Password
     public static function of(#[\SensitiveParameter] string $value): self
     {
         try {
-            return Url::of(\sprintf(
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of(\sprintf(
                 'http://u:%s@a.org',
                 $value,
-            ))
+            ));
+            $self = $url
                 ->authority()
                 ->userInformation()
                 ->password();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            !\in_array($parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        return $self;
     }
 
     /**
@@ -45,7 +72,7 @@ final class Password
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -62,9 +89,10 @@ final class Password
             $password = $parsed->getPassword();
         }
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($password) {
             null => self::none(),
-            default => new self($password),
+            default => new self($password, \WeakReference::create($parsed)),
         };
     }
 

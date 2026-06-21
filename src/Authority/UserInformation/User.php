@@ -15,8 +15,13 @@ use Uri\Rfc3986\Uri;
  */
 final class User
 {
-    private function __construct(private string $value)
-    {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
+    private function __construct(
+        private string $value,
+        private ?\WeakReference $parsed,
+    ) {
     }
 
     /**
@@ -26,16 +31,44 @@ final class User
     public static function of(string $value): self
     {
         try {
-            return Url::of(\sprintf(
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of(\sprintf(
                 'http://%s@a.org',
                 $value,
-            ))
+            ));
+            $self = $url
                 ->authority()
                 ->userInformation()
                 ->user();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $self->parsed?->get();
+
+        if (\is_null($parsed)) {
+            // it means the Url parsed the user as null and the provided value
+            // as been parsed as another component
+            if ($value !== '') {
+                throw new \DomainException;
+            }
+
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            !\in_array($parsed->getPassword(), ['', null], true) ||
+            !\in_array($parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($parsed->getQuery()) ||
+            !\is_null($parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        return $self;
     }
 
     /**
@@ -44,7 +77,7 @@ final class User
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -61,9 +94,10 @@ final class User
             $user = $parsed->getUsername();
         }
 
+        /** @psalm-suppress ImpureMethodCall */
         return match ($user) {
             null => self::none(),
-            default => new self($user),
+            default => new self($user, \WeakReference::create($parsed)),
         };
     }
 

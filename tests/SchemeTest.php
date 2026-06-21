@@ -40,4 +40,26 @@ class SchemeTest extends TestCase
         $this->assertTrue(Scheme::of('http')->equals(Scheme::of('http')));
         $this->assertFalse(Scheme::of('https')->equals(Scheme::of('http')));
     }
+
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => Scheme::of('http://foo.com'),
+        );
+        $this->assert()->throws(
+            static fn() => Scheme::of('http://user@foo.com'),
+        );
+        $this->assert()->throws(
+            static fn() => Scheme::of('http://user:pass@foo.com'),
+        );
+        $this->assert()->throws(
+            static fn() => Scheme::of('http:///'),
+        );
+        $this->assert()->throws(
+            static fn() => Scheme::of('http://?foo'),
+        );
+        $this->assert()->throws(
+            static fn() => Scheme::of('http://#foo'),
+        );
+    }
 }

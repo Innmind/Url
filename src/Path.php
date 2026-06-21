@@ -11,8 +11,13 @@ use Uri\Rfc3986\Uri;
  */
 abstract class Path
 {
-    final private function __construct(private string $value)
-    {
+    /**
+     * @param ?\WeakReference<Uri|Concrete> $parsed
+     */
+    final private function __construct(
+        private string $value,
+        private ?\WeakReference $parsed,
+    ) {
     }
 
     /**
@@ -26,13 +31,31 @@ abstract class Path
         }
 
         try {
-            $path = Url::of($value)->path();
+            // this variable is here to keep a reference to the underlying
+            // parsed object
+            $url = Url::of($value);
+            $path = $url->path();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
 
+        /** @psalm-suppress ImpureMethodCall */
+        $parsed = $path->parsed?->get();
+
+        if (!\is_null($parsed)) {
+            /** @psalm-suppress ImpureMethodCall */
+            if (!\is_null($parsed->getQuery())) {
+                throw new \DomainException($value);
+            }
+
+            /** @psalm-suppress ImpureMethodCall */
+            if (!\is_null($parsed->getFragment())) {
+                throw new \DomainException($value);
+            }
+        }
+
         if ($path instanceof RelativePath) {
-            return new RelativePath($value);
+            return new RelativePath($value, null);
         }
 
         // For some paths the parsing removes chars leading to the parsing
@@ -40,10 +63,10 @@ abstract class Path
         // But since we don't use the parsed string, to avoid using encoded
         // strings, then the relative path is returned as an absolute one.
         if ($value[0] !== '/') {
-            return new RelativePath($value);
+            return new RelativePath($value, null);
         }
 
-        return new AbsolutePath($value);
+        return new AbsolutePath($value, null);
     }
 
     /**
@@ -52,7 +75,7 @@ abstract class Path
     #[\NoDiscard]
     final public static function none(): self
     {
-        return new AbsolutePath('');
+        return new AbsolutePath('', null);
     }
 
     /**
@@ -74,10 +97,12 @@ abstract class Path
         }
 
         if ($path[0] === '/') {
-            return new AbsolutePath($path);
+            /** @psalm-suppress ImpureMethodCall */
+            return new AbsolutePath($path, \WeakReference::create($parsed));
         }
 
-        return new RelativePath($path);
+        /** @psalm-suppress ImpureMethodCall */
+        return new RelativePath($path, \WeakReference::create($parsed));
     }
 
     /**
@@ -90,7 +115,7 @@ abstract class Path
 
         return match ($path) {
             '' => self::none(),
-            default => new RelativePath($path),
+            default => new RelativePath($path, $self->parsed),
         };
     }
 

@@ -29,4 +29,20 @@ class PasswordTest extends TestCase
         $this->assertTrue(Password::of('foo')->equals(Password::of('foo')));
         $this->assertFalse(Password::of('bar')->equals(Password::of('foo')));
     }
+
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => Password::of('foo/bar'),
+        );
+        $this->assert()->throws(
+            static fn() => Password::of('foo?bar'),
+        );
+        $this->assert()->throws(
+            static fn() => Password::of('foo#bar'),
+        );
+        $this->assert()->throws(
+            static fn() => Password::of('foo@bar/baz?zab#rab'),
+        );
+    }
 }

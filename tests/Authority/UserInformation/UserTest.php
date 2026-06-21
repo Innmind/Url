@@ -29,4 +29,23 @@ class UserTest extends TestCase
         $this->assertTrue(User::of('foo')->equals(User::of('foo')));
         $this->assertFalse(User::of('bar')->equals(User::of('foo')));
     }
+
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => User::of('foo:bar'),
+        );
+        $this->assert()->throws(
+            static fn() => User::of('foo/bar'),
+        );
+        $this->assert()->throws(
+            static fn() => User::of('foo?bar'),
+        );
+        $this->assert()->throws(
+            static fn() => User::of('foo#bar'),
+        );
+        $this->assert()->throws(
+            static fn() => User::of('foo:f@bar/baz?zab#rab'),
+        );
+    }
 }

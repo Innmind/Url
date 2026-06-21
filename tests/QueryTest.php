@@ -30,4 +30,11 @@ class QueryTest extends TestCase
         $this->assertTrue(Query::of('foo')->equals(Query::of('foo')));
         $this->assertFalse(Query::of('bar')->equals(Query::of('foo')));
     }
+
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => Query::of('a=#b'),
+        );
+    }
 }
