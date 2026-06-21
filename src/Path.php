@@ -11,8 +11,10 @@ use Uri\Rfc3986\Uri;
  */
 abstract class Path
 {
-    final private function __construct(private string $value)
-    {
+    final private function __construct(
+        private string $value,
+        private Uri|Concrete|null $parsed,
+    ) {
     }
 
     /**
@@ -31,8 +33,20 @@ abstract class Path
             throw new \DomainException($value);
         }
 
+        if (!\is_null($path->parsed)) {
+            /** @psalm-suppress ImpureMethodCall */
+            if (!\is_null($path->parsed->getQuery())) {
+                throw new \DomainException($value);
+            }
+
+            /** @psalm-suppress ImpureMethodCall */
+            if (!\is_null($path->parsed->getFragment())) {
+                throw new \DomainException($value);
+            }
+        }
+
         if ($path instanceof RelativePath) {
-            return new RelativePath($value);
+            return new RelativePath($value, null);
         }
 
         // For some paths the parsing removes chars leading to the parsing
@@ -40,10 +54,10 @@ abstract class Path
         // But since we don't use the parsed string, to avoid using encoded
         // strings, then the relative path is returned as an absolute one.
         if ($value[0] !== '/') {
-            return new RelativePath($value);
+            return new RelativePath($value, null);
         }
 
-        return new AbsolutePath($value);
+        return new AbsolutePath($value, null);
     }
 
     /**
@@ -52,7 +66,7 @@ abstract class Path
     #[\NoDiscard]
     final public static function none(): self
     {
-        return new AbsolutePath('');
+        return new AbsolutePath('', null);
     }
 
     /**
@@ -74,10 +88,10 @@ abstract class Path
         }
 
         if ($path[0] === '/') {
-            return new AbsolutePath($path);
+            return new AbsolutePath($path, $parsed);
         }
 
-        return new RelativePath($path);
+        return new RelativePath($path, $parsed);
     }
 
     /**
@@ -90,7 +104,7 @@ abstract class Path
 
         return match ($path) {
             '' => self::none(),
-            default => new RelativePath($path),
+            default => new RelativePath($path, $self->parsed),
         };
     }
 

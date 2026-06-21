@@ -32,6 +32,19 @@ final class Path
     private static function strings(): Set
     {
         return Set::strings()
+            ->madeOf(
+                Set::either(
+                    Set::strings()
+                        ->chars()
+                        ->ascii()
+                        ->exclude(static fn($char) => $char === '?')
+                        ->exclude(static fn($char) => $char === '#'),
+                    Set::strings()->unicode()->basicLatin(),
+                    Set::strings()->unicode()->cyrillic(),
+                    Set::strings()->unicode()->arabic(),
+                )->map(\rawurlencode(...)),
+                Set::of(' '),
+            )
             ->filter(static fn($value) => (bool) \preg_match('~\S+~', $value))
             ->exclude(static fn($value) => \str_contains($value, '//'))
             ->exclude(static fn($value) => \str_starts_with($value, '\\'))
