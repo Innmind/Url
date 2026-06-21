@@ -119,6 +119,19 @@ class PathTest extends TestCase
         );
     }
 
+    public function testThrowWhenContainingInvalidChars()
+    {
+        $this->assert()->throws(
+            static fn() => Path::of('a?b'),
+        );
+        $this->assert()->throws(
+            static fn() => Path::of('a#b'),
+        );
+        $this->assert()->throws(
+            static fn() => Path::of('a?b#c'),
+        );
+    }
+
     public static function resolutions(): array
     {
         return [
