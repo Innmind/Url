@@ -268,7 +268,7 @@ class UrlTest extends TestCase
     {
         $url = Url::of('//example.com');
 
-        $this->assertSame('example.com/', $url->toString());
+        $this->assertSame('//example.com/', $url->toString());
     }
 
     public function testPathIsAbsolute()
@@ -632,7 +632,7 @@ class UrlTest extends TestCase
     public static function resolvable(): array
     {
         return [
-            ['//example.com', 'foo', 'example.com/foo'],
+            ['//example.com', 'foo', '//example.com/foo'],
             ['http://example.com', 'foo', 'http://example.com/foo'],
             ['http://example.com/bar', 'http://example.com/foo', 'http://example.com/foo'],
             ['http://xn--example.com/foo/baz', './bar', 'http://xn--example.com/foo/bar'],

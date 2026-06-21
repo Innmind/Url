@@ -405,7 +405,7 @@ final class Url
         }
 
         return new self(
-            Scheme::parsed($uri),
+            Scheme::parsed($uri, $string),
             Authority::of(
                 UserInformation::of(
                     User::parsed($uri),

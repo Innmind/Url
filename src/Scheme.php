@@ -38,13 +38,18 @@ final class Scheme
      * @internal
      * @psalm-pure
      */
-    public static function parsed(Uri $parsed): self
-    {
+    public static function parsed(
+        Uri $parsed,
+        #[\SensitiveParameter] string $origin,
+    ): self {
         /** @psalm-suppress ImpureMethodCall */
         $scheme = $parsed->getScheme();
 
         return match ($scheme) {
-            null => self::none(),
+            null => match (\str_starts_with($origin, '//')) {
+                true => self::less(),
+                false => self::none(),
+            },
             default => new self($scheme),
         };
     }
@@ -93,7 +98,8 @@ final class Scheme
     #[\NoDiscard]
     public function equals(self $scheme): bool
     {
-        return $this->value === $scheme->value;
+        return $this->value === $scheme->value &&
+            $this->less === $scheme->less;
     }
 
     #[\NoDiscard]
