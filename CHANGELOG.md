@@ -13,6 +13,7 @@
 ### Fixed
 
 - Url parsing idempotency with partially encoded characters
+- `Query::of()` silently lost characters
 
 ## 5.3.0 - 2026-05-14
 

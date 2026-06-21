@@ -14,7 +14,17 @@ final class Query
     public static function any(): Set
     {
         return Set::strings()
-            ->filter(static fn($value) => (bool) \preg_match('/^\S+$/', $value))
+            ->madeOf(
+                Set::either(
+                    Set::strings()->chars()->ascii()->exclude(
+                        static fn($char) => $char === '#',
+                    ),
+                    Set::strings()->unicode()->basicLatin(),
+                    Set::strings()->unicode()->cyrillic(),
+                    Set::strings()->unicode()->arabic(),
+                )->map(\rawurlencode(...)),
+                Set::of(' '),
+            )
             ->map(Model::of(...));
     }
 }

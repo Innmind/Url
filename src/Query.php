@@ -11,8 +11,10 @@ use Uri\Rfc3986\Uri;
  */
 final class Query
 {
-    private function __construct(private string $value)
-    {
+    private function __construct(
+        private string $value,
+        private Uri|Concrete|null $parsed,
+    ) {
     }
 
     /**
@@ -22,10 +24,22 @@ final class Query
     public static function of(string $value): self
     {
         try {
-            return Url::of('http://a.org/?'.$value)->query();
+            $self = Url::of('http://a.org/?'.$value)->query();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if (\is_null($self->parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (!\is_null($self->parsed->getFragment())) {
+            throw new \DomainException($value);
+        }
+
+        // the parsed object is longer necessary at this point
+        return new self($self->value, null);
     }
 
     /**
@@ -34,7 +48,7 @@ final class Query
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -53,7 +67,7 @@ final class Query
 
         return match ($query) {
             null => self::none(),
-            default => new self($query),
+            default => new self($query, $parsed),
         };
     }
 
