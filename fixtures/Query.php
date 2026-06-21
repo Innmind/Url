@@ -15,15 +15,14 @@ final class Query
     {
         return Set::strings()
             ->madeOf(
+                Set::strings()->chars()->ascii()->exclude(
+                    static fn($char) => $char === '#',
+                ),
                 Set::either(
-                    Set::strings()->chars()->ascii()->exclude(
-                        static fn($char) => $char === '#',
-                    ),
                     Set::strings()->unicode()->basicLatin(),
                     Set::strings()->unicode()->cyrillic(),
                     Set::strings()->unicode()->arabic(),
                 )->map(\rawurlencode(...)),
-                Set::of(' '),
             )
             ->map(Model::of(...));
     }
