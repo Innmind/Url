@@ -15,8 +15,10 @@ use Uri\Rfc3986\Uri;
  */
 final class User
 {
-    private function __construct(private string $value)
-    {
+    private function __construct(
+        private string $value,
+        private Uri|Concrete|null $parsed,
+    ) {
     }
 
     /**
@@ -26,7 +28,7 @@ final class User
     public static function of(string $value): self
     {
         try {
-            return Url::of(\sprintf(
+            $self = Url::of(\sprintf(
                 'http://%s@a.org',
                 $value,
             ))
@@ -36,6 +38,29 @@ final class User
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if (\is_null($self->parsed)) {
+            // it means the Url parsed the user as null and the provided value
+            // as been parsed as another component
+            if ($value !== '') {
+                throw new \DomainException;
+            }
+
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            !\in_array($self->parsed->getPassword(), ['', null], true) ||
+            !\in_array($self->parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($self->parsed->getQuery()) ||
+            !\is_null($self->parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        // the parsed object is longer necessary at this point
+        return new self($self->value, null);
     }
 
     /**
@@ -44,7 +69,7 @@ final class User
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -63,7 +88,7 @@ final class User
 
         return match ($user) {
             null => self::none(),
-            default => new self($user),
+            default => new self($user, $parsed),
         };
     }
 
