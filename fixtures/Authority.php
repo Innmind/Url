@@ -24,6 +24,10 @@ final class Authority
                 Authority\Port::any(),
                 Set::of(Model\Port::none()),
             ),
-        );
+        )
+            ->exclude(
+                static fn($authority) => !$authority->userInformation()->equals(Model\UserInformation::none()) &&
+                    $authority->host()->equals(Model\Host::none()),
+            );
     }
 }

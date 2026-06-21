@@ -347,6 +347,28 @@ class UrlTest extends TestCase
         );
     }
 
+    public function testAnyUrlFixtureCanBeParsed(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(Fixture::any())
+            ->prove(function($url) {
+                $this->assert()->not()->throws(
+                    static fn() => Url::of($url->toString()),
+                );
+            });
+    }
+
+    public function testAnyUrlsCanBeResolved(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(Fixture::any(), Fixture::any())
+            ->prove(function($a, $b) {
+                $this->assert()->not()->throws(
+                    static fn() => $a->resolve($b)->unwrap(),
+                );
+            });
+    }
+
     public static function cases(): array
     {
         return [
