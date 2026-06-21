@@ -11,8 +11,10 @@ use Uri\Rfc3986\Uri;
  */
 final class Scheme
 {
-    private function __construct(private string $value)
-    {
+    private function __construct(
+        private string $value,
+        private bool $less = false,
+    ) {
     }
 
     /**
@@ -77,6 +79,17 @@ final class Scheme
         return new self('');
     }
 
+    /**
+     * This will force the url to start with '//' unlike `::none()`
+     *
+     * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function less(): self
+    {
+        return new self('', true);
+    }
+
     #[\NoDiscard]
     public function equals(self $scheme): bool
     {
@@ -86,6 +99,10 @@ final class Scheme
     #[\NoDiscard]
     public function format(Authority $authority): string
     {
+        if ($this->less) {
+            return '//'.$authority->toString();
+        }
+
         if ($this->value === '') {
             return $authority->toString();
         }

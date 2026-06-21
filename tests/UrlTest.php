@@ -317,6 +317,20 @@ class UrlTest extends TestCase
         );
     }
 
+    public function testSchemeLessUrls(): BlackBox\Proof
+    {
+        return $this
+            ->forAll(Fixture::any())
+            ->prove(function($url) {
+                $this->assertStringStartsWith(
+                    '//',
+                    $url
+                        ->withScheme(Scheme::less())
+                        ->toString(),
+                );
+            });
+    }
+
     public static function cases(): array
     {
         return [

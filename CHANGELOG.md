@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\Url\Scheme::less()`
+
 ## 5.3.0 - 2026-05-14
 
 ### Changed
