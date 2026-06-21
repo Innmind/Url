@@ -43,8 +43,13 @@ final class Query
      */
     public static function parsed(Uri|Concrete $parsed): self
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $query = $parsed->getQuery();
+        if ($parsed instanceof Uri) {
+            /** @psalm-suppress ImpureMethodCall */
+            $query = $parsed->getRawQuery();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $query = $parsed->getQuery();
+        }
 
         return match ($query) {
             null => self::none(),

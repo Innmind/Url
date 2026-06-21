@@ -43,8 +43,13 @@ final class Fragment
      */
     public static function parsed(Uri|Concrete $parsed): self
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $fragment = $parsed->getFragment();
+        if ($parsed instanceof Uri) {
+            /** @psalm-suppress ImpureMethodCall */
+            $fragment = $parsed->getRawFragment();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $fragment = $parsed->getFragment();
+        }
 
         return match ($fragment) {
             null => self::none(),

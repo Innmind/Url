@@ -43,7 +43,7 @@ final class Scheme
         #[\SensitiveParameter] string $origin,
     ): self {
         /** @psalm-suppress ImpureMethodCall */
-        $scheme = $parsed->getScheme();
+        $scheme = $parsed->getRawScheme();
 
         return match ($scheme) {
             null => match (\str_starts_with($origin, '//')) {
