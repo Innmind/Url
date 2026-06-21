@@ -13,7 +13,32 @@ final class Path
      */
     public static function any(): Set
     {
-        return self::strings()->map(Model::of(...));
+        return Set::either(
+            self::relative(),
+            self::absolute(),
+        );
+    }
+
+    /**
+     * @return Set<Model>
+     */
+    public static function relative(): Set
+    {
+        return self::strings()
+            ->map(static fn($value) => \ltrim($value, '/'))
+            ->exclude(static fn($value) => \str_ends_with($value, '\\'))
+            ->map(Model::of(...));
+    }
+
+    /**
+     * @return Set<Model>
+     */
+    public static function absolute(): Set
+    {
+        return self::strings()
+            ->map(static fn($value) => '/'.\ltrim($value, '/'))
+            ->exclude(static fn($value) => \str_ends_with($value, '\\'))
+            ->map(Model::of(...));
     }
 
     /**
