@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.3.2 - 2026-06-21
+
+### Fixed
+
+- Scenario that lead to an empty path generation
+
 ## 5.3.1 - 2026-06-21
 
 ### Added
