@@ -12,8 +12,10 @@ use Uri\Rfc3986\Uri;
  */
 final class Host
 {
-    private function __construct(private string $value)
-    {
+    private function __construct(
+        private string $value,
+        private Uri|Concrete|null $parsed,
+    ) {
     }
 
     /**
@@ -23,12 +25,29 @@ final class Host
     public static function of(string $value): self
     {
         try {
-            return Url::of('http://'.$value)
+            $self = Url::of('http://'.$value)
                 ->authority()
                 ->host();
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if (\is_null($self->parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            !\is_null($self->parsed->getPort()) ||
+            !\in_array($self->parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($self->parsed->getQuery()) ||
+            !\is_null($self->parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        // the parsed object is longer necessary at this point
+        return new self($self->value, null);
     }
 
     /**
@@ -37,7 +56,7 @@ final class Host
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -51,7 +70,7 @@ final class Host
 
         return match ($host) {
             null => self::none(),
-            default => new self($host),
+            default => new self($host, $parsed),
         };
     }
 
@@ -77,7 +96,7 @@ final class Host
 
         return match ($host) {
             null => self::none(),
-            default => new self($host),
+            default => new self($host, $parsed),
         };
     }
 
