@@ -14,10 +14,12 @@ final class Password
 {
     /** @var \SensitiveParameterValue<string> */
     private \SensitiveParameterValue $value;
+    private Uri|Concrete|null $parsed;
 
-    private function __construct(string $value)
+    private function __construct(string $value, Uri|Concrete|null $parsed)
     {
         $this->value = new \SensitiveParameterValue($value);
+        $this->parsed = $parsed;
     }
 
     /**
@@ -27,7 +29,7 @@ final class Password
     public static function of(#[\SensitiveParameter] string $value): self
     {
         try {
-            return Url::of(\sprintf(
+            $self = Url::of(\sprintf(
                 'http://u:%s@a.org',
                 $value,
             ))
@@ -37,6 +39,22 @@ final class Password
         } catch (\Exception) {
             throw new \DomainException($value);
         }
+
+        if (\is_null($self->parsed)) {
+            return $self;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        if (
+            !\in_array($self->parsed->getPath(), ['/', '', null], true) ||
+            !\is_null($self->parsed->getQuery()) ||
+            !\is_null($self->parsed->getFragment())
+        ) {
+            throw new \DomainException($value);
+        }
+
+        // the parsed object is longer necessary at this point
+        return new self($self->value->getValue(), null);
     }
 
     /**
@@ -45,7 +63,7 @@ final class Password
     #[\NoDiscard]
     public static function none(): self
     {
-        return new self('');
+        return new self('', null);
     }
 
     /**
@@ -64,7 +82,7 @@ final class Password
 
         return match ($password) {
             null => self::none(),
-            default => new self($password),
+            default => new self($password, $parsed),
         };
     }
 

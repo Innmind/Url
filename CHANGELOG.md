@@ -16,6 +16,7 @@
 - `Query::of()` silently lost characters
 - `Path::of()` silently lost characters
 - `Host::of()` silently lost characters
+- `Password::of()` silently lost characters
 
 ## 5.3.0 - 2026-05-14
 
